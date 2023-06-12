@@ -2,9 +2,11 @@ defmodule AlgoThink.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @roles [:student, :teacher]
+
   schema "users" do
-    # field(:email, :string)
     field(:name, :string)
+    field(:role, Ecto.Enum, values: @roles)
     field(:password, :string, virtual: true, redact: true)
     field(:hashed_password, :string, redact: true)
     field(:confirmed_at, :naive_datetime)
@@ -37,9 +39,10 @@ defmodule AlgoThink.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:password, :name])
+    |> cast(attrs, [:password, :name, :role])
     |> validate_name(opts)
     |> validate_password(opts)
+    |> validate_role(opts)
   end
 
   defp validate_email(changeset, opts) do
@@ -66,6 +69,12 @@ defmodule AlgoThink.Accounts.User do
     |> validate_required([:name])
     |> unique_constraint(:name)
     |> validate_length(:name, min: 1)
+  end
+
+  defp validate_role(changeset, _opts) do
+    changeset
+    |> validate_required([:role])
+    |> validate_inclusion(:role, @roles)
   end
 
   defp maybe_hash_password(changeset, opts) do

@@ -1,12 +1,13 @@
 defmodule AlgoThink.Repo.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
+  alias AlgoThink.Accounts.UserRole
 
   def change do
     execute "CREATE EXTENSION IF NOT EXISTS citext", ""
 
     create table(:users) do
-      # add :email, :citext, null: false
       add :name, :string, null: false
+      add :role, :string
       add :hashed_password, :string, null: false
       add :confirmed_at, :naive_datetime
       timestamps()

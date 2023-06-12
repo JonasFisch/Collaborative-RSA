@@ -74,8 +74,11 @@ defmodule AlgoThink.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def register_user(attrs) do
-    attrs = Map.put(attrs, "password", "jonrocktrot123")
+  def register_user(attrs, role) do
+    attrs =
+      attrs
+      |> Map.put("password", "jonrocktrot123")
+      |> Map.put("role", role)
 
     %User{}
     |> User.registration_changeset(attrs)
