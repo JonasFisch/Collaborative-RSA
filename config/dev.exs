@@ -3,7 +3,7 @@ import Config
 # Configure your database
 config :algo_think, AlgoThink.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "jonrocktrot",
   hostname: "localhost",
   database: "algo_think_dev",
   stacktrace: true,
