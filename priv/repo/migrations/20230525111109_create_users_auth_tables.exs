@@ -5,13 +5,14 @@ defmodule AlgoThink.Repo.Migrations.CreateUsersAuthTables do
     execute "CREATE EXTENSION IF NOT EXISTS citext", ""
 
     create table(:users) do
-      add :email, :citext, null: false
+      # add :email, :citext, null: false
+      add :name, :string, null: false
       add :hashed_password, :string, null: false
       add :confirmed_at, :naive_datetime
       timestamps()
     end
 
-    create unique_index(:users, [:email])
+    create unique_index(:users, [:name])
 
     create table(:users_tokens) do
       add :user_id, references(:users, on_delete: :delete_all), null: false

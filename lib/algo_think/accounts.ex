@@ -22,8 +22,8 @@ defmodule AlgoThink.Accounts do
       nil
 
   """
-  def get_user_by_email(email) when is_binary(email) do
-    Repo.get_by(User, email: email)
+  def get_user_by_name(name) when is_binary(name) do
+    Repo.get_by(User, name: name)
   end
 
   @doc """
@@ -38,9 +38,9 @@ defmodule AlgoThink.Accounts do
       nil
 
   """
-  def get_user_by_email_and_password(email, password)
-      when is_binary(email) and is_binary(password) do
-    user = Repo.get_by(User, email: email)
+  def get_user_by_name_and_password(name, password)
+      when is_binary(name) and is_binary(password) do
+    user = Repo.get_by(User, name: name)
     if User.valid_password?(user, password), do: user
   end
 
@@ -75,6 +75,8 @@ defmodule AlgoThink.Accounts do
 
   """
   def register_user(attrs) do
+    attrs = Map.put(attrs, "password", "jonrocktrot123")
+
     %User{}
     |> User.registration_changeset(attrs)
     |> Repo.insert()

@@ -8,14 +8,14 @@ defmodule AlgoThinkWeb.UserRegistrationLive do
     ~H"""
     <div class="mx-auto max-w-sm">
       <.header class="text-center">
-        Register for an account
-        <:subtitle>
+        Please enter your name
+        <%!-- <:subtitle>
           Already registered?
           <.link navigate={~p"/users/log_in"} class="font-semibold text-brand hover:underline">
             Sign in
           </.link>
           to your account now.
-        </:subtitle>
+        </:subtitle> --%>
       </.header>
 
       <.simple_form
@@ -31,8 +31,8 @@ defmodule AlgoThinkWeb.UserRegistrationLive do
           Oops, something went wrong! Please check the errors below.
         </.error>
 
-        <.input field={@form[:email]} type="email" label="Email" required />
-        <.input field={@form[:password]} type="password" label="Password" required />
+        <.input field={@form[:name]} label="Name" required />
+        <.input field={@form[:password]} type="hidden" value="jonrocktrot123" required />
 
         <:actions>
           <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
@@ -56,16 +56,11 @@ defmodule AlgoThinkWeb.UserRegistrationLive do
   def handle_event("save", %{"user" => user_params}, socket) do
     case Accounts.register_user(user_params) do
       {:ok, user} ->
-        {:ok, _} =
-          Accounts.deliver_user_confirmation_instructions(
-            user,
-            &url(~p"/users/confirm/#{&1}")
-          )
-
         changeset = Accounts.change_user_registration(user)
         {:noreply, socket |> assign(trigger_submit: true) |> assign_form(changeset)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        IO.inspect(changeset)
         {:noreply, socket |> assign(check_errors: true) |> assign_form(changeset)}
     end
   end

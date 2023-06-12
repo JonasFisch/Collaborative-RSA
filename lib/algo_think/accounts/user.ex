@@ -3,10 +3,11 @@ defmodule AlgoThink.Accounts.User do
   import Ecto.Changeset
 
   schema "users" do
-    field :email, :string
-    field :password, :string, virtual: true, redact: true
-    field :hashed_password, :string, redact: true
-    field :confirmed_at, :naive_datetime
+    # field(:email, :string)
+    field(:name, :string)
+    field(:password, :string, virtual: true, redact: true)
+    field(:hashed_password, :string, redact: true)
+    field(:confirmed_at, :naive_datetime)
 
     timestamps()
   end
@@ -36,8 +37,8 @@ defmodule AlgoThink.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
-    |> validate_email(opts)
+    |> cast(attrs, [:password, :name])
+    |> validate_name(opts)
     |> validate_password(opts)
   end
 
@@ -58,6 +59,13 @@ defmodule AlgoThink.Accounts.User do
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
     # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
     |> maybe_hash_password(opts)
+  end
+
+  defp validate_name(changeset, _opts) do
+    changeset
+    |> validate_required([:name])
+    |> unique_constraint(:name)
+    |> validate_length(:name, min: 1)
   end
 
   defp maybe_hash_password(changeset, opts) do
@@ -99,6 +107,16 @@ defmodule AlgoThink.Accounts.User do
     |> case do
       %{changes: %{email: _}} = changeset -> changeset
       %{} = changeset -> add_error(changeset, :email, "did not change")
+    end
+  end
+
+  def name_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:name])
+    |> validate_name(opts)
+    |> case do
+      %{changes: %{name: _}} = changeset -> changeset
+      %{} = changeset -> add_error(changeset, :name, "did not change")
     end
   end
 
