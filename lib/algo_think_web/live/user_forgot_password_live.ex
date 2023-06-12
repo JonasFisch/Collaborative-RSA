@@ -31,8 +31,8 @@ defmodule AlgoThinkWeb.UserForgotPasswordLive do
     {:ok, assign(socket, form: to_form(%{}, as: "user"))}
   end
 
-  def handle_event("send_email", %{"user" => %{"email" => email}}, socket) do
-    if user = Accounts.get_user_by_email(email) do
+  def handle_event("send_email", %{"user" => %{"name" => name}}, socket) do
+    if user = Accounts.get_user_by_name(name) do
       Accounts.deliver_user_reset_password_instructions(
         user,
         &url(~p"/users/reset_password/#{&1}")
