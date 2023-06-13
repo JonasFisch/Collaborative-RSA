@@ -60,7 +60,6 @@ defmodule AlgoThinkWeb.UserRegistrationLive do
         {:noreply, socket |> assign(trigger_submit: true) |> assign_form(changeset)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        IO.inspect(changeset)
         {:noreply, socket |> assign(check_errors: true) |> assign_form(changeset)}
     end
   end

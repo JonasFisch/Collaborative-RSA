@@ -6,7 +6,9 @@ defmodule AlgoThink.Classrooms do
   import Ecto.Query, warn: false
   alias AlgoThink.Repo
 
+  alias AlgoThink.Accounts.User
   alias AlgoThink.Classrooms.Classroom
+  alias AlgoThink.Classrooms.ClassroomUser
 
   @doc """
   Returns the list of classroom.
@@ -19,6 +21,12 @@ defmodule AlgoThink.Classrooms do
   """
   def list_classroom do
     Repo.all(Classroom)
+  end
+
+  def list_classroom_for_owner(%User{} = user) do
+    user = user |> Repo.preload(:classrooms)
+
+    user.classrooms
   end
 
   @doc """
@@ -35,9 +43,17 @@ defmodule AlgoThink.Classrooms do
       ** (Ecto.NoResultsError)
 
   """
-  def get_classroom!(id), do: Repo.get!(Classroom, id)
+  def get_classroom!(id) do
+    Repo.get!(Classroom, id) |> Repo.preload(:users)
+  end
 
   def get_classroom_by_token(token), do: Repo.one(from c in Classroom, where: c.token == ^token)
+
+  def add_user_classroom(%User{} = user, %Classroom{} = classroom) do
+    %ClassroomUser{}
+    |> ClassroomUser.changeset(%{"user_id" => user.id, "classroom_id" => classroom.id})
+    |> Repo.insert()
+  end
 
   @doc """
   Creates a classroom.
@@ -51,12 +67,18 @@ defmodule AlgoThink.Classrooms do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_classroom(attrs \\ %{}) do
-    IO.inspect(attrs)
-    %Classroom{}
-    |> Classroom.changeset(attrs)
-    |> Repo.insert()
+  def create_classroom(attrs \\ %{}, %User{} = user) do
+    {:ok, classroom} =
+      %Classroom{}
+      |> Classroom.changeset(attrs)
+      |> Repo.insert()
+
+    add_user_classroom(user, classroom)
+
+    {:ok, classroom}
   end
+
+
 
   @doc """
   Updates a classroom.

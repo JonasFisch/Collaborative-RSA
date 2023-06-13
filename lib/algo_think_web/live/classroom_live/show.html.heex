@@ -9,8 +9,14 @@
 </.header>
 
 <.list>
-        <:item title="Name"><%= @classroom.name %></:item>
-        <:item title="Token"><%= @classroom.token %></:item>
+  <:item title="Name"><%= @classroom.name %></:item>
+  <:item title="Token"><%= @classroom.token %></:item>
+  <:item title="#User"><%= length(@classroom.users) %></:item>
+  <:item title="User">
+    <%= for user <- @classroom.users do %>
+      <p class="text-gray-500"><%= user.name %></p>
+    <%= end %>
+  </:item>
 </.list>
 
 <.back navigate={~p"/classroom"}>Back to classroom</.back>
@@ -28,5 +34,6 @@
     action={@live_action}
     classroom={@classroom}
     patch={~p"/classroom/#{@classroom}"}
+    current_user={@current_user}
   />
 </.modal>

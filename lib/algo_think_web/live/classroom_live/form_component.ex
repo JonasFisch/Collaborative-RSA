@@ -10,7 +10,9 @@ defmodule AlgoThinkWeb.ClassroomLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Create a new Classroom and use the generated token to invite all students in the class.</:subtitle>
+        <:subtitle>
+          Create a new Classroom and use the generated token to invite all students in the class.
+        </:subtitle>
       </.header>
 
       <.simple_form
@@ -20,7 +22,7 @@ defmodule AlgoThinkWeb.ClassroomLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} label="Name"/>
+        <.input field={@form[:name]} label="Name" />
 
         <:actions>
           <.button phx-disable-with="Saving...">Save Classroom</.button>
@@ -70,8 +72,9 @@ defmodule AlgoThinkWeb.ClassroomLive.FormComponent do
   end
 
   defp save_classroom(socket, :new, classroom_params) do
-    classroom_params = Map.put(classroom_params, "token", ClassroomToken.generateUniqueToken(5))
-    case Classrooms.create_classroom(classroom_params) do
+    classroom_params = Map.put(classroom_params, "token", ClassroomToken.generate_unique_token(5))
+
+    case Classrooms.create_classroom(classroom_params, socket.assigns.current_user) do
       {:ok, classroom} ->
         notify_parent({:saved, classroom})
 

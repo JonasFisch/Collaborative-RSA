@@ -6,7 +6,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :classroom_collection, Classrooms.list_classroom())}
+    {:ok, stream(socket, :classroom_collection, Classrooms.list_classroom_for_owner(socket.assigns.current_user))}
   end
 
   @impl true

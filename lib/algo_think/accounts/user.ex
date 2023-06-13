@@ -1,6 +1,7 @@
 defmodule AlgoThink.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias AlgoThink.Classrooms.Classroom
 
   @roles [:student, :teacher]
 
@@ -10,6 +11,8 @@ defmodule AlgoThink.Accounts.User do
     field(:password, :string, virtual: true, redact: true)
     field(:hashed_password, :string, redact: true)
     field(:confirmed_at, :naive_datetime)
+
+    many_to_many :classrooms, Classroom, join_through: "classroom_users", on_replace: :delete
 
     timestamps()
   end
