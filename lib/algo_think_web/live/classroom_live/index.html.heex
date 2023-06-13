@@ -1,0 +1,71 @@
+<.header>
+  Listing Classroom
+  <:actions>
+    <%= if @current_user.role == :teacher do %>
+      <.link patch={~p"/classroom/new"}>
+        <.button>New Classroom</.button>
+      </.link>
+    <% end %>
+  </:actions>
+  <:col>
+    <p>
+      Name
+    </p>
+  </:col>
+</.header>
+
+<.table
+  id="classroom"
+  rows={@streams.classroom_collection}
+  row_click={fn {_id, classroom} -> JS.navigate(~p"/classroom/#{classroom}") end}
+>
+  <:col :let={{_id, classroom}}>
+    <p>
+      <%= classroom.name %>
+    </p>
+  </:col>
+
+  <:col :let={{_id, classroom}}>
+    <p>
+      <%= classroom.token %>
+    </p>
+  </:col>
+
+  <:action :let={{_id, classroom}}>
+    <%= if @current_user.role == :teacher do %>
+      <div class="sr-only">
+        <.link navigate={~p"/classroom/#{classroom}"}>Show</.link>
+      </div>
+      <.link patch={~p"/classroom/#{classroom}/edit"}>Edit</.link>
+    <% end %>
+  </:action>
+  <:action :let={{id, classroom}}>
+    <%= if @current_user.role == :teacher do %>
+      <.link
+        phx-click={JS.push("delete", value: %{id: classroom.id}) |> hide("##{id}")}
+        data-confirm="Are you sure?"
+      >
+        Delete
+      </.link>
+    <% end %>
+  </:action>
+  <:action :let={{id, classroom}}>
+    <.link navigate={~p"/classroom/#{classroom}"}>Open</.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="classroom-modal"
+  show
+  on_cancel={JS.patch(~p"/classroom")}
+>
+  <.live_component
+    module={AlgoThinkWeb.ClassroomLive.FormComponent}
+    id={@classroom.id || :new}
+    title={@page_title}
+    action={@live_action}
+    classroom={@classroom}
+    patch={~p"/classroom"}
+  />
+</.modal>

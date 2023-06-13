@@ -1,0 +1,32 @@
+<.header>
+  Classroom <%= @classroom.id %>
+  <:subtitle>This is a classroom record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/classroom/#{@classroom}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit classroom</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+        <:item title="Name"><%= @classroom.name %></:item>
+        <:item title="Token"><%= @classroom.token %></:item>
+</.list>
+
+<.back navigate={~p"/classroom"}>Back to classroom</.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="classroom-modal"
+  show
+  on_cancel={JS.patch(~p"/classroom/#{@classroom}")}
+>
+  <.live_component
+    module={AlgoThinkWeb.ClassroomLive.FormComponent}
+    id={@classroom.id}
+    title={@page_title}
+    action={@live_action}
+    classroom={@classroom}
+    patch={~p"/classroom/#{@classroom}"}
+  />
+</.modal>

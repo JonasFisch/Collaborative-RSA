@@ -66,8 +66,12 @@ defmodule AlgoThinkWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{AlgoThinkWeb.UserAuth, :ensure_authenticated}] do
-      # live "/users/settings", UserSettingsLive, :edit
-      # live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/classroom", ClassroomLive.Index, :index
+      live "/classroom/new", ClassroomLive.Index, :new
+      live "/classroom/:id/edit", ClassroomLive.Index, :edit
+
+      live "/classroom/:id", ClassroomLive.Show, :show
+      live "/classroom/:id/show/edit", ClassroomLive.Show, :edit
     end
   end
 
