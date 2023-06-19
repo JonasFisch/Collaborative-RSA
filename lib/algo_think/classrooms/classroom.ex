@@ -19,4 +19,12 @@ defmodule AlgoThink.Classrooms.Classroom do
     |> validate_required([:name, :token])
     |> unique_constraint(:token)
   end
+
+  @doc false
+  def token_changeset(classroom, attrs) do
+    classroom
+    |> cast(attrs, [:token])
+    |> validate_length(:token, min: 3)
+    |> validate_required([:token])
+  end
 end

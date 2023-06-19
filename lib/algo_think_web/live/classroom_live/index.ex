@@ -26,6 +26,12 @@ defmodule AlgoThinkWeb.ClassroomLive.Index do
     |> assign(:classroom, %Classroom{})
   end
 
+  defp apply_action(socket, :join, _params) do
+    socket
+    |> assign(:page_title, "Join Classroom")
+    |> assign(:classroom, %Classroom{})
+  end
+
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Classroom")

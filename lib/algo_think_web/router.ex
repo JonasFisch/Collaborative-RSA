@@ -68,6 +68,7 @@ defmodule AlgoThinkWeb.Router do
       on_mount: [{AlgoThinkWeb.UserAuth, :ensure_authenticated}] do
       live "/classroom", ClassroomLive.Index, :index
       live "/classroom/new", ClassroomLive.Index, :new
+      live "/classroom/join", ClassroomLive.Index, :join
       live "/classroom/:id/edit", ClassroomLive.Index, :edit
 
       live "/classroom/:id", ClassroomLive.Show, :show

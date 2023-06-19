@@ -19,7 +19,6 @@ defmodule AlgoThinkWeb.ClassroomLive.FormComponent do
         for={@form}
         id="classroom-form"
         phx-target={@myself}
-        phx-change="validate"
         phx-submit="save"
       >
         <.input field={@form[:name]} label="Name" />

@@ -6,7 +6,11 @@
         <.button>New Classroom</.button>
       </.link>
     <% end %>
+      <.link patch={~p"/classroom/join"}>
+        <.button>Join</.button>
+      </.link>
   </:actions>
+
   <:col>
     <p>
       Name
@@ -55,18 +59,22 @@
 </.table>
 
 <.modal
-  :if={@live_action in [:new, :edit]}
+  :if={@live_action in [:new, :edit, :join]}
   id="classroom-modal"
   show
   on_cancel={JS.patch(~p"/classroom")}
 >
-  <.live_component
-    module={AlgoThinkWeb.ClassroomLive.FormComponent}
-    id={@classroom.id || :new}
-    title={@page_title}
-    action={@live_action}
-    classroom={@classroom}
-    patch={~p"/classroom"}
-    current_user={@current_user}
-  />
+  <%= if @live_action == :join do %>
+    <.live_component module={AlgoThinkWeb.ClassroomLive.JoinComponent} id={@classroom.id || :join} current_user={@current_user}/>
+  <%= else %>
+    <.live_component
+      module={AlgoThinkWeb.ClassroomLive.FormComponent}
+      id={@classroom.id || :new}
+      title={@page_title}
+      action={@live_action}
+      classroom={@classroom}
+      patch={~p"/classroom"}
+      current_user={@current_user}
+    />
+  <%= end %>
 </.modal>
