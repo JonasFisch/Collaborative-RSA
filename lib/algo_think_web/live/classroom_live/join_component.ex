@@ -3,6 +3,7 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinComponent do
 
   alias AlgoThink.Classrooms
   alias AlgoThink.Classrooms.Classroom
+  alias AlgoThink.Classrooms.ClassroomUser
 
   @impl true
   def render(assigns) do
@@ -41,13 +42,11 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinComponent do
 
   @impl true
   def update(assigns, socket) do
-    # changeset = Classrooms.change_classroom_join(%Classroom{}, %{token: ""})
     {:ok,
      socket
       |> assign(assigns)
       |> assign(:errors, [])
     }
-      # |> assign_form(changeset)}
   end
 
   @impl true
@@ -57,15 +56,15 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinComponent do
 
   defp join_classroom(socket, token) do
     case Classrooms.classroom_join_by_token(socket.assigns.current_user, token) do
-      {:ok, %Classroom{} = classroom} ->
+      {:ok, %ClassroomUser{} = classroomUser} ->
         {:noreply,
          socket
          |> put_flash(:info, "Successfully joined classroom")
-         |> push_navigate(to: ~p"/classroom/#{classroom.id}")
+         |> push_navigate(to: ~p"/classroom/#{classroomUser.classroom_id}")
         }
 
-      {:error, _changeset} ->
-        {:noreply, socket |> assign(errors: ["Token not found!"])} # |> assign(check_errors: true) |> assign_form(changeset)}
+      {:error, msg} ->
+        {:noreply, socket |> assign(errors: [msg])} # |> assign(check_errors: true) |> assign_form(changeset)}
     end
   end
 end

@@ -5,7 +5,7 @@ defmodule AlgoThink.Classrooms.ClassroomToken do
   def generate_unique_token(length) do
     token = generate_token(length)
 
-    if nil != Classrooms.get_classroom_by_token(token) do
+    if {:ok, nil} != Classrooms.get_classroom_by_token(token) do
       ^token = generate_unique_token(length)
     end
 

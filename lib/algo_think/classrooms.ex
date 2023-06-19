@@ -4,7 +4,6 @@ defmodule AlgoThink.Classrooms do
   """
 
   import Ecto.Query, warn: false
-  alias Ecto.Changeset
   alias AlgoThink.Repo
 
   alias AlgoThink.Accounts.User
@@ -48,7 +47,7 @@ defmodule AlgoThink.Classrooms do
     Repo.get!(Classroom, id) |> Repo.preload(:users)
   end
 
-  defp get_classroom_by_token(token) when is_binary(token), do: Repo.get_by(Classroom, token: token)
+  def get_classroom_by_token(token) when is_binary(token), do: {:ok, Repo.get_by(Classroom, token: token)}
 
   def add_user_classroom(%User{} = user, %Classroom{} = classroom) do
     %ClassroomUser{}
@@ -56,12 +55,21 @@ defmodule AlgoThink.Classrooms do
     |> Repo.insert()
   end
 
-  def classroom_join_by_token(%User{} = _user, token) do
+  def classroom_join_by_token(%User{} = user, token) do
+    IO.inspect(token)
+    IO.inspect(user)
+    IO.inspect(get_classroom_by_token(token))
     case get_classroom_by_token(token) do
-      {%Classroom{} = classroom} ->
-        {:ok, classroom}
-      :nil ->
-        {:error, "token not found"}
+      {:ok, %Classroom{} = classroom} ->
+
+        case add_user_classroom(user, classroom) do
+          {:ok, %ClassroomUser{} = classroomUser} ->
+            {:ok, classroomUser}
+          {:error, _changeset} ->
+            {:error, "already joined!"}
+        end
+      {:ok, nil} ->
+        {:error, "token not found!"}
     end
   end
 
@@ -137,7 +145,5 @@ defmodule AlgoThink.Classrooms do
     Classroom.changeset(classroom, attrs)
   end
 
-  def change_classroom_join(%Classroom{} = classroom, attrs \\ %{}) do
-    Classroom.token_changeset(classroom, attrs)
-  end
+
 end
