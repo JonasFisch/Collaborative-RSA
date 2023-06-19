@@ -78,7 +78,7 @@ defmodule AlgoThinkWeb.UserResetPasswordLive do
       assign(socket, user: user, token: token)
     else
       socket
-      |> put_flash(:error, "Reset password link is invalid or it has expired.")
+      |> put_flash(:warn, "Reset password link is invalid or it has expired.")
       |> redirect(to: ~p"/")
     end
   end

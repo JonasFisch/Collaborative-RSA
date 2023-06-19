@@ -1,5 +1,5 @@
 <.header>
-  Classroom <%= @classroom.id %>
+  <%= @classroom.name %>
   <:subtitle>This is a classroom record from your database.</:subtitle>
   <:actions>
     <.link patch={~p"/classroom/#{@classroom}/show/edit"} phx-click={JS.push_focus()}>

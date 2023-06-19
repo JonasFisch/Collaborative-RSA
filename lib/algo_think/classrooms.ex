@@ -10,6 +10,8 @@ defmodule AlgoThink.Classrooms do
   alias AlgoThink.Classrooms.Classroom
   alias AlgoThink.Classrooms.ClassroomUser
 
+  @topic "classroom"
+
   @doc """
   Returns the list of classroom.
 
@@ -60,6 +62,7 @@ defmodule AlgoThink.Classrooms do
       {:ok, %Classroom{} = classroom} ->
         case add_user_classroom(user, classroom) do
           {:ok, %ClassroomUser{} = classroomUser} ->
+            notify_subscribers("classroom_updated")
             {:ok, classroomUser}
           {:error, _changeset} ->
             {:error, "already joined!"}
@@ -110,6 +113,7 @@ defmodule AlgoThink.Classrooms do
     classroom
     |> Classroom.changeset(attrs)
     |> Repo.update()
+    |> notify_subscribers("classroom_updated")
   end
 
   @doc """
@@ -126,6 +130,7 @@ defmodule AlgoThink.Classrooms do
   """
   def delete_classroom(%Classroom{} = classroom) do
     Repo.delete(classroom)
+    |> notify_subscribers("classroom_deleted")
   end
 
   @doc """
@@ -141,5 +146,30 @@ defmodule AlgoThink.Classrooms do
     Classroom.changeset(classroom, attrs)
   end
 
+  defp notify_subscribers({:ok, result}, event) do
+    AlgoThinkWeb.Endpoint.broadcast_from(
+      self(),
+      @topic,
+      event,
+      result
+    )
+
+    if not is_nil(result) do
+      AlgoThinkWeb.Endpoint.broadcast_from(
+        self(),
+        @topic <> "#{result.id}",
+        event,
+        result
+      )
+    end
+
+    {:ok, result}
+  end
+
+  defp notify_subscribers(event) do
+    notify_subscribers({:ok, nil}, event)
+  end
+
+  defp notify_subscribers({:error, reason}, _), do: {:error, reason}
 
 end

@@ -13,7 +13,7 @@ defmodule AlgoThink.Application do
       # Start the Ecto repository
       AlgoThink.Repo,
       # Start the PubSub system
-      {Phoenix.PubSub, name: AlgoThink.PubSub},
+      {Phoenix.PubSub, name: AlgoThink.PubSub, adapter: Phoenix.PubSub.PG2},
       # Start Finch
       {Finch, name: AlgoThink.Finch},
       # Start the Endpoint (http/https)

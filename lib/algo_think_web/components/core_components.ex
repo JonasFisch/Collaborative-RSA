@@ -115,12 +115,14 @@ defmodule AlgoThinkWeb.CoreComponents do
       class={[
         "fixed top-2 right-2 w-80 sm:w-96 z-50 rounded-lg p-3 ring-1",
         @kind == :info && "bg-emerald-50 text-emerald-800 ring-emerald-500 fill-cyan-900",
+        @kind == :warning && "bg-orange-50 text-orange-800 ring-orange-500 fill-orange-900",
         @kind == :error && "bg-rose-50 text-rose-900 shadow-md ring-rose-500 fill-rose-900"
       ]}
       {@rest}
     >
       <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
         <.icon :if={@kind == :info} name="hero-information-circle-mini" class="h-4 w-4" />
+        <.icon :if={@kind == :warning} name="hero-exclamation-triangle-mini" class="h-4 w-4" />
         <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
         <%= @title %>
       </p>
@@ -144,6 +146,7 @@ defmodule AlgoThinkWeb.CoreComponents do
   def flash_group(assigns) do
     ~H"""
     <.flash kind={:info} title="Success!" flash={@flash} />
+    <.flash kind={:warning} title="Warning!" flash={@flash} />
     <.flash kind={:error} title="Error!" flash={@flash} />
     <.flash
       id="disconnected"
