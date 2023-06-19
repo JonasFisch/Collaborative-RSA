@@ -17,5 +17,6 @@ defmodule AlgoThink.Classrooms.ClassroomUser do
     classroom_user
     |> cast(attrs, [:user_id, :classroom_id])
     |> validate_required([:user_id, :classroom_id])
+    |> unique_constraint([:user_id, :classroom_id], name: :classroom_user_unique)
   end
 end

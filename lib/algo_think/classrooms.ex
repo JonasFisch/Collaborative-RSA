@@ -56,12 +56,8 @@ defmodule AlgoThink.Classrooms do
   end
 
   def classroom_join_by_token(%User{} = user, token) do
-    IO.inspect(token)
-    IO.inspect(user)
-    IO.inspect(get_classroom_by_token(token))
     case get_classroom_by_token(token) do
       {:ok, %Classroom{} = classroom} ->
-
         case add_user_classroom(user, classroom) do
           {:ok, %ClassroomUser{} = classroomUser} ->
             {:ok, classroomUser}
@@ -69,7 +65,7 @@ defmodule AlgoThink.Classrooms do
             {:error, "already joined!"}
         end
       {:ok, nil} ->
-        {:error, "token not found!"}
+        {:error, "invalid token!"}
     end
   end
 

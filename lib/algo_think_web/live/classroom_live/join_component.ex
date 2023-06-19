@@ -17,7 +17,7 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinComponent do
       </.header>
 
 
-      <form action="post" phx-submit="save" phx-target={@myself}>
+      <form action="post" phx-submit="save" phx-target={@myself} phx-change="validate">
         <div class="mb-4 mt-4">
           <.label for="token">Token</.label>
           <input
@@ -52,6 +52,12 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinComponent do
   @impl true
   def handle_event("save", %{"token" => token}, socket) do
     join_classroom(socket, token)
+  end
+
+  def handle_event("validate", _params, socket) do
+    {:noreply, socket
+      |> assign(:errors, [])
+    }
   end
 
   defp join_classroom(socket, token) do
