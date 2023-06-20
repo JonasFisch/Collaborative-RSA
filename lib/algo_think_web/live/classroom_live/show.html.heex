@@ -19,6 +19,17 @@
   </:item>
 </.list>
 
+<.live_component
+    module={AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent}
+    id={@classroom.id}
+    title={@page_title}
+    action={@live_action}
+    classroom={@classroom}
+    patch={~p"/classroom/#{@classroom}"}
+    current_user={@current_user}
+    items={["Group 1", "Group 2", "Group 3"]}
+  />
+
 <.back navigate={~p"/classroom"}>Back to classroom</.back>
 
 <.modal

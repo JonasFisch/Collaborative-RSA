@@ -4,7 +4,7 @@ defmodule AlgoThink.Repo.Migrations.CreateClassroomUsers do
   def change do
     create table(:classroom_users) do
       add :user_id, references(:users, on_delete: :delete_all)
-      add :classroom_id, references(:classroom, on_delete: :delete_all)
+      add :classroom_id, references(:classrooms, on_delete: :delete_all)
 
       timestamps()
     end

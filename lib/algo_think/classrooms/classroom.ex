@@ -2,12 +2,14 @@ defmodule AlgoThink.Classrooms.Classroom do
   use Ecto.Schema
   import Ecto.Changeset
   alias AlgoThink.Accounts.User
+  alias AlgoThink.StudyGroups.StudyGroup
 
-  schema "classroom" do
+  schema "classrooms" do
     field :name, :string
     field :token, :string
 
     many_to_many :users, User, join_through: "classroom_users", on_replace: :delete
+    has_many :study_groups, StudyGroup
 
     timestamps()
   end

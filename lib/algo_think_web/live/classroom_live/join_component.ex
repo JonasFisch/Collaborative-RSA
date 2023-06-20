@@ -2,7 +2,6 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinComponent do
   use AlgoThinkWeb, :live_component
 
   alias AlgoThink.Classrooms
-  alias AlgoThink.Classrooms.Classroom
   alias AlgoThink.Classrooms.ClassroomUser
 
   @impl true

@@ -170,6 +170,6 @@ defmodule AlgoThink.Classrooms do
     notify_subscribers({:ok, nil}, event)
   end
 
-  defp notify_subscribers({:error, reason}, _), do: {:error, reason}
+  # defp notify_subscribers({:error, reason}, _), do: {:error, reason}
 
 end
