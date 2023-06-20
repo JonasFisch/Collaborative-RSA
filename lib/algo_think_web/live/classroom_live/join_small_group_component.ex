@@ -16,7 +16,7 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
               <%= study_group.name %>
             </p>
             <%= if @current_study_group_id == study_group.id do %>
-              <button phx-value-id={study_group.id} phx-click="join_study_group" phx-target={@myself} class="bg-green-500 transition-colors text-white px-3 rounded-xl ml-3 flex justify-center items-center">
+              <button phx-value-id={study_group.id} class="bg-green-500 transition-colors text-white px-3 rounded-xl ml-3 flex justify-center items-center">
                 <.icon name="hero-check-mini" class="h-4 w-4" />
               </button>
             <% else %>
@@ -26,7 +26,7 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
             <% end %>
           </dt>
           <dd class="text-zinc-700 h-24">
-            <p :for={user <- study_group.users}>
+            <p :for={user <- study_group.users} class="animate-fade-in">
               <%= user.name %>
             </p>
           </dd>
