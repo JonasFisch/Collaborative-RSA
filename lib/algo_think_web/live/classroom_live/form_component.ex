@@ -57,7 +57,8 @@ defmodule AlgoThinkWeb.ClassroomLive.FormComponent do
 
   defp save_classroom(socket, :edit, classroom_params) do
     case Classrooms.update_classroom(socket.assigns.classroom, classroom_params) do
-      {:ok, _classroom} ->
+      {:ok, classroom} ->
+        notify_parent({:saved, classroom})
         {:noreply,
          socket
          |> put_flash(:info, "Classroom updated successfully")

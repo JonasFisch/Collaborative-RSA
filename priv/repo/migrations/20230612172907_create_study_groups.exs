@@ -8,7 +8,5 @@ defmodule AlgoThink.Repo.Migrations.CreateStudyGroups do
 
       timestamps()
     end
-
-    create index(:study_groups, [:classroom_id])
   end
 end

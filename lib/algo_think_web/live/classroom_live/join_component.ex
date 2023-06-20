@@ -61,11 +61,11 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinComponent do
 
   defp join_classroom(socket, token) do
     case Classrooms.classroom_join_by_token(socket.assigns.current_user, token) do
-      {:ok, %ClassroomUser{} = classroomUser} ->
+      {:ok, %ClassroomUser{} = classroom_user} ->
         {:noreply,
          socket
          |> put_flash(:info, "Successfully joined classroom")
-         |> push_navigate(to: ~p"/classroom/#{classroomUser.classroom_id}")
+         |> push_navigate(to: ~p"/classroom/#{classroom_user.classroom_id}")
         }
 
       {:error, msg} ->

@@ -22,10 +22,10 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
   end
 
   @impl true
-  def handle_info(%{topic: @topic, event: event, payload: _msg}, socket) do
+  def handle_info(%{topic: @topic, event: event, payload: classroom}, socket) do
     case event do
       "classroom_updated" ->
-        {:noreply, socket |> assign(:classroom, Classrooms.get_classroom!(socket.assigns.classroom_id))}
+        {:noreply, socket |> assign(:classroom, Classrooms.get_classroom!(socket.assigns.classroom.id))}
 
       "classroom_deleted" ->
         {:noreply, socket
@@ -35,7 +35,10 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
         IO.warn("unknown event")
         {:noreply, socket}
     end
+  end
 
+  def handle_info({AlgoThinkWeb.ClassroomLive.FormComponent, {:saved, classroom}}, socket) do
+    {:noreply, socket |> assign(:classroom, classroom)}
   end
 
   defp page_title(:show), do: "Show Classroom"

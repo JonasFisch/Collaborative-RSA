@@ -1,4 +1,5 @@
 defmodule AlgoThinkWeb.UserAuth do
+  @moduledoc "User Authentication"
   use AlgoThinkWeb, :verified_routes
 
   import Plug.Conn

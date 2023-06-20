@@ -1,4 +1,6 @@
 defmodule AlgoThink.Accounts.UserNotifier do
+  @moduledoc "User Notifier"
+
   import Swoosh.Email
 
   alias AlgoThink.Mailer

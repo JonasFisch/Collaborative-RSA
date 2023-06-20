@@ -4,7 +4,10 @@ defmodule AlgoThink.StudyGroups do
   """
 
   import Ecto.Query, warn: false
+  alias AlgoThink.Classrooms
+  alias AlgoThink.Classrooms.ClassroomUser
   alias AlgoThink.Classrooms.Classroom
+  alias AlgoThink.Accounts.User
   alias AlgoThink.Repo
 
   alias AlgoThink.StudyGroups.StudyGroup
@@ -36,7 +39,7 @@ defmodule AlgoThink.StudyGroups do
       ** (Ecto.NoResultsError)
 
   """
-  def get_study_group!(id), do: Repo.get!(StudyGroup, id)
+  def get_study_group!(id), do: Repo.get!(StudyGroup, id) |> Repo.preload(:users)
 
   @doc """
   Creates a study_group.
@@ -56,11 +59,31 @@ defmodule AlgoThink.StudyGroups do
     |> Repo.insert()
   end
 
-  def create_study_groups_for_classroom(%Classroom{} = classroom, amount \\ 1) do
-    IO.inspect(amount)
-    IO.inspect(classroom)
-    IO.inspect("study group created")
-    create_study_group(%{name: "Group 1", classroom_id: classroom.id})
+  def create_study_groups_for_classroom(%Classroom{} = classroom, name \\ "Group 1") do
+    create_study_group(%{name: name, classroom_id: classroom.id})
+  end
+
+  def join_study_group(%Classroom{} = classroom, %User{} = user, study_group_id) do
+
+    classroom_user = Repo.one(from classroom_user in ClassroomUser, where: classroom_user.user_id == ^user.id and classroom_user.classroom_id == ^classroom.id)
+
+    result = classroom_user
+      |> ClassroomUser.changeset_update(%{study_group_id: study_group_id})
+      |> Repo.update()
+
+      Classrooms.notify_subscribers("classroom_updated")
+
+    result
+  end
+
+  def get_users_study_group(%User{} = user) do
+    user = user |> Repo.preload(:study_groups)
+    user.study_groups
+  end
+
+  def get_study_group_for_classroom(%User{} = user, %Classroom{} = classroom) do
+    classroom_user = Repo.one(from classroom_user in ClassroomUser, where: classroom_user.user_id == ^user.id and classroom_user.classroom_id == ^classroom.id)
+    classroom_user.study_group_id
   end
 
   @doc """

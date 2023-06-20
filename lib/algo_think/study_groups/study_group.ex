@@ -1,10 +1,13 @@
 defmodule AlgoThink.StudyGroups.StudyGroup do
+  @moduledoc "StudyGroup"
+
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "study_groups" do
     field :name, :string
     belongs_to :classroom, AlgoThink.Classrooms.Classroom
+    many_to_many :users, AlgoThink.Accounts.User, join_through: "classroom_users"
 
     timestamps()
   end

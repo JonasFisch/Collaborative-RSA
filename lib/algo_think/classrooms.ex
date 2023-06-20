@@ -47,7 +47,7 @@ defmodule AlgoThink.Classrooms do
 
   """
   def get_classroom!(id) do
-    Repo.get!(Classroom, id) |> Repo.preload(:users) |> Repo.preload(:study_groups)
+    Repo.get!(Classroom, id) |> Repo.preload([:users, :study_groups]) |> Repo.preload(study_groups: [:users])
   end
 
   def get_classroom_by_token(token) when is_binary(token), do: {:ok, Repo.get_by(Classroom, token: token)}
@@ -62,9 +62,9 @@ defmodule AlgoThink.Classrooms do
     case get_classroom_by_token(token) do
       {:ok, %Classroom{} = classroom} ->
         case add_user_classroom(user, classroom) do
-          {:ok, %ClassroomUser{} = classroomUser} ->
+          {:ok, %ClassroomUser{} = classroom_user} ->
             notify_subscribers("classroom_updated")
-            {:ok, classroomUser}
+            {:ok, classroom_user}
           {:error, _changeset} ->
             {:error, "already joined!"}
         end
@@ -92,7 +92,9 @@ defmodule AlgoThink.Classrooms do
       |> Repo.insert()
 
     add_user_classroom(user, classroom)
-    StudyGroups.create_study_groups_for_classroom(classroom, 1)
+    StudyGroups.create_study_groups_for_classroom(classroom, "Group 1")
+    StudyGroups.create_study_groups_for_classroom(classroom, "Group 2")
+    StudyGroups.create_study_groups_for_classroom(classroom, "Group 3")
 
     {:ok, classroom}
   end
@@ -148,7 +150,7 @@ defmodule AlgoThink.Classrooms do
     Classroom.changeset(classroom, attrs)
   end
 
-  defp notify_subscribers({:ok, result}, event) do
+  def notify_subscribers({:ok, result}, event) do
     AlgoThinkWeb.Endpoint.broadcast_from(
       self(),
       @topic,
@@ -168,7 +170,7 @@ defmodule AlgoThink.Classrooms do
     {:ok, result}
   end
 
-  defp notify_subscribers(event) do
+  def notify_subscribers(event) do
     notify_subscribers({:ok, nil}, event)
   end
 

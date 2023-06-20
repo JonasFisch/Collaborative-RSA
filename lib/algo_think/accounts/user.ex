@@ -1,4 +1,6 @@
 defmodule AlgoThink.Accounts.User do
+  @moduledoc "User"
+
   use Ecto.Schema
   import Ecto.Changeset
   alias AlgoThink.Classrooms.Classroom
@@ -13,6 +15,7 @@ defmodule AlgoThink.Accounts.User do
     field(:confirmed_at, :naive_datetime)
 
     many_to_many :classrooms, Classroom, join_through: "classroom_users", on_replace: :delete
+    many_to_many :study_groups, AlgoThink.StudyGroups.StudyGroup, join_through: "classroom_users", on_replace: :delete
 
     timestamps()
   end

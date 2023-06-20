@@ -1,4 +1,6 @@
 defmodule AlgoThink.Classrooms.Classroom do
+  @moduledoc "Classroom"
+
   use Ecto.Schema
   import Ecto.Changeset
   alias AlgoThink.Accounts.User

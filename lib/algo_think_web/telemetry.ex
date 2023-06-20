@@ -1,4 +1,6 @@
 defmodule AlgoThinkWeb.Telemetry do
+  @moduledoc "Telemetry"
+
   use Supervisor
   import Telemetry.Metrics
 

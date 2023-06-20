@@ -1,4 +1,6 @@
 defmodule AlgoThink.Accounts.UserToken do
+    @moduledoc "User Token"
+
   use Ecto.Schema
   import Ecto.Query
   alias AlgoThink.Accounts.UserToken

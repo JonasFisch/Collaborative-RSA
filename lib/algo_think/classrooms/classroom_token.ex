@@ -1,4 +1,6 @@
 defmodule AlgoThink.Classrooms.ClassroomToken do
+  @moduledoc "Classroom Token"
+
   alias AlgoThink.Classrooms
 
   @spec generate_unique_token(integer) :: bitstring
