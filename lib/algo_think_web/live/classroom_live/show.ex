@@ -7,7 +7,6 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
 
   @impl true
   def mount(%{"id" => id}, _session, socket) do
-    IO.inspect(id)
     AlgoThinkWeb.Endpoint.subscribe(@topic)
     {:ok, assign(socket, classroom_id: id)}
   end

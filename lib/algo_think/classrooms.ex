@@ -4,6 +4,7 @@ defmodule AlgoThink.Classrooms do
   """
 
   import Ecto.Query, warn: false
+  alias AlgoThink.StudyGroups
   alias AlgoThink.Repo
 
   alias AlgoThink.Accounts.User
@@ -46,7 +47,7 @@ defmodule AlgoThink.Classrooms do
 
   """
   def get_classroom!(id) do
-    Repo.get!(Classroom, id) |> Repo.preload(:users)
+    Repo.get!(Classroom, id) |> Repo.preload(:users) |> Repo.preload(:study_groups)
   end
 
   def get_classroom_by_token(token) when is_binary(token), do: {:ok, Repo.get_by(Classroom, token: token)}
@@ -91,6 +92,7 @@ defmodule AlgoThink.Classrooms do
       |> Repo.insert()
 
     add_user_classroom(user, classroom)
+    StudyGroups.create_study_groups_for_classroom(classroom, 1)
 
     {:ok, classroom}
   end

@@ -12,7 +12,7 @@ defmodule AlgoThink.StudyGroups.StudyGroup do
   @doc false
   def changeset(study_group, attrs) do
     study_group
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :classroom_id])
+    |> validate_required([:name, :classroom_id])
   end
 end

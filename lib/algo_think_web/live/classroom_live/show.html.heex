@@ -19,6 +19,10 @@
   </:item>
 </.list>
 
+<p>
+  <% IO.inspect(@classroom.study_groups) %>
+</p>
+
 <.live_component
     module={AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent}
     id={@classroom.id}
@@ -27,7 +31,7 @@
     classroom={@classroom}
     patch={~p"/classroom/#{@classroom}"}
     current_user={@current_user}
-    items={["Group 1", "Group 2", "Group 3"]}
+    items={@classroom.study_groups}
   />
 
 <.back navigate={~p"/classroom"}>Back to classroom</.back>

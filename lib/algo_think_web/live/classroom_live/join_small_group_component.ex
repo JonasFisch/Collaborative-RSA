@@ -12,7 +12,7 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
           </div>
           <dt class="w-1/4 flex flex-row h-6 text-zinc-500">
             <p class="font-medium">
-              <%= item %>
+              <%= item.name %>
             </p>
             <button class="bg-blue-500 hover:bg-blue-600 transition-colors text-white px-3 rounded-xl ml-3">
               join

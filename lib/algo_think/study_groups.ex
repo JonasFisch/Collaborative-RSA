@@ -4,6 +4,7 @@ defmodule AlgoThink.StudyGroups do
   """
 
   import Ecto.Query, warn: false
+  alias AlgoThink.Classrooms.Classroom
   alias AlgoThink.Repo
 
   alias AlgoThink.StudyGroups.StudyGroup
@@ -53,6 +54,13 @@ defmodule AlgoThink.StudyGroups do
     %StudyGroup{}
     |> StudyGroup.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def create_study_groups_for_classroom(%Classroom{} = classroom, amount \\ 1) do
+    IO.inspect(amount)
+    IO.inspect(classroom)
+    IO.inspect("study group created")
+    create_study_group(%{name: "Group 1", classroom_id: classroom.id})
   end
 
   @doc """
