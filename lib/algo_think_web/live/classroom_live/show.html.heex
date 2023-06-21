@@ -1,15 +1,15 @@
 <.header>
   <%= @classroom.name %>
-  <:subtitle>This is a classroom record from your database.</:subtitle>
+  <:subtitle>This is a classroom. You can already join one of the small study groups below.</:subtitle>
   <:actions>
-    <.link patch={~p"/classroom/#{@classroom}/show/edit"} phx-click={JS.push_focus()}>
+    <.link :if={@current_user.role == :teacher} patch={~p"/classroom/#{@classroom}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit classroom</.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Name"><%= @classroom.name %></:item>
+  <%!-- <:item title="Name"><%= @classroom.name %></:item> --%>
   <:item title="Token"><%= @classroom.token %></:item>
   <:item title="#User"><%= length(@classroom.users) %></:item>
   <:item title="User">
