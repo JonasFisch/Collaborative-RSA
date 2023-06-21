@@ -26,7 +26,7 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
             <% end %>
           </dt>
           <dd class="text-zinc-700 h-24">
-            <p :for={user <- study_group.users} class="animate-fade-in">
+            <p :for={user <- Enum.sort_by(study_group.users, fn user -> user.name end)} class="animate-fade-in">
               <%= user.name %>
             </p>
           </dd>
@@ -41,8 +41,9 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
     current_user = assigns.current_user
     classroom = assigns.classroom
     study_groups = classroom.study_groups
-    IO.inspect("in update")
     current_study_group_id = StudyGroups.get_study_group_for_classroom(current_user, classroom)
+
+    # IO.inspect(study_groups)
 
     {:ok,
       socket

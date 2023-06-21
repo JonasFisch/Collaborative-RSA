@@ -10,6 +10,7 @@ defmodule AlgoThink.Classrooms do
   alias AlgoThink.Accounts.User
   alias AlgoThink.Classrooms.Classroom
   alias AlgoThink.Classrooms.ClassroomUser
+  alias AlgoThink.StudyGroups.StudyGroup
 
   @topic "classroom"
 
@@ -47,7 +48,16 @@ defmodule AlgoThink.Classrooms do
 
   """
   def get_classroom!(id) do
-    Repo.get!(Classroom, id) |> Repo.preload([:users, :study_groups]) |> Repo.preload(study_groups: [:users])
+    study_group_users_query =
+      from(
+        sg in StudyGroup,
+        order_by: [asc: sg.name],
+        preload: [:users]
+      )
+
+    result = Repo.get!(Classroom, id) |> Repo.preload([:users]) |> Repo.preload(study_groups: study_group_users_query)
+    IO.inspect(result)
+    result
   end
 
   def get_classroom_by_token(token) when is_binary(token), do: {:ok, Repo.get_by(Classroom, token: token)}

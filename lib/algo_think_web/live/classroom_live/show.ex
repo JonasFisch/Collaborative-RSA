@@ -31,6 +31,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
         {:noreply, socket
         |> put_flash(:warning, "the classroom has been deleted.")
         |> redirect(to: ~p"/classroom")}
+
       _other ->
         IO.warn("unknown event")
         {:noreply, socket}
