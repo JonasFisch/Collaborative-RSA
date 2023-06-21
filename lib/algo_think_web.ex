@@ -54,6 +54,8 @@ defmodule AlgoThinkWeb do
       use Phoenix.LiveView,
         layout: {AlgoThinkWeb.Layouts, :app}
 
+        on_mount AlgoThink.Flash
+
       unquote(html_helpers())
     end
   end
@@ -61,6 +63,8 @@ defmodule AlgoThinkWeb do
   def live_component do
     quote do
       use Phoenix.LiveComponent
+
+      import AlgoThink.Flash, only: [put_flash!: 3]
 
       unquote(html_helpers())
     end

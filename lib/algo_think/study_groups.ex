@@ -64,16 +64,25 @@ defmodule AlgoThink.StudyGroups do
   end
 
   def join_study_group(%Classroom{} = classroom, %User{} = user, study_group_id) do
-
+    study_group = get_study_group!(study_group_id)
     classroom_user = Repo.one(from classroom_user in ClassroomUser, where: classroom_user.user_id == ^user.id and classroom_user.classroom_id == ^classroom.id)
 
-    result = classroom_user
-      |> ClassroomUser.changeset_update(%{study_group_id: study_group_id})
-      |> Repo.update()
+    if not study_group_full(study_group) do
+      result = classroom_user
+        |> ClassroomUser.changeset_update(%{study_group_id: study_group.id})
+        |> Repo.update()
 
       Classrooms.notify_subscribers("classroom_updated")
 
-    result
+      {:ok, result}
+    else
+      {:error, "already full"}
+    end
+
+  end
+
+  def study_group_full(%StudyGroup{} = study_group) do
+    length(study_group.users) >= study_group.max_users
   end
 
   def get_users_study_group(%User{} = user) do

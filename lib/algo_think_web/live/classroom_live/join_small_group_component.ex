@@ -9,7 +9,7 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
       <dl class="-my-4 divide-y divide-zinc-100">
         <div :for={study_group <- @classroom.study_groups} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8 relative">
           <div class="absolute top-4 right-4">
-            <p><%= length(study_group.users) %>/4</p>
+            <p><%= length(study_group.users) %>/<%= study_group.max_users %></p>
           </div>
           <dt class="w-1/4 flex flex-row h-6 text-zinc-500">
             <p class="font-medium">
@@ -38,11 +38,10 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
   end
 
   def update(assigns, socket) do
-
     current_user = assigns.current_user
     classroom = assigns.classroom
     study_groups = classroom.study_groups
-
+    IO.inspect("in update")
     current_study_group_id = StudyGroups.get_study_group_for_classroom(current_user, classroom)
 
     {:ok,
@@ -58,12 +57,15 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
     current_user = socket.assigns.current_user
     study_group_id = params["id"]
 
-    StudyGroups.join_study_group(classroom, current_user, study_group_id)
-
-    send(
-      self(),
-      %{topic: "classroom", event: "classroom_updated", payload: nil}
-    )
-    {:noreply, socket}
+    with {:ok, result} <- StudyGroups.join_study_group(classroom, current_user, study_group_id) do
+      send(
+        self(),
+        %{topic: "classroom", event: "classroom_updated", payload: nil}
+      )
+      {:noreply, socket}
+    else
+      {:error, msg} ->
+        {:noreply, socket |> put_flash!(:warning, msg)}
+    end
   end
 end
