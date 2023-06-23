@@ -22,7 +22,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
   end
 
   @impl true
-  def handle_info(%{topic: @topic, event: event, payload: classroom}, socket) do
+  def handle_info(%{topic: @topic, event: event, payload: _classroom}, socket) do
     case event do
       "classroom_updated" ->
         {:noreply, socket |> assign(:classroom, Classrooms.get_classroom!(socket.assigns.classroom.id))}

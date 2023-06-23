@@ -53,7 +53,8 @@ defmodule AlgoThink.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_export, "~> 0.8.2"},
-      {:material_icons, "~> 0.1.0"}
+      {:material_icons, "~> 0.1.0"},
+      {:ex_crypto, "~> 0.10.0"}
     ]
   end
 

@@ -37,13 +37,11 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
     """
   end
 
+  @impl true
   def update(assigns, socket) do
     current_user = assigns.current_user
     classroom = assigns.classroom
-    study_groups = classroom.study_groups
     current_study_group_id = StudyGroups.get_study_group_for_classroom(current_user, classroom)
-
-    # IO.inspect(study_groups)
 
     {:ok,
       socket
@@ -52,13 +50,14 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
     }
   end
 
+  @impl true
   def handle_event("join_study_group", params, socket) do
 
     classroom = socket.assigns.classroom
     current_user = socket.assigns.current_user
     study_group_id = params["id"]
 
-    with {:ok, result} <- StudyGroups.join_study_group(classroom, current_user, study_group_id) do
+    with {:ok, _result} <- StudyGroups.join_study_group(classroom, current_user, study_group_id) do
       send(
         self(),
         %{topic: "classroom", event: "classroom_updated", payload: nil}

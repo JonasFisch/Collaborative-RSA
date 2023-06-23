@@ -1,7 +1,6 @@
 defmodule AlgoThinkWeb.ClassroomLive.Index do
   use AlgoThinkWeb, :live_view
 
-  alias AlgoThink.StudyGroups
   alias AlgoThink.Classrooms
   alias AlgoThink.Classrooms.Classroom
 
