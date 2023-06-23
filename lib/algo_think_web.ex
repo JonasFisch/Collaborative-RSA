@@ -89,6 +89,7 @@ defmodule AlgoThinkWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import AlgoThinkWeb.CoreComponents
+      import AlgoThinkWeb.Components
       import AlgoThinkWeb.Gettext
 
       # Shortcut for generating JS commands

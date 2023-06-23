@@ -16,6 +16,9 @@ module.exports = {
       colors: {
         brand: "#FD4F00",
       },
+      boxShadow: {
+        'default': '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
+      },
       keyframes: {
         fadeIn: {
           '0%': { opacity: 0, transform: "scale(0.9)" },

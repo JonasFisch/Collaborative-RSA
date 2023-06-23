@@ -1,4 +1,6 @@
 defmodule AlgoThinkWeb.Router do
+  alias StudyGroupLive
+  alias ClassroomLive
   use AlgoThinkWeb, :router
 
   import AlgoThinkWeb.UserAuth
@@ -73,6 +75,8 @@ defmodule AlgoThinkWeb.Router do
 
       live "/classroom/:id", ClassroomLive.Show, :show
       live "/classroom/:id/show/edit", ClassroomLive.Show, :edit
+
+      live "/classroom/:id/studygroup/:study_group_id", StudyGroupLive.Index, :index
     end
   end
 
