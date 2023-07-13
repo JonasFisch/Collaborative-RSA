@@ -9,6 +9,7 @@ defmodule AlgoThink.StudyGroups.StudyGroup do
     field :max_users, :integer, default: 4
     belongs_to :classroom, AlgoThink.Classrooms.Classroom
     many_to_many :users, AlgoThink.Accounts.User, join_through: "classroom_users"
+    has_many :chat_messages, AlgoThink.ChatMessages.ChatMessage
 
     timestamps()
   end

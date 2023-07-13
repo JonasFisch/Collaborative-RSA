@@ -1,26 +1,56 @@
 defmodule AlgoThinkWeb.StudyGroupLive.Index do
+  alias AlgoThink.ChatMessages
   use AlgoThinkWeb, :live_view
 
-  def mount(_params, _session, socket) do
+  def mount(%{"id" => _classroom_id, "study_group_id" => study_group_id}, _session, socket) do
 
-    # clear text
-    clear_text = "hallo"
+    AlgoThinkWeb.Endpoint.subscribe("study_group_#{study_group_id}")
 
-    # generate keys
-    {:ok, private_key} = ExPublicKey.generate_key(4096)
-    {:ok, public_key} = ExPublicKey.public_key_from_private_key(private_key)
+    # # clear text
+    # clear_text = "hallo"
 
-    # encrypt keys
-    {:ok, cipher_text} = ExPublicKey.encrypt_public(clear_text, public_key)
+    # # generate keys
+    # {:ok, private_key} = ExPublicKey.generate_key(4096)
+    # {:ok, public_key} = ExPublicKey.public_key_from_private_key(private_key)
 
-    IO.inspect("cipher text: #{cipher_text}")
+    # # encrypt keys
+    # {:ok, cipher_text} = ExPublicKey.encrypt_public(clear_text, public_key)
+    # IO.inspect("cipher text: #{cipher_text}")
 
-    {:ok, decrypted_text} = ExPublicKey.decrypt_private(cipher_text, private_key)
+    # # sign encrypted
+    # {:ok, signature} = ExPublicKey.sign(clear_text, private_key)
 
-    IO.inspect("decrypted text: #{decrypted_text}")
+    # # decrypt
+    # {:ok, decrypted_text} = ExPublicKey.decrypt_private(cipher_text, private_key)
+    # IO.inspect("decrypted text: #{decrypted_text}")
 
-    {:ok, socket}
+    # # verify
+    # {:ok, valid} = ExPublicKey.verify(decrypted_text, signature, public_key)
+    # IO.inspect("valid: #{valid}")
+    send(self(), "load_messages")
+
+    {:ok, socket |> assign(chat_messages: [], study_group_id: study_group_id)}
   end
+
+  def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do
+    {:noreply, socket |> assign(chat_messages: socket.assigns.chat_messages ++ [new_message])}
+  end
+
+  def handle_event("send_message", params, socket) do
+    with {:ok, new_message} <- ChatMessages.create_chat_message(%{text: params["text"], author_id: socket.assigns.current_user.id, study_group_id: socket.assigns.study_group_id}) do
+      {:noreply, socket
+        |> assign(chat_messages: socket.assigns.chat_messages ++ [new_message])
+      }
+    else
+      {:error, _changeset} -> {:noreply, socket}
+    end
+  end
+
+  def handle_info("load_messages", socket) do
+    chat_messages = ChatMessages.list_chat_messages(socket.assigns.study_group_id)
+    {:noreply, socket |> assign(chat_messages: chat_messages)}
+  end
+
 
   # defp apply_action(socket, :index, _params) do
   #   socket

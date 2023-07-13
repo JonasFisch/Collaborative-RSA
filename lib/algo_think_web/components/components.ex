@@ -4,5 +4,6 @@ defmodule AlgoThinkWeb.Components do
 
   ExExport.export(AlgoThinkWeb.Chip)
   ExExport.export(AlgoThinkWeb.Container)
+  ExExport.export(AlgoThinkWeb.Message)
 
 end
