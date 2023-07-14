@@ -3,3 +3,22 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+
+* {
+  scroll-behavior: smooth;
+}
+
+#chat * {
+  overflow-anchor: none;
+}
+
+#chat-anchor {
+  background-color: red;
+  overflow-anchor: auto;
+  height: 1px;
+}
+
+.hidden {
+  display: none;
+}
+

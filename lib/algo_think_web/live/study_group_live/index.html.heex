@@ -12,10 +12,15 @@
   </.container>
 
   <.container>
-    <div class="chat overflow-y-scroll h-96 gap-3 flex flex-col pb-2">
-      <%= for message <- @chat_messages do %>
-        <.message text={message.text} author={message.author.name} self={message.author.id == @current_user.id} time={Time.to_string(Time.add(message.inserted_at, 7200))} />
-      <% end %>
+    <div class="relative">
+      <div id="chat" class="chat overflow-y-scroll h-96 gap-3 flex flex-col pb-2">
+        <%= for message <- @chat_messages do %>
+          <div id={"message-#{message.id}"} phx-mounted={JS.dispatch("algothink:newMessage")}>
+            <.message text={message.text} author={message.author.name} self={message.author.id == @current_user.id} time={Time.to_string(Time.add(message.inserted_at, 7200))} />
+          </div>
+        <% end %>
+        <div id="chat-anchor"></div>
+      </div>
     </div>
 
     <form action="" phx-submit="send_message" class="flex flex-row gap-3 pt-2">
