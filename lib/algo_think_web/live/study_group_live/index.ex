@@ -33,7 +33,11 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   end
 
   def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do
-    {:noreply, socket |> assign(chat_messages: socket.assigns.chat_messages ++ [new_message])}
+    if (topic == "study_group_#{socket.assigns.study_group_id}") do
+      {:noreply, socket |> assign(chat_messages: socket.assigns.chat_messages ++ [new_message])}
+    else
+      {:noreply, socket}
+    end
   end
 
   def handle_event("send_message", params, socket) do
