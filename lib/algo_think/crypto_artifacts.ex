@@ -92,7 +92,6 @@ defmodule AlgoThink.CryptoArtifacts do
   end
 
   def decrypt_message(encrypted_message_id, private_key_id) do
-    IO.inspect(encrypted_message_id)
     crypto_artifact_encrypted_message = get_crypto_artifact!(encrypted_message_id)
     crypto_artifact_private_key = get_crypto_artifact!(private_key_id)
 
@@ -105,10 +104,18 @@ defmodule AlgoThink.CryptoArtifacts do
     else
       raise "given crypo artifacts does not contain encrypted message or private key!"
     end
-
   end
 
-  def sign_message(owner_id, message_id, private_key_id) do
+  def mark_message_as_verified(message_id) do
+    %CryptoArtifact{} = message = get_crypto_artifact!(message_id)
+    if (message.type == :message) do
+      update_crypto_artifact(message, %{signed: true})
+    else
+      raise "given crypo artifact is not a message."
+    end
+  end
+
+  def create_signature(owner_id, message_id, private_key_id) do
     crypto_artifact_message = get_crypto_artifact!(message_id)
     crypto_artifact_private_key = get_crypto_artifact!(private_key_id)
     # validate if key is private key
@@ -133,7 +140,6 @@ defmodule AlgoThink.CryptoArtifacts do
     else
       raise "given crypo artifact does not contain message or private key!"
     end
-
   end
 
   @doc """

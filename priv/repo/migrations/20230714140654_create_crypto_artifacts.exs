@@ -6,6 +6,7 @@ defmodule AlgoThink.Repo.Migrations.CreateCryptoArtifacts do
       add :type, :string
       add :content, :text
       add :encrypted, :boolean, default: false, null: false
+      add :signed, :boolean, default: false, null: false
       add :owner_id, references(:users, on_delete: :nothing)
 
       timestamps()
