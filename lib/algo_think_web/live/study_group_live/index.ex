@@ -33,7 +33,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     # {:ok, public_key} = AlgoThink.CryptoArtifacts.create_public_key(socket.assigns.current_user.id, private_key.id)
 
     # # encryption
-    # {:ok, message} = AlgoThink.CryptoArtifacts.create_message(socket.assigns.current_user.id, "Random Message")
+    {:ok, message} = AlgoThink.CryptoArtifacts.create_message(socket.assigns.current_user.id, "Random Message")
     # {:ok, encrypted_message} = AlgoThink.CryptoArtifacts.encrypt_message(socket.assigns.current_user.id, message.id, public_key.id)
     # {:ok, signature} = AlgoThink.CryptoArtifacts.create_signature(socket.assigns.current_user.id, message.id, private_key.id)
 
@@ -47,7 +47,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     #   AlgoThink.CryptoArtifacts.mark_message_as_verified(decrypted_message.id)
     # end
 
-    {:ok, socket |> assign(chat_messages: [], study_group_id: study_group_id)}
+    {:ok, socket |> assign(chat_messages: [], study_group_id: study_group_id, crypoartifact: message)}
   end
 
   def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do

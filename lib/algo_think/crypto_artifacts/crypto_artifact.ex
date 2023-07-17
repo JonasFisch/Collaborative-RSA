@@ -1,5 +1,4 @@
 defmodule AlgoThink.CryptoArtifacts.CryptoArtifact do
-  alias AlgoThink.CryptoArtifacts
   use Ecto.Schema
   import Ecto.Changeset
 
