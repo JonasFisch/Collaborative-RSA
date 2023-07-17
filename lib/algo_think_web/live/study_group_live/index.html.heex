@@ -1,16 +1,14 @@
 <div class="h-full flex flex-row gap-8 w-full">
   <.container class="w-3/12">
-    Hallo
-  </.container>  
-
-  <.container class="w-5/12">
     <.chip type={:private_key} name="Jonas" />
     <.chip type={:public_key} name="Bob" />
     <.chip type={:encrypted_message} name="Alice" />
     <.chip type={:message} name="Eve" />
     <.chip type={:message} name="Isabelle" signed="true" />
     <.chip type={:signature} name="Isabelle" />
+  </.container>  
 
+  <.container class="w-5/12">
     <div>
       <h3>Buttons</h3>
       <.button>Generate Keys</.button>
@@ -43,24 +41,27 @@
 
   </.container>
 
-  <.container  class="w-4/12">
-    <div class="relative">
-      <div id="chat" class="chat overflow-y-scroll h-96 gap-3 flex flex-col pb-2">
-        <%= for message <- @chat_messages do %>
-          <div id={"message-#{message.id}"} phx-mounted={JS.dispatch("algothink:newMessage")}>
-            <.message text={message.text} author={message.author.name} self={message.author.id == @current_user.id} time={Time.to_string(Time.add(message.inserted_at, 7200))} />
-          </div>
-        <% end %>
-        <div id="chat-anchor"></div>
+  <.container  class="w-4/12 overflow-auto">
+    
+    <div class="relative h-full">
+      <div class="h-full pb-12">
+        <div id="chat" class="chat overflow-y-scroll h-full gap-3 flex flex-col pb-2">
+          <%= for message <- @chat_messages do %>
+            <div id={"message-#{message.id}"} phx-mounted={JS.dispatch("algothink:newMessage")}>
+              <.message text={message.text} author={message.author.name} self={message.author.id == @current_user.id} time={Time.to_string(Time.add(message.inserted_at, 7200))} />
+            </div>
+          <% end %>
+          <div id="chat-anchor"></div>
+        </div>
       </div>
-    </div>
 
-    <form action="" phx-submit="send_message" class="flex flex-row gap-3 pt-2">
-      <input type="text" name="text" id="text" class="rounded-xl bg-gray-300 border-gray-300 placeholder:text-gray-400 placeholder:font-bold" placeholder="Type a message">
-      <button type="submit">
-        <.icon name="hero-arrow-right-circle" class="h-10 w-10 bg-blue-500 hover:bg-blue-400 transition-colors" />
-      </button>
-    </form>
+      <form action="" phx-submit="send_message" class="flex flex-row gap-3 absolute bottom-0 w-full">
+        <input type="text" name="text" id="text" class="w-full rounded-xl bg-gray-300 border-gray-300 placeholder:text-gray-400 placeholder:font-bold" placeholder="Type a message">
+        <button type="submit">
+          <.icon name="hero-arrow-right-circle" class="h-10 w-10 bg-blue-500 hover:bg-blue-400 transition-colors" />
+        </button>
+      </form>
+    </div>
   </.container>
 
   <.container class="fixed -bottom-2 h-1/6 w-2/6 z-50 left-1/2 -translate-x-1/2">
