@@ -12,16 +12,25 @@
     <.chip type={:signature} name="Isabelle" />
 
     <div>
+      <h3>Buttons</h3>
       <.button>Generate Keys</.button>
       <.button loading>Generate Keys</.button>
       <.button disabled>Generate Keys</.button>
     </div>
 
     <div>
+      <h3>Drop Zones</h3>
       <.drop_zone placeholder="Drop Message here" crypto_artifact={@crypoartifact}/>
       <.drop_zone error="this is an error"/>
       <.drop_zone placeholder="drop message here"/>
+
+      <%!-- results --%>
+      <h3>Results</h3>
+      <.drop_zone placeholder="Drop Message here" is_result crypto_artifact={@crypoartifact}/>
+      <.drop_zone placeholder="result" is_result />
+      <.drop_zone placeholder="result" error="this is an error" is_result />
     </div>
+
   </.container>
 
   <.container>
