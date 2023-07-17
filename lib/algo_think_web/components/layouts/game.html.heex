@@ -1,15 +1,15 @@
 <header class="px-4 sm:px-6 lg:px-8">
   <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
-    <div class="flex items-center gap-4">
-      <a href="/">
-        <img src={~p"/images/logo.svg"} width="36" />
-      </a>
-      <p class="bg-brand/5 text-brand rounded-full px-2 font-medium leading-6">
-        v<%= Application.spec(:phoenix, :vsn) %>
-      </p>
-      <p>Task Description goes here</p>
+    <div class="flex items-center gap-4 justify-center w-full">
+      <%!-- Task description --%>
+      <div>
+        <h1 class="font-bold text-lg text-center mb-1">Aufgabe</h1>
+        <p class="text-md text-center max-w-2xl">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati aspernatur possimus odio ratione.
+          <%!-- <%= assigns[:task] || "Task Description goes here" %> --%>
+        </p>
+      </div>
     </div>
-
   </div>
 </header>
 <main class="px-4 py-20 sm:px-6 lg:px-8">
