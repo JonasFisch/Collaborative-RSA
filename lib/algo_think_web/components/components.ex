@@ -7,4 +7,5 @@ defmodule AlgoThinkWeb.Components do
   ExExport.export(AlgoThinkWeb.Message)
   ExExport.export(AlgoThinkWeb.Button)
   ExExport.export(AlgoThinkWeb.DropZone)
+  ExExport.export(AlgoThinkWeb.Accordion)
 end
