@@ -5,7 +5,7 @@ defmodule AlgoThinkWeb.Chip do
   attr :signed, :boolean, default: false, required: false, doc: "chip is signed"
 
   attr :type, :atom,
-    values: [:public_key, :private_key, :encrypted_message, :message],
+    values: [:public_key, :private_key, :encrypted_message, :message, :signature],
     required: true,
     doc: "type defines an appeareance for the chip"
 
@@ -24,6 +24,8 @@ defmodule AlgoThinkWeb.Chip do
             Encrypted Message
           <% :message -> %>
             Message
+          <% :signature -> %>
+            Signature
         <% end %>
       </span>
       <div class={[
@@ -33,6 +35,7 @@ defmodule AlgoThinkWeb.Chip do
           :private_key -> "bg-green-400"
           :encrypted_message -> "bg-red-400"
           :message -> "bg-blue-400"
+          :signature -> "bg-yellow-400"
         end
       ]}>
         <%!-- <%= IO.inspect(@type) %> --%>
@@ -45,6 +48,8 @@ defmodule AlgoThinkWeb.Chip do
             <MaterialIcons.lock style="outlined" class="fill-black" size={25} />
           <% :message -> %>
             <MaterialIcons.mail style="outlined" class="fill-black" size={25} />
+          <% :signature -> %>
+            <MaterialIcons.tag style="outlined" class="fill-black" size={25} />
         <% end %>
         <div
           :if={@signed}
