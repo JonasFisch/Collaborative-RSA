@@ -31,9 +31,12 @@
       <.drop_zone placeholder="result" error="this is an error" is_result />
     </div>
 
-    <div>
+    <div class="flex flex-col gap-4">
       <h3>Accordion</h3>
-      <.accordion header="Encryption">
+      <.accordion header="Encryption" open>
+        <span>Heyy</span>
+      </.accordion>
+      <.accordion header="Decryption">
         <span>Heyy</span>
       </.accordion>
     </div>
