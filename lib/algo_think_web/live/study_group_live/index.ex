@@ -47,7 +47,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     #   AlgoThink.CryptoArtifacts.mark_message_as_verified(decrypted_message.id)
     # end
 
-    {:ok, socket |> assign(chat_messages: [], study_group_id: study_group_id, crypoartifact: message)}
+    {:ok, socket |> assign(chat_messages: [], study_group_id: study_group_id, crypoartifact: message), layout: {AlgoThinkWeb.Layouts, :game}}
   end
 
   def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do

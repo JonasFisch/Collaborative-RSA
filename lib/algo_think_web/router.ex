@@ -58,6 +58,7 @@ defmodule AlgoThinkWeb.Router do
       live "/users/reset_password/:token", UserResetPasswordLive, :edit
     end
 
+
     post "/users/log_in", UserSessionController, :create
   end
 
@@ -75,11 +76,12 @@ defmodule AlgoThinkWeb.Router do
 
       live "/classroom/:id", ClassroomLive.Show, :show
       live "/classroom/:id/show/edit", ClassroomLive.Show, :edit
-
       live "/classroom/:id/studygroup/:study_group_id", StudyGroupLive.Index, :index
     end
   end
 
+
+  # user session and token handling
   scope "/", AlgoThinkWeb do
     pipe_through [:browser]
 
