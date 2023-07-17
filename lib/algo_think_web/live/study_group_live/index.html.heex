@@ -42,12 +42,11 @@
   </.container>
 
   <.container  class="w-4/12 overflow-auto">
-    
     <div class="relative h-full">
       <div class="h-full pb-12">
         <div id="chat" class="chat overflow-y-scroll h-full gap-3 flex flex-col pb-2">
           <%= for message <- @chat_messages do %>
-            <div id={"message-#{message.id}"} phx-mounted={JS.dispatch("algothink:newMessage")}>
+            <div id={"message-#{message.id}"} phx-mounted={JS.dispatch("algothink:newMessage")} class="flex flex-col">
               <.message text={message.text} author={message.author.name} self={message.author.id == @current_user.id} time={Time.to_string(Time.add(message.inserted_at, 7200))} />
             </div>
           <% end %>

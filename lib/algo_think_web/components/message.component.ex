@@ -8,8 +8,8 @@ defmodule AlgoThinkWeb.Message do
   def message(assigns) do
     ~H"""
     <div class={[
-      "rounded-md py-1 px-2 flex flex-col border-2",
-      if @self do "bg-blue-500 border-blue-500" else "bg-white" end
+      "rounded-md py-1 px-2 flex flex-col border-2 w-fit",
+      if @self do "bg-blue-500 border-blue-500 self-end" else "bg-white self-start" end
     ]}>
       <%= if not @self do %>
         <span class="font-bold">
