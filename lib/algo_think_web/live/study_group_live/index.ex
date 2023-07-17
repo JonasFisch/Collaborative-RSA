@@ -6,10 +6,9 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
     AlgoThinkWeb.Endpoint.subscribe("study_group_#{study_group_id}")
 
-    # clear text
     # clear_text = "hallo"
 
-    # generate keys
+    # # generate keys
     # {:ok, private_key} = ExPublicKey.generate_key(4096)
     # {:ok, public_key} = ExPublicKey.public_key_from_private_key(private_key)
 
@@ -19,7 +18,6 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
     # # sign encrypted
     # {:ok, signature} = ExPublicKey.sign(clear_text, private_key)
-    # IO.inspect()
 
     # # decrypt
     # {:ok, decrypted_text} = ExPublicKey.decrypt_private(cipher_text, private_key)
@@ -30,16 +28,19 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     # IO.inspect("valid: #{valid}")
     send(self(), "load_messages")
 
+    # key creation
     {:ok, private_key} = AlgoThink.CryptoArtifacts.create_private_key(socket.assigns.current_user.id)
     {:ok, public_key} = AlgoThink.CryptoArtifacts.create_public_key(socket.assigns.current_user.id, private_key.id)
 
+    # encryption
     {:ok, message} = AlgoThink.CryptoArtifacts.create_message(socket.assigns.current_user.id, "Random Message")
     {:ok, encrypted_message} = AlgoThink.CryptoArtifacts.encrypt_message(socket.assigns.current_user.id, message.id, public_key.id)
-
     {:ok, signature} = AlgoThink.CryptoArtifacts.sign_message(socket.assigns.current_user.id, message.id, private_key.id)
 
-    # TODO: implement decrypt
-    # TODO: implement verify
+    # decryption and validation
+    {:ok, decrypted_message} = AlgoThink.CryptoArtifacts.decrypt_message(encrypted_message.id, private_key.id)
+    {:ok, valid} = AlgoThink.CryptoArtifacts.verify_message(decrypted_message.id, signature.id, public_key.id)
+    IO.inspect(valid)
 
     {:ok, socket |> assign(chat_messages: [], study_group_id: study_group_id)}
   end

@@ -91,6 +91,23 @@ defmodule AlgoThink.CryptoArtifacts do
     end
   end
 
+  def decrypt_message(encrypted_message_id, private_key_id) do
+    IO.inspect(encrypted_message_id)
+    crypto_artifact_encrypted_message = get_crypto_artifact!(encrypted_message_id)
+    crypto_artifact_private_key = get_crypto_artifact!(private_key_id)
+
+    if (crypto_artifact_encrypted_message.type == :message && crypto_artifact_encrypted_message.encrypted && crypto_artifact_private_key.type == :private_key) do
+      {:ok, private_key} = ExPublicKey.loads(crypto_artifact_private_key.content)
+
+      # decrypt and save to db
+      {:ok, decrypted_message} = ExPublicKey.decrypt_private(crypto_artifact_encrypted_message.content, private_key)
+      create_message(crypto_artifact_encrypted_message.owner_id, decrypted_message)
+    else
+      raise "given crypo artifacts does not contain encrypted message or private key!"
+    end
+
+  end
+
   def sign_message(owner_id, message_id, private_key_id) do
     crypto_artifact_message = get_crypto_artifact!(message_id)
     crypto_artifact_private_key = get_crypto_artifact!(private_key_id)
@@ -102,6 +119,21 @@ defmodule AlgoThink.CryptoArtifacts do
     else
       raise "given crypo artifact does not contain message or private key!"
     end
+  end
+
+  def verify_message(message_id, signature_id, public_key_id) do
+    crypto_artifact_message = get_crypto_artifact!(message_id)
+    crypto_artifact_signature = get_crypto_artifact!(signature_id)
+    crypto_artifact_public_key = get_crypto_artifact!(public_key_id)
+
+    if (crypto_artifact_message.type == :message && crypto_artifact_signature.type == :signature && crypto_artifact_public_key.type == :public_key) do
+      {:ok, public_key} = ExPublicKey.loads(crypto_artifact_public_key.content)
+      {:ok, signature_decoded} = Base.decode64(crypto_artifact_signature.content)
+      ExPublicKey.verify(crypto_artifact_message.content, signature_decoded, public_key)
+    else
+      raise "given crypo artifact does not contain message or private key!"
+    end
+
   end
 
   @doc """
