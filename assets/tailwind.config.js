@@ -17,7 +17,7 @@ module.exports = {
         brand: "#FD4F00",
       },
       boxShadow: {
-        'default': '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
+        'default': '0 20px 30px -10px rgba(0, 0, 0, 0.3)',
       },
       keyframes: {
         fadeIn: {
@@ -27,6 +27,12 @@ module.exports = {
       },
       animation: {
         'fade-in': "fadeIn 0.3s ease-in-out"
+      },
+      spacing: {
+        "128": "32rem"
+      },
+      maxHeight: {
+        "128": "38rem"
       }
     },
   },
