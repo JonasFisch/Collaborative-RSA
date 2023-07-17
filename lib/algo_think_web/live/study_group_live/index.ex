@@ -29,23 +29,23 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     send(self(), "load_messages")
 
     # key creation
-    {:ok, private_key} = AlgoThink.CryptoArtifacts.create_private_key(socket.assigns.current_user.id)
-    {:ok, public_key} = AlgoThink.CryptoArtifacts.create_public_key(socket.assigns.current_user.id, private_key.id)
+    # {:ok, private_key} = AlgoThink.CryptoArtifacts.create_private_key(socket.assigns.current_user.id)
+    # {:ok, public_key} = AlgoThink.CryptoArtifacts.create_public_key(socket.assigns.current_user.id, private_key.id)
 
-    # encryption
-    {:ok, message} = AlgoThink.CryptoArtifacts.create_message(socket.assigns.current_user.id, "Random Message")
-    {:ok, encrypted_message} = AlgoThink.CryptoArtifacts.encrypt_message(socket.assigns.current_user.id, message.id, public_key.id)
-    {:ok, signature} = AlgoThink.CryptoArtifacts.create_signature(socket.assigns.current_user.id, message.id, private_key.id)
+    # # encryption
+    # {:ok, message} = AlgoThink.CryptoArtifacts.create_message(socket.assigns.current_user.id, "Random Message")
+    # {:ok, encrypted_message} = AlgoThink.CryptoArtifacts.encrypt_message(socket.assigns.current_user.id, message.id, public_key.id)
+    # {:ok, signature} = AlgoThink.CryptoArtifacts.create_signature(socket.assigns.current_user.id, message.id, private_key.id)
 
-    # decryption and validation
-    {:ok, decrypted_message} = AlgoThink.CryptoArtifacts.decrypt_message(encrypted_message.id, private_key.id)
-    {:ok, valid} = AlgoThink.CryptoArtifacts.verify_message(decrypted_message.id, signature.id, public_key.id)
-    IO.inspect(valid)
+    # # decryption and validation
+    # {:ok, decrypted_message} = AlgoThink.CryptoArtifacts.decrypt_message(encrypted_message.id, private_key.id)
+    # {:ok, valid} = AlgoThink.CryptoArtifacts.verify_message(decrypted_message.id, signature.id, public_key.id)
+    # IO.inspect(valid)
 
-    # mark decrypted as verified
-    if (valid) do
-      AlgoThink.CryptoArtifacts.mark_message_as_verified(decrypted_message.id)
-    end
+    # # mark decrypted as verified
+    # if (valid) do
+    #   AlgoThink.CryptoArtifacts.mark_message_as_verified(decrypted_message.id)
+    # end
 
     {:ok, socket |> assign(chat_messages: [], study_group_id: study_group_id)}
   end
