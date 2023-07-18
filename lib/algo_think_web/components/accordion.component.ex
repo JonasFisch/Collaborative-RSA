@@ -7,7 +7,7 @@ defmodule AlgoThinkWeb.Accordion do
   slot :inner_block, required: false
   def accordion(assigns) do
     ~H"""
-    <details class="w-full bg-gray-100 rounded-md p-3 group" open={@open}>
+    <details class="bg-gray-100 rounded-md p-3 group m-6" open={@open}>
       <summary class="list-none cursor-pointer">
         <div class="flex justify-between items-center">
           <span class="font-medium text-xl"><%= @header %></span>

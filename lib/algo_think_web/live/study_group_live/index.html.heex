@@ -9,7 +9,7 @@
   </.container>  
 
   <.container class="w-5/12">
-    <div>
+    <%!-- <div>
       <h3>Buttons</h3>
       <.button>Generate Keys</.button>
       <.button loading>Generate Keys</.button>
@@ -20,23 +20,29 @@
       <h3>Drop Zones</h3>
       <.drop_zone placeholder="Drop Message here" crypto_artifact={@crypoartifact}/>
       <.drop_zone error="this is an error"/>
-      <.drop_zone placeholder="drop message here"/>
+      <.drop_zone placeholder="drop message here"/> --%>
 
       <%!-- results --%>
-      <h3>Results</h3>
+      <%!-- <h3>Results</h3>
       <.drop_zone placeholder="Drop Message here" is_result crypto_artifact={@crypoartifact}/>
       <.drop_zone placeholder="result" is_result />
       <.drop_zone placeholder="result" error="this is an error" is_result />
-    </div>
+    </div> --%>
 
     <div class="flex flex-col gap-4">
-      <h3>Accordion</h3>
-      <.accordion header="Encryption" open>
+      <h3>Accordions</h3>
+      <%!-- <.accordion header="Encryption" open>
         <span>Heyy</span>
       </.accordion>
       <.accordion header="Decryption">
         <span>Heyy</span>
-      </.accordion>
+      </.accordion> --%>
+
+      <.live_component
+        id={"encryption"}
+        module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
+      />
+
     </div>
 
   </.container>
