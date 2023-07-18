@@ -8,6 +8,7 @@ defmodule AlgoThink.CryptoArtifacts.CryptoArtifact do
     field :signed, :boolean, default: false
     field :type, Ecto.Enum, values: [:private_key, :public_key, :signature, :message]
     belongs_to :owner, AlgoThink.Accounts.User
+    has_many :crypto_artifact_user, AlgoThink.ChipStorage.CryptoArtifactUser
 
     timestamps()
   end

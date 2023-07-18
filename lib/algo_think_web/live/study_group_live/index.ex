@@ -1,4 +1,5 @@
 defmodule AlgoThinkWeb.StudyGroupLive.Index do
+  alias AlgoThink.ChipStorage
   alias AlgoThink.ChatMessages
   use AlgoThinkWeb, :live_view
 
@@ -47,7 +48,12 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     #   AlgoThink.CryptoArtifacts.mark_message_as_verified(decrypted_message.id)
     # end
 
-    {:ok, socket |> assign(chat_messages: [], study_group_id: study_group_id, crypoartifact: message), layout: {AlgoThinkWeb.Layouts, :game}}
+    # ChipStorage.create_crypto_artifact_user(%{user_id: socket.assigns.current_user.id, study_group_id: study_group_id, crypto_artifact_id: message.id })
+
+    users_crypo_artifacts = ChipStorage.list_cryptoartifact_for_user(socket.assigns.current_user.id, study_group_id)
+    IO.inspect(users_crypo_artifacts)
+
+    {:ok, socket |> assign(crypo_artifacts: users_crypo_artifacts, chat_messages: [], study_group_id: study_group_id, crypoartifact: message), layout: {AlgoThinkWeb.Layouts, :game}}
   end
 
   def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do
@@ -71,6 +77,11 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   def handle_info("load_messages", socket) do
     chat_messages = ChatMessages.list_chat_messages(socket.assigns.study_group_id)
     {:noreply, socket |> assign(chat_messages: chat_messages)}
+  end
+
+  def handle_info("load_users_chips", socket) do
+    # Context: ChipStorage
+    # Table Name: cryptoartifact_user
   end
 
 

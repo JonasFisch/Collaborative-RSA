@@ -11,7 +11,7 @@ defmodule AlgoThinkWeb.Chip do
 
   def chip(assigns) do
     ~H"""
-    <div class="bg-white border border-slate-200 flex flex-row items-center w-80 p-2 justify-between">
+    <div class="bg-white border border-slate-200 flex flex-row items-center w-full p-3 justify-between">
       <MaterialIcons.drag_indicator class="fill-gray-300 mr-2" size={32} />
       <span class="font-bold text-left w-1/3"><%= @name %></span>
       <span class="text-gray-500 w-1/3 text-sm text-left">
