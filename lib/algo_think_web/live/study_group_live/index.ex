@@ -51,7 +51,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     # ChipStorage.create_crypto_artifact_user(%{user_id: socket.assigns.current_user.id, study_group_id: study_group_id, crypto_artifact_id: message.id })
 
     users_crypo_artifacts = ChipStorage.list_cryptoartifact_for_user(socket.assigns.current_user.id, study_group_id)
-    IO.inspect(users_crypo_artifacts)
+    # IO.inspect(users_crypo_artifacts)
 
     {:ok, socket |> assign(crypo_artifacts: users_crypo_artifacts, chat_messages: [], study_group_id: study_group_id, crypoartifact: message), layout: {AlgoThinkWeb.Layouts, :game}}
   end

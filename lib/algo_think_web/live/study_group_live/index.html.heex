@@ -1,7 +1,7 @@
 <div class="h-full flex flex-row gap-8 w-full">
   <.container class="w-3/12 p-7">
     <%= for crypo_artifact <- @crypo_artifacts do %>
-      <.chip type={crypo_artifact.type} name={crypo_artifact.owner.name} />
+      <.chip type={crypo_artifact.type} name={crypo_artifact.owner.name} signed={crypo_artifact.signed} />
     <% end %>
     <%!-- <div class="font-medium mt-3 mb-1">Keys</div> --%>
     <%!-- <.chip type={:private_key} name="Jonas" />
@@ -59,7 +59,7 @@
         <div id="chat" class="chat overflow-y-scroll h-full gap-3 flex flex-col pb-2">
           <%= for message <- @chat_messages do %>
             <div id={"message-#{message.id}"} phx-mounted={JS.dispatch("algothink:newMessage")} class="flex flex-col">
-              <.message text={message.text} author={message.author.name} self={message.author.id == @current_user.id} time={Time.to_string(Time.add(message.inserted_at, 7200))} />
+              <.message attachement={AlgoThink.CryptoArtifacts.get_crypto_artifact!(1)} text={message.text} author={message.author.name} self={message.author.id == @current_user.id} time={Time.to_string(Time.add(message.inserted_at, 7200))} />
             </div>
           <% end %>
           <div id="chat-anchor"></div>

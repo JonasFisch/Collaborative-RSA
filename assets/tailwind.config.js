@@ -33,6 +33,9 @@ module.exports = {
       },
       maxHeight: {
         "128": "38rem"
+      },
+      minWidth: {
+        "chip": "20rem"
       }
     },
   },
