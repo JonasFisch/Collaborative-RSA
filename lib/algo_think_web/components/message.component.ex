@@ -5,7 +5,7 @@ defmodule AlgoThinkWeb.Message do
   attr :text, :string, required: false, doc: "Text of the message."
   attr :author, :string, required: true, doc: "Author of the message."
   attr :time, :string, required: false, doc: "Time the message was send."
-  attr :attachement, CryptoArtifacts.CryptoArtifact, required: false, default: nil, doc: "An attached Crypto Artefact"
+  attr :attachment, CryptoArtifacts.CryptoArtifact, required: false, default: nil, doc: "An attached Crypto Artefact"
   attr :self, :boolean, default: false, doc: "changes color and position of message indicates who is author."
   def message(assigns) do
     ~H"""
@@ -18,9 +18,9 @@ defmodule AlgoThinkWeb.Message do
           <%= @author %>
         </span>
       <% end %>
-      <%= if @attachement != nil do %>
+      <%= if @attachment != nil do %>
         <div class="mb-2">
-          <AlgoThinkWeb.Chip.chip type={@attachement.type} name={"test"} signed={@attachement.signed} />
+          <AlgoThinkWeb.Chip.chip type={@attachment.type} name={"test"} signed={@attachment.signed} />
         </div>
       <% end %>
       <span class={[

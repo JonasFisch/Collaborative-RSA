@@ -24,7 +24,7 @@ defmodule AlgoThink.ChatMessages do
     study_group = Repo.get(StudyGroup, study_group_id)
       |> Repo.preload(:chat_messages)
 
-    study_group.chat_messages |> Repo.preload(:author)
+    study_group.chat_messages |> Repo.preload(:author) |> Repo.preload(:attachment)
   end
 
   @doc """
