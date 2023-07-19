@@ -34,7 +34,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     # {:ok, public_key} = AlgoThink.CryptoArtifacts.create_public_key(socket.assigns.current_user.id, private_key.id)
 
     # # encryption
-    {:ok, message} = AlgoThink.CryptoArtifacts.create_message(socket.assigns.current_user.id, "Random Message")
+    # {:ok, message} = AlgoThink.CryptoArtifacts.create_message(socket.assigns.current_user.id, "Random Message")
     # {:ok, encrypted_message} = AlgoThink.CryptoArtifacts.encrypt_message(socket.assigns.current_user.id, message.id, public_key.id)
     # {:ok, signature} = AlgoThink.CryptoArtifacts.create_signature(socket.assigns.current_user.id, message.id, private_key.id)
 
@@ -50,10 +50,12 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
     # ChipStorage.create_crypto_artifact_user(%{user_id: socket.assigns.current_user.id, study_group_id: study_group_id, crypto_artifact_id: message.id })
 
-    users_crypo_artifacts = ChipStorage.list_cryptoartifact_for_user(socket.assigns.current_user.id, study_group_id)
+    # users_crypo_artifacts = ChipStorage.list_cryptoartifact_for_user(socket.assigns.current_user.id, study_group_id)
+    send(self(), "load_users_chips")
+
     # IO.inspect(users_crypo_artifacts)
 
-    {:ok, socket |> assign(crypo_artifacts: users_crypo_artifacts, chat_messages: [], study_group_id: study_group_id, crypoartifact: message), layout: {AlgoThinkWeb.Layouts, :game}}
+    {:ok, socket |> assign(crypo_artifacts: [], chat_messages: [], study_group_id: study_group_id), layout: {AlgoThinkWeb.Layouts, :game}}
   end
 
   def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do
@@ -80,14 +82,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   end
 
   def handle_info("load_users_chips", socket) do
-    # Context: ChipStorage
-    # Table Name: cryptoartifact_user
+    users_crypo_artifacts = ChipStorage.list_cryptoartifact_for_user(socket.assigns.current_user.id, socket.assigns.study_group_id)
+    {:noreply, socket |> assign(crypo_artifacts: users_crypo_artifacts)}
   end
-
-
-  # defp apply_action(socket, :index, _params) do
-  #   socket
-  #   |> assign(:page_title, "Listing Classroom")
-  #   |> assign(:classroom, nil)
-  # end
 end

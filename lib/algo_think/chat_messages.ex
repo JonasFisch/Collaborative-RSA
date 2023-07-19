@@ -57,7 +57,7 @@ defmodule AlgoThink.ChatMessages do
       |> ChatMessage.changeset(attrs)
       |> Repo.insert()
 
-    chat_message = chat_message |> Repo.preload(:author)
+    chat_message = chat_message |> Repo.preload(:author) |> Repo.preload(:attachment)
     notify_subscribers({:ok, chat_message}, "new_message", attrs[:study_group_id])
 
     {:ok, chat_message}

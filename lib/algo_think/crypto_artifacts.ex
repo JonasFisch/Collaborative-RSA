@@ -74,6 +74,12 @@ defmodule AlgoThink.CryptoArtifacts do
     end
   end
 
+  def generate_public_private_key_pair(owner_id) do
+    {:ok, private_key} = AlgoThink.CryptoArtifacts.create_private_key(owner_id)
+    {:ok, public_key} = AlgoThink.CryptoArtifacts.create_public_key(owner_id, private_key.id)
+    {:ok, %{private_key: private_key, public_key: public_key}}
+  end
+
   def create_message(owner_id, message) do
     create_crypto_artifact(%{content: message, type: :message, owner_id: owner_id})
   end

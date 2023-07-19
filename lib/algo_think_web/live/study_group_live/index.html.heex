@@ -45,6 +45,13 @@
       </.accordion> --%>
 
       <.live_component
+        id={"key_generation"}
+        module={AlgoThinkWeb.StudyGroupLive.KeyGeneration}
+        current_user={@current_user}
+        study_group_id={@study_group_id}
+      />
+
+      <.live_component
         id={"encryption"}
         module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
       />

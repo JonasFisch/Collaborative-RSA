@@ -36,6 +36,9 @@ module.exports = {
       },
       minWidth: {
         "chip": "20rem"
+      },
+      height: {
+        "chip": "62px",
       }
     },
   },

@@ -5,7 +5,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
   def render(assigns) do
     ~H"""
     <div>
-      <.accordion header="Encryption" open>
+      <.accordion header="Encryption">
         <div class="flex flex-col gap-4">
           <%= for slot <- @data do %>
             <div class="flex flex-row justify-between items-center gap-4">
