@@ -27,7 +27,7 @@ defmodule AlgoThinkWeb.DropZone do
     ]}>
       <%= if @crypto_artifact != nil do %>
         <div {@rest} class="w-full p-1" phx-value-crypto-artifact-id={@crypto_artifact.id} phx-value-crypto-artifact-type={@crypto_artifact.type}>
-          <AlgoThinkWeb.Chip.chip name={@crypto_artifact.owner_id} type={@crypto_artifact.type}/>
+          <AlgoThinkWeb.Chip.chip name={@crypto_artifact.owner.name} type={@crypto_artifact.type}/>
         </div>
       <% else %>
         <div class="w-full p-1 relative">

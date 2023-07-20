@@ -50,9 +50,12 @@ defmodule AlgoThink.CryptoArtifacts do
 
   """
   def create_crypto_artifact(attrs \\ %{}) do
-    %CryptoArtifact{}
+    {:ok, crypto_artifact} = %CryptoArtifact{}
     |> CryptoArtifact.changeset(attrs)
     |> Repo.insert()
+
+    {:ok, Repo.preload(crypto_artifact, :owner)
+  }
   end
 
   def create_private_key(owner_id) do
