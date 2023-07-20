@@ -55,7 +55,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
     # IO.inspect(users_crypo_artifacts)
 
-    {:ok, socket |> assign(crypo_artifacts: [], chat_messages: [], study_group_id: study_group_id), layout: {AlgoThinkWeb.Layouts, :game}}
+    {:ok, socket |> assign(crypto_artifacts: [], chat_messages: [], study_group_id: study_group_id), layout: {AlgoThinkWeb.Layouts, :game}}
   end
 
   def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do
@@ -64,6 +64,13 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     else
       {:noreply, socket}
     end
+  end
+
+  def handle_event("dropped", params, socket) do
+    IO.inspect(params)
+    IO.inspect("in dropped")
+
+    {:noreply, socket}
   end
 
   def handle_event("send_message", params, socket) do
@@ -83,6 +90,6 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
   def handle_info("load_users_chips", socket) do
     users_crypo_artifacts = ChipStorage.list_cryptoartifact_for_user(socket.assigns.current_user.id, socket.assigns.study_group_id)
-    {:noreply, socket |> assign(crypo_artifacts: users_crypo_artifacts)}
+    {:noreply, socket |> assign(crypto_artifacts: users_crypo_artifacts)}
   end
 end

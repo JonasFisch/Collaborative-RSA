@@ -1,6 +1,7 @@
 defmodule AlgoThinkWeb.Button do
   use Phoenix.Component
 
+  @spec button(map) :: Phoenix.LiveView.Rendered.t()
   @doc """
   Renders a button.
 

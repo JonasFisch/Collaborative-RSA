@@ -17,9 +17,9 @@ defmodule AlgoThinkWeb.DropZone do
   def drop_zone(assigns) do
     ~H"""
     <div class={[
-      "rounded-md border-2 border-dashed border-gray-300 flex flex-row justify-center w-full items-center",
+      "rounded-md border-2 border-dashed border-gray-300 flex flex-row justify-center w-full items-center transition-colors",
       if @crypto_artifact != nil do "cursor-pointer" end,
-      if @is_result do "border-gray-300 bg-gray-300" end,
+      if @is_result do "border-gray-300 bg-gray-300" else "drop-zone" end,
       if @error != nil do
         if @is_result do "border-red-400 bg-red-400" else "border-red-400" end
       end,
@@ -27,11 +27,11 @@ defmodule AlgoThinkWeb.DropZone do
     ]}>
       <%= if @crypto_artifact != nil do %>
         <div {@rest} class="w-full p-1" phx-value-crypto-artifact-id={@crypto_artifact.id} phx-value-crypto-artifact-type={@crypto_artifact.type}>
-          <AlgoThinkWeb.Chip.chip name={@crypto_artifact.owner.name} type={@crypto_artifact.type}/>
+          <AlgoThinkWeb.Chip.chip id={@crypto_artifact.id} name={@crypto_artifact.owner.name} type={@crypto_artifact.type} />
         </div>
       <% else %>
         <div class="w-full p-1 relative">
-          <AlgoThinkWeb.Chip.chip name={"nil"} type={:message} class="invisible" />
+          <AlgoThinkWeb.Chip.chip id={nil} name={"nil"} type={:message} class="invisible" />
           <span class={[
             "text-gray-400 font-medium absolute bottom-0 left-0 flex flex-row justify-center items-center w-full h-full",
             if @error != nil do
@@ -42,7 +42,6 @@ defmodule AlgoThinkWeb.DropZone do
           </span>
         </div>
       <% end %>
-
     </div>
     """
   end

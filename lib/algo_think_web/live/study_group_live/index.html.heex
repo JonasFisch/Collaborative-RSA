@@ -1,7 +1,7 @@
-<div class="h-full flex flex-row gap-8 w-full">
-  <.container class="w-3/12 p-7">
-    <%= for crypo_artifact <- @crypo_artifacts do %>
-      <.chip type={crypo_artifact.type} name={crypo_artifact.owner.name} signed={crypo_artifact.signed} />
+<div class="h-full flex flex-row gap-8 w-full" phx-hook="drag" id="drag">
+  <.container class="w-3/12 p-7 drop-zone">
+    <%= for crypto_artifact <- @crypto_artifacts do %>
+      <.chip id={crypto_artifact.id} type={crypto_artifact.type} name={crypto_artifact.owner.name} signed={crypto_artifact.signed} />
     <% end %>
     <%!-- <div class="font-medium mt-3 mb-1">Keys</div> --%>
     <%!-- <.chip type={:private_key} name="Jonas" />
@@ -51,9 +51,11 @@
         study_group_id={@study_group_id}
       />
 
+      <%!-- <.crypto_module name="Encryption" id="encryption-module" /> --%>
       <.live_component
         id={"encryption"}
-        module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
+        module={AlgoThinkWeb.StudyGroupLive.EncryptionModule}
+        crypto_artifacts={@crypto_artifacts}
       />
 
     </div>
