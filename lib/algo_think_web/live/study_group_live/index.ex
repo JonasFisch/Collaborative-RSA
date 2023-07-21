@@ -64,7 +64,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
     # IO.inspect(users_crypo_artifacts)
 
-    {:ok, socket |> assign(storage_artifacts: [], encryption_module_artifacts: [], chat_messages: [], study_group_id: study_group_id), layout: {AlgoThinkWeb.Layouts, :game}}
+    {:ok, socket |> assign(crypto_artifacts: [],storage_artifacts: [], encryption_module_artifacts: [], chat_messages: [], study_group_id: study_group_id), layout: {AlgoThinkWeb.Layouts, :game}}
   end
 
   def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do
@@ -91,17 +91,14 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   end
 
   def handle_info(%{topic: "update_chip_location", dragged_id: dragged_id, drop_zone_id: drop_zone_id, location: location}, socket) do
-    artifacts = (socket.assigns.storage_artifacts ++ socket.assigns.encryption_module_artifacts)
+    artifacts = (socket.assigns.crypto_artifacts)
     |> Enum.map(fn artifact ->
       if artifact.id == dragged_id do
-        artifact
-        |> Map.put(:location, location)
-        |> Map.put(:location_id, drop_zone_id)
+        %{artifact | location_id: drop_zone_id, location: location}
       else
         # remove chip that is already in drop box
         if (artifact.location_id == drop_zone_id) do
-          artifact |> Map.put(:location_id, "storage")
-          artifact |> Map.put(:location, "storage")
+          %{artifact | location_id: "storage", location: "storage"}
         else
           artifact
         end
@@ -109,14 +106,27 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     end)
 
     {:noreply, socket |> assign(
-      storage_artifacts: Enum.filter(artifacts, fn artifact -> artifact.location == "storage" end),
-      encryption_module_artifacts: Enum.filter(artifacts, fn artifact -> artifact.location == "encryption" end)
+      crypto_artifacts: artifacts,
     )}
+  end
+
+  # def handle_info(%{topic: "check_crypto_module"}, socket) do
+  #   socket.assigns.crypto_artifact
+  # end
+
+  def handle_info(%{topic: "add_new_chip", crypto_artifact: crypto_artifact, location: location, drop_zone_id: drop_zone_id}, socket) do
+    IO.inspect("in add new chip")
+
+    crypto_artifact = crypto_artifact
+    |> Map.put(:location, location)
+    |> Map.put(:location_id, drop_zone_id)
+
+    {:noreply, socket |> assign(crypto_artifacts: socket.assigns.crypto_artifacts ++ [crypto_artifact])}
   end
 
   def handle_info("load_users_chips", socket) do
     users_crypo_artifacts = ChipStorage.list_cryptoartifact_for_user(socket.assigns.current_user.id, socket.assigns.study_group_id)
     users_crypo_artifacts = users_crypo_artifacts |> Enum.map(fn artifact -> artifact |> Map.put(:location, "storage") |> Map.put(:location_id, nil) end)
-    {:noreply, socket |> assign(storage_artifacts: users_crypo_artifacts)}
+    {:noreply, socket |> assign(storage_artifacts: users_crypo_artifacts, crypto_artifacts: users_crypo_artifacts)}
   end
 end

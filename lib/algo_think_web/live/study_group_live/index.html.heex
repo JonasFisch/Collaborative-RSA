@@ -1,72 +1,34 @@
 <div class="h-full flex flex-row gap-8 w-full">
   <.container class="w-3/12 p-7 ">
     <.live_component
-        id={"storage"}
-        module={AlgoThinkWeb.StudyGroupLive.StorageModule}
-        storage_artifacts={@storage_artifacts}
-      />
-    <%!-- <div class="font-medium mt-3 mb-1">Keys</div> --%>
-    <%!-- <.chip type={:private_key} name="Jonas" />
-    <.chip type={:public_key} name="Bob" /> --%>
-    <%!-- <div class="font-medium mt-3 mb-1">Messages</div> --%>
-    <%!-- <.chip type={:encrypted_message} name="Alice" />
-    <.chip type={:message} name="Eve" />
-    <.chip type={:message} name="Isabelle" signed="true" /> --%>
-    <%!-- <div class="font-medium mt-3 mb-1">Signatures</div> --%>
-    <%!-- <.chip type={:signature} name="Isabelle" /> --%>
+      id={"storage"}
+      module={AlgoThinkWeb.StudyGroupLive.StorageModule}
+      storage_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "storage" end)}
+    />
   </.container>  
 
   <.container class="w-5/12">
-    <%!-- <div>
-      <h3>Buttons</h3>
-      <.button>Generate Keys</.button>
-      <.button loading>Generate Keys</.button>
-      <.button disabled>Generate Keys</.button>
-    </div>
-
-    <div>
-      <h3>Drop Zones</h3>
-      <.drop_zone placeholder="Drop Message here" crypto_artifact={@crypoartifact}/>
-      <.drop_zone error="this is an error"/>
-      <.drop_zone placeholder="drop message here"/> --%>
-
-      <%!-- results --%>
-      <%!-- <h3>Results</h3>
-      <.drop_zone placeholder="Drop Message here" is_result crypto_artifact={@crypoartifact}/>
-      <.drop_zone placeholder="result" is_result />
-      <.drop_zone placeholder="result" error="this is an error" is_result />
-    </div> --%>
-
     <div class="flex flex-col gap-4">
-      <h3>Accordions</h3>
-      <%!-- <.accordion header="Encryption" open>
-        <span>Heyy</span>
-      </.accordion>
-      <.accordion header="Decryption">
-        <span>Heyy</span>
-      </.accordion> --%>
-
-     
-
-      <%!-- <.crypto_module name="Encryption" id="encryption-module" /> --%>
       <.live_component
         id={"encryption"}
         module={AlgoThinkWeb.StudyGroupLive.EncryptionModule}
-        crypto_artifacts={@encryption_module_artifacts}
+        crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "encryption" end)}
+        current_user={@current_user}
+        study_group_id={@study_group_id}
+        name="Encryption"
+        type="encryption"
+        action="Encrypt"
       />
-
-       <.live_component
+      <.live_component
         id={"key_generation"}
         module={AlgoThinkWeb.StudyGroupLive.KeyGeneration}
         current_user={@current_user}
         study_group_id={@study_group_id}
       />
-
     </div>
-
   </.container>
 
-  <.container  class="w-4/12 overflow-auto">
+  <.container class="w-4/12 overflow-auto">
     <div class="relative h-full">
       <div class="h-full pb-12">
         <div id="chat" class="chat overflow-y-scroll h-full gap-3 flex flex-col pb-2">
