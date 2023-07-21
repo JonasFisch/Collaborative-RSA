@@ -1,8 +1,10 @@
 <div class="h-full flex flex-row gap-8 w-full">
-  <.container class="w-3/12 p-7 drop-zone">
-    <%= for crypto_artifact <- @crypto_artifacts do %>
-      <.chip id={crypto_artifact.id} type={crypto_artifact.type} name={crypto_artifact.owner.name} signed={crypto_artifact.signed} />
-    <% end %>
+  <.container class="w-3/12 p-7 ">
+    <.live_component
+        id={"storage"}
+        module={AlgoThinkWeb.StudyGroupLive.StorageModule}
+        storage_artifacts={@storage_artifacts}
+      />
     <%!-- <div class="font-medium mt-3 mb-1">Keys</div> --%>
     <%!-- <.chip type={:private_key} name="Jonas" />
     <.chip type={:public_key} name="Bob" /> --%>
@@ -50,7 +52,7 @@
       <.live_component
         id={"encryption"}
         module={AlgoThinkWeb.StudyGroupLive.EncryptionModule}
-        crypto_artifacts={@crypto_artifacts}
+        crypto_artifacts={@encryption_module_artifacts}
       />
 
        <.live_component

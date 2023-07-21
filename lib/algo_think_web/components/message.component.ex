@@ -20,7 +20,7 @@ defmodule AlgoThinkWeb.Message do
       <% end %>
       <%= if @attachment != nil do %>
         <div class="mb-2">
-          <AlgoThinkWeb.Chip.chip type={@attachment.type} name={"test"} signed={@attachment.signed} />
+          <AlgoThinkWeb.Chip.chip id={"message-attachment-#{@attachment.id}"} type={@attachment.type} name={"test"} signed={@attachment.signed} />
         </div>
       <% end %>
       <span class={[

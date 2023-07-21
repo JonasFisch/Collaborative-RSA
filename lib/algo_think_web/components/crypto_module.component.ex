@@ -15,18 +15,16 @@ defmodule AlgoThinkWeb.CrypoModule do
   def crypto_module(assigns) do
     ~H"""
     <div>
-      <AlgoThinkWeb.Accordion.accordion header={@name}>
-        <div class="flex flex-col gap-4">
-          <%= for field <- @fields do %>
-            <div class="flex flex-row justify-between items-center gap-4">
-              <span class="w-2/6 font-medium">
-                <%= field.name %>:
-              </span>
-              <AlgoThinkWeb.DropZone.drop_zone placeholder={"#{field.placeholder}"} is_result={field.result} crypto_artifact={field.crypto_artifact} id={field.drop_zone_id} />
-            </div>
-          <% end %>
-        </div>
-      </AlgoThinkWeb.Accordion.accordion>
+      <div class="flex flex-col gap-4">
+        <%= for field <- @fields do %>
+          <div class="flex flex-row justify-between items-center gap-4">
+            <span class="w-2/6 font-medium">
+              <%= field.name %>:
+            </span>
+            <AlgoThinkWeb.DropZone.drop_zone placeholder={"#{field.placeholder}"} is_result={field.result} crypto_artifact={field.crypto_artifact} id={field.drop_zone_id} />
+          </div>
+        <% end %>
+      </div>
     </div>
     """
   end

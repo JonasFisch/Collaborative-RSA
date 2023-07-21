@@ -4,7 +4,6 @@ defmodule AlgoThink.ChipStorage do
   """
 
   import Ecto.Query, warn: false
-  alias AlgoThink.Accounts
   alias AlgoThink.CryptoArtifacts.CryptoArtifact
   alias AlgoThink.Repo
 

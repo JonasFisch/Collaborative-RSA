@@ -32,7 +32,7 @@ defmodule AlgoThinkWeb.DropZone do
         </div>
       <% else %>
         <div class="w-full p-1 relative">
-          <AlgoThinkWeb.Chip.chip id={nil} name={"nil"} type={:message} class="invisible" />
+          <AlgoThinkWeb.Chip.chip id={"placeholder-crypto-module-#{@id}"} name={"nil"} type={:message} class="invisible" />
           <span class={[
             "text-gray-400 font-medium absolute bottom-0 left-0 flex flex-row justify-center items-center w-full h-full",
             if @error != nil do

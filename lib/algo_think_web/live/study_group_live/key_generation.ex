@@ -39,6 +39,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
     )}
   end
 
+  @impl true
   def handle_event("generate_keys", _params, socket) do
     {:ok, %{:public_key => public_key, :private_key => private_key}} = CryptoArtifacts.generate_public_private_key_pair(socket.assigns.current_user.id)
 
@@ -49,6 +50,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
     )}
   end
 
+  @impl true
   def handle_event("add_key_to_storage", params, socket) do
     ChipStorage.create_crypto_artifact_user(%{
       user_id: socket.assigns.current_user.id,

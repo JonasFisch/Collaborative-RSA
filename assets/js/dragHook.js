@@ -18,6 +18,7 @@ export default {
   },
 
   dropped(e, dropzone, hook, selector) {
+    console.log("dropped");
     dropzone.classList.remove("drop-hover")
     const draggable_id = e.dataTransfer.getData("text")
 
