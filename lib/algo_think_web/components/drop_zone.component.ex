@@ -11,12 +11,13 @@ defmodule AlgoThinkWeb.DropZone do
   attr :is_result, :boolean, default: false
   attr :crypto_artifact, CryptoArtifact, required: false, default: nil
   attr :rest, :global, include: ~w(phx-click phx-target), doc: "the arbitrary HTML attributes to add to the drop zone"
+  attr :id, :string, required: true
 
   slot :inner_block, required: false
 
   def drop_zone(assigns) do
     ~H"""
-    <div class={[
+    <div id={@id} class={[
       "rounded-md border-2 border-dashed border-gray-300 flex flex-row justify-center w-full items-center transition-colors",
       if @crypto_artifact != nil do "cursor-pointer" end,
       if @is_result do "border-gray-300 bg-gray-300" else "drop-zone" end,

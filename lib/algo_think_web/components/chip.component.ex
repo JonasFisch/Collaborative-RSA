@@ -13,7 +13,7 @@ defmodule AlgoThinkWeb.Chip do
 
   def chip(assigns) do
     ~H"""
-    <div draggable="true" id={"crypto-artifact-#{@id}"} class={[
+    <div draggable="true" id={"crypto-artifact-#{@id}"} phx-hook="draggable" class={[
       "draggable bg-white border border-slate-200 flex flex-row items-center w-full p-3 justify-between h-chip",
       @class
     ]}

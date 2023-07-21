@@ -22,8 +22,7 @@ defmodule AlgoThinkWeb.CrypoModule do
               <span class="w-2/6 font-medium">
                 <%= field.name %>:
               </span>
-              <%IO.inspect(field.crypto_artifact) %>
-              <AlgoThinkWeb.DropZone.drop_zone placeholder={"#{field.placeholder}"} is_result={field.result} crypto_artifact={field.crypto_artifact} />
+              <AlgoThinkWeb.DropZone.drop_zone placeholder={"#{field.placeholder}"} is_result={field.result} crypto_artifact={field.crypto_artifact} id={field.drop_zone_id} />
             </div>
           <% end %>
         </div>

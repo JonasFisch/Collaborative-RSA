@@ -4,7 +4,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.EncryptionModule do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div phx-hook="drag" id="drag">
       <.crypto_module name="Encryption" fields={@data} />
     </div>
     """
@@ -20,9 +20,9 @@ defmodule AlgoThinkWeb.StudyGroupLive.EncryptionModule do
       |> assign(assigns)
       |> assign(:errors, [])
       |> assign(:data, [
-        %{name: "Plain Message", crypto_artifact: crypto_artifact, placeholder: "Drop Message", expected_type: :message, encrypted: false, result: false},
-        %{name: "Encrypt with", crypto_artifact: crypto_artifact, placeholder: "Drop Public Key", expected_type: :public_key, encrypted: false, result: false},
-        %{name: "Encrypted Message", crypto_artifact: nil, placeholder: "Result", expected_type: :message, encrypted: true, result: true}
+        %{drop_zone_id: "drop-zone-encryption-message", name: "Plain Message", crypto_artifact: crypto_artifact, placeholder: "Drop Message", expected_type: :message, encrypted: false, result: false},
+        %{drop_zone_id: "drop-zone-encryption-public-key", name: "Encrypt with", crypto_artifact: crypto_artifact, placeholder: "Drop Public Key", expected_type: :public_key, encrypted: false, result: false},
+        %{drop_zone_id: "drop-zone-encryption-result", name: "Encrypted Message", crypto_artifact: nil, placeholder: "Result", expected_type: :message, encrypted: true, result: true}
       ])
     }
   end
@@ -31,4 +31,12 @@ defmodule AlgoThinkWeb.StudyGroupLive.EncryptionModule do
   def mount(socket) do
     {:ok, socket |> assign(data: [])}
   end
+
+  def handle_event("dropped", params, socket) do
+    IO.inspect(params)
+    IO.inspect("in dropped in encryption module")
+
+    {:noreply, socket}
+  end
+
 end

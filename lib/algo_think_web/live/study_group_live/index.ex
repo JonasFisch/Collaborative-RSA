@@ -67,8 +67,8 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   end
 
   def handle_event("dropped", params, socket) do
-    IO.inspect(params)
-    IO.inspect("in dropped")
+    # IO.inspect(params)
+    IO.inspect("in dropped in index")
 
     {:noreply, socket}
   end

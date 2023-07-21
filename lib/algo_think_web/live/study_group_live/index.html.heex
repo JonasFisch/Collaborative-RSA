@@ -1,4 +1,4 @@
-<div class="h-full flex flex-row gap-8 w-full" phx-hook="drag" id="drag">
+<div class="h-full flex flex-row gap-8 w-full">
   <.container class="w-3/12 p-7 drop-zone">
     <%= for crypto_artifact <- @crypto_artifacts do %>
       <.chip id={crypto_artifact.id} type={crypto_artifact.type} name={crypto_artifact.owner.name} signed={crypto_artifact.signed} />
@@ -44,18 +44,20 @@
         <span>Heyy</span>
       </.accordion> --%>
 
-      <.live_component
-        id={"key_generation"}
-        module={AlgoThinkWeb.StudyGroupLive.KeyGeneration}
-        current_user={@current_user}
-        study_group_id={@study_group_id}
-      />
+     
 
       <%!-- <.crypto_module name="Encryption" id="encryption-module" /> --%>
       <.live_component
         id={"encryption"}
         module={AlgoThinkWeb.StudyGroupLive.EncryptionModule}
         crypto_artifacts={@crypto_artifacts}
+      />
+
+       <.live_component
+        id={"key_generation"}
+        module={AlgoThinkWeb.StudyGroupLive.KeyGeneration}
+        current_user={@current_user}
+        study_group_id={@study_group_id}
       />
 
     </div>

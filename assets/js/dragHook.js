@@ -1,5 +1,3 @@
-import Sortable from "sortablejs"
-
 export default {
   cancelDefault(e) {
     e.preventDefault();
@@ -15,30 +13,29 @@ export default {
     this.classList.remove("drop-hover")
   },
 
-  dropped(e, dropzone, hook, selector) {
-    console.log("dropped");
+  dragEnter(e) {
+    console.log("dragenter");
+  },
 
-    console.log(e);
+  dropped(e, dropzone, hook, selector) {
     dropzone.classList.remove("drop-hover")
-    console.log(e);
-    console.log(hook);
-    console.log(selector);
+    const draggable_id = e.dataTransfer.getData("text")
+
+    // trigger dropped event in backend
     hook.pushEventTo(selector, 'dropped', {
-      draggedId: Number(String(e.target.id).replace("crypto-artifact-", "")), // id of the dragged item
-      // dropzoneId: e.to.id, // id of the drop zone where the drop occured
-      // draggableIndex: e.newDraggableIndex, // index where the item was dropped (relative to other items in the drop zone)
+      draggedId: Number(String(draggable_id).replace("crypto-artifact-", "")), // id of the dragged item
+      dropzoneId: dropzone.id, // id of the drop zone where the drop occured
     });
-  
   },
 
   mounted() {
-    let dragged;
     const hook = this;
     const selector = "#" + this.el.id;    
 
-    document.querySelectorAll('.drop-zone').forEach((dropzone) => {
+    // register event for every dropzone that is child of hook element
+    hook.el.querySelectorAll('.drop-zone').forEach((dropzone) => {
       dropzone.addEventListener("drop", e => this.dropped(e, dropzone , hook, selector));
-      dropzone.addEventListener("dragenter", this.cancelDefault);
+      dropzone.addEventListener("dragenter", this.dragEnter);
       dropzone.addEventListener("dragover", this.dragOver);
       dropzone.addEventListener("dragleave", this.dragLeave);
     });
