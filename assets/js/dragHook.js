@@ -7,10 +7,12 @@ export default {
 
   dragOver(e) {
     this.classList.add("drop-hover");  
+    this.classList.add("phx-dragging");  
   },
 
   dragLeave(e) {
     this.classList.remove("drop-hover")
+    this.classList.remove("phx-dragging")
   },
 
   dragEnter(e) {
@@ -20,6 +22,7 @@ export default {
   dropped(e, dropzone, hook, selector) {
     console.log("dropped");
     dropzone.classList.remove("drop-hover")
+    dropzone.classList.remove("phx-dragging")
     const draggable_id = e.dataTransfer.getData("text")
 
     // trigger dropped event in backend

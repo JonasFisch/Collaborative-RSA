@@ -4,8 +4,8 @@ defmodule AlgoThinkWeb.StudyGroupLive.StorageModule do
   @impl true
   def render(assigns) do
     ~H"""
-    <div phx-hook="drag" id="storage-drag" class="h-96">
-      <div class="drop-zone h-full">
+    <div phx-hook="drag" id="storage-drag" class="h-full">
+      <div class="drop-zone h-full border-2 rounded-md border-dashed p-2 phx-dragging:border-gray-300 phx-dragging:bg-gray-50">
         <%= for crypto_artifact <- @storage_artifacts do %>
           <.chip id={crypto_artifact.id} type={crypto_artifact.type} name={crypto_artifact.owner.name} signed={crypto_artifact.signed} />
         <% end %>

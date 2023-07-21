@@ -98,7 +98,13 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         |> Map.put(:location, location)
         |> Map.put(:location_id, drop_zone_id)
       else
-        artifact
+        # remove chip that is already in drop box
+        if (artifact.location_id == drop_zone_id) do
+          artifact |> Map.put(:location_id, "storage")
+          artifact |> Map.put(:location, "storage")
+        else
+          artifact
+        end
       end
     end)
 

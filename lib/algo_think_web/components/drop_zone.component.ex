@@ -18,7 +18,7 @@ defmodule AlgoThinkWeb.DropZone do
   def drop_zone(assigns) do
     ~H"""
     <div id={@id} class={[
-      "rounded-md border-2 border-dashed border-gray-300 flex flex-row justify-center w-full items-center transition-colors",
+      "rounded-md border-2 border-dashed border-gray-300 flex flex-row justify-center w-full items-center transition-colors phx-dragging:bg-white",
       if @crypto_artifact != nil do "cursor-pointer" end,
       if @is_result do "border-gray-300 bg-gray-300" else "drop-zone" end,
       if @error != nil do
