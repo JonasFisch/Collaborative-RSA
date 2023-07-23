@@ -11,13 +11,23 @@
     <div class="flex flex-col gap-4">
       <.live_component
         id={"encryption"}
-        module={AlgoThinkWeb.StudyGroupLive.EncryptionModule}
+        module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
         crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "encryption" end)}
         current_user={@current_user}
         study_group_id={@study_group_id}
         name="Encryption"
         type="encryption"
         action="Encrypt"
+      />
+      <.live_component
+        id={"decryption"}
+        module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
+        crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "encryption" end)}
+        current_user={@current_user}
+        study_group_id={@study_group_id}
+        name="Decryption"
+        type="decryption"
+        action="Decryption"
       />
       <.live_component
         id={"key_generation"}

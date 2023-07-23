@@ -1,4 +1,4 @@
-defmodule AlgoThinkWeb.StudyGroupLive.EncryptionModule do
+defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
   alias AlgoThink.ChipStorage
   alias AlgoThink.CryptoArtifacts
   use AlgoThinkWeb, :live_component
@@ -28,17 +28,50 @@ defmodule AlgoThinkWeb.StudyGroupLive.EncryptionModule do
 
   @impl true
   def update(assigns, socket) do
-
-    if not Enum.member?(["encryption", "decryption", "sign", "verify"], assigns.type) do
-      raise("invalid type given in crypto module live component")
+    zones_structure = case assigns.type do
+      "encryption" -> [
+        %{type: :message, name: "Message", placeholder: "Drop Message"},
+        %{type: :public_key, name: "Encrypt with", placeholder: "Drop Public Key"},
+        %{type: :result, name: "Encrypted Message"}
+      ]
+      "decryption" -> [
+        %{type: :message, name: "Encrypted Message", placeholder: "Drop Message", encrypted: true},
+        %{type: :private_key, name: "Decrypt with", placeholder: "Drop Private Key"},
+        %{type: :result, name: "Message"}
+      ]
+      "sign" -> [
+        %{type: :message, name: "Message", placeholder: "Drop Message"},
+        %{type: :private_key, name: "Sign with", placeholder: "Drop Private Key"},
+        %{type: :result, name: "Signature"}
+      ]
+      "verify" -> [
+        %{type: :signature, name: "Signature", placeholder: "Drop Signature"},
+        %{type: :message, name: "Message", placeholder: "Drop Message"},
+        %{type: :public_key, name: "Public Key", placeholder: "Drop Public Key"},
+        %{type: :result, name: "Valid"}
+      ]
+      _ -> raise("invalid type given in crypto module live component")
     end
 
-    # TODO: generate zones dynamically depending on input Enum variable
-    zones = [
-      %{drop_zone_id: "drop-zone-encryption-message", name: "Plain Message", crypto_artifact: Enum.find(assigns.crypto_artifacts, fn artifact -> artifact.location_id == "drop-zone-encryption-message" end), placeholder: "Drop Message", expected_type: :message, encrypted: false, result: false},
-      %{drop_zone_id: "drop-zone-encryption-public-key", name: "Encrypt with", crypto_artifact: Enum.find(assigns.crypto_artifacts, fn artifact -> artifact.location_id == "drop-zone-encryption-public-key" end), placeholder: "Drop Public Key", expected_type: :public_key, encrypted: false, result: false},
-      %{drop_zone_id: "drop-zone-encryption-result", name: "Encrypted Message", crypto_artifact: Enum.find(assigns.crypto_artifacts, fn artifact -> artifact.location_id == "drop-zone-encryption-result" end), placeholder: "Result", expected_type: :message, encrypted: true, result: true}
-    ]
+    zones =
+      zones_structure
+      |> Enum.map(fn zone_structure ->
+        zone_type = Map.get(zone_structure, :type)
+        encrypted = Map.get(zone_structure, :encrypted)
+        name = Map.get(zone_structure, :name)
+        placeholder = Map.get(zone_structure, :placeholder, "result")
+        is_result = zone_type == :result
+        crypto_artifact = Enum.find(assigns.crypto_artifacts, fn artifact -> artifact.location_id == "drop-zone-#{assigns.type}-#{zone_type}" end)
+        %{
+          drop_zone_id: "drop-zone-#{assigns.type}-#{zone_type}",
+          name: name,
+          crypto_artifact: crypto_artifact,
+          placeholder: placeholder,
+          expected_type: zone_type,
+          encrypted: encrypted,
+          result: is_result
+        }
+      end)
 
     {:ok,
      socket
@@ -56,6 +89,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.EncryptionModule do
   def handle_event("encrypt", _params, socket) do
     zones = socket.assigns.data |> Enum.filter(fn drop_zone -> drop_zone.result == false end)
 
+    # TODO: make this method depend on the type
     with {:ok, result} <- CryptoArtifacts.encrypt_message(
         socket.assigns.current_user.id,
         Enum.reduce(zones, %{}, fn zone, acc ->
@@ -80,7 +114,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.EncryptionModule do
         end)
 
         {:noreply, socket |> assign(errors: errors)}
-      err ->
+      _err ->
         IO.warn("uncatched error in crypto module")
         {:noreply, socket}
     end
