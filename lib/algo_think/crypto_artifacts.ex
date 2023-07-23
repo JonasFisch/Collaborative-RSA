@@ -4,6 +4,7 @@ defmodule AlgoThink.CryptoArtifacts do
   """
 
   import Ecto.Query, warn: false
+  alias AlgoThinkWeb.StudyGroupLive.EncryptionModule
   alias AlgoThink.Repo
 
   alias AlgoThink.CryptoArtifacts.CryptoArtifact
@@ -66,6 +67,7 @@ defmodule AlgoThink.CryptoArtifacts do
 
   def create_public_key(owner_id, private_key_id) do
     crypto_artifact = get_crypto_artifact!(private_key_id)
+
     # validate if key is private key
     if (crypto_artifact.type == :private_key) do
       {:ok, private_key} = ExPublicKey.loads(crypto_artifact.content)
@@ -87,16 +89,17 @@ defmodule AlgoThink.CryptoArtifacts do
     create_crypto_artifact(%{content: message, type: :message, owner_id: owner_id})
   end
 
-  def encrypt_message(owner_id, message_id, public_key_id) do
-    crypto_artifact_message = get_crypto_artifact!(message_id)
-    crypto_artifact_public_key = get_crypto_artifact!(public_key_id)
-    # validate if key is private key
-    if (crypto_artifact_message.type == :message && crypto_artifact_public_key.type == :public_key) do
+  def encrypt_message(owner_id, %{message: crypto_artifact_message, public_key: crypto_artifact_public_key}) do
+    changeset = AlgoThink.CryptoModuleValidation.changeset_encryption(%{
+      message: crypto_artifact_message,
+      public_key: crypto_artifact_public_key,
+    })
+    if (changeset.valid?) do
       {:ok, public_key} = ExPublicKey.loads(crypto_artifact_public_key.content)
       {:ok, cipher_text} = ExPublicKey.encrypt_public(crypto_artifact_message.content, public_key)
       create_crypto_artifact(%{content: cipher_text, type: :message, owner_id: owner_id, encrypted: true})
     else
-      raise "given crypo artifact does not contain message or public key!"
+      {:error, changeset}
     end
   end
 
