@@ -124,17 +124,16 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   def handle_info(%{topic: "mark_message_as_valid", message: message, valid: valid?}, socket) do
     IO.inspect("in mark_message_as_valid")
 
-    # TODO: uncomment this when added valid prop to db
-    # socket.assigns.crypto_artifacts
-    # |> Enum.map(fn artifact ->
-    #   if (artifact.id == message.id) do
-    #     %{artifact | valid: true}
-    #   else
-    #     artifact
-    #   end
-    # end)
+    crypto_artifacts = socket.assigns.crypto_artifacts
+    |> Enum.map(fn artifact ->
+      if (artifact.id == message.id) do
+        %{artifact | valid: if valid? do :valid else :invalid end}
+      else
+        artifact
+      end
+    end)
 
-    {:noreply, socket}
+    {:noreply, socket |> assign(crypto_artifacts: crypto_artifacts)}
   end
 
   def handle_info("load_users_chips", socket) do

@@ -115,6 +115,15 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
       IO.inspect("post action verify")
       # TODO: mark message as verified / or not valid
 
+      valid = if Map.get(result, :valid) do :valid else :invalid end
+
+      updated_message = CryptoArtifacts.update_crypto_artifact(
+        Map.get(result, :message),
+        %{valid: valid}
+      )
+
+      IO.inspect(updated_message)
+
       valid = true
 
       {:ok, valid}
@@ -151,8 +160,6 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
         valid = Map.get(result, :valid)
         message = Map.get(result, :message)
 
-        IO.inspect(message)
-        # TODO: send update so that the validaded message is updated
         send(self(), %{topic: "mark_message_as_valid", message: message, valid: valid})
       else
         send(self(), %{topic: "add_new_chip", crypto_artifact: result, location: socket.assigns.type, drop_zone_id: "drop-zone-#{socket.assigns.type}-result"})

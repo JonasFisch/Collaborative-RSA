@@ -2,7 +2,7 @@ defmodule AlgoThinkWeb.Chip do
   use Phoenix.Component
 
   attr :name, :string, required: true, doc: "Name of the chip creator"
-  attr :signed, :boolean, default: false, required: false, doc: "chip is signed"
+  attr :valid, :boolean, default: false, required: false, doc: "chip is valid"
   attr :class, :string, default: nil
   attr :id, :string, required: true
   attr :encrypted, :boolean, default: false
@@ -56,10 +56,14 @@ defmodule AlgoThinkWeb.Chip do
             <MaterialIcons.tag style="outlined" class="fill-black" size={25} />
         <% end %>
         <div
-          :if={@signed}
-          class="absolute -left-4 rounded-full w-5 h-5 flex justify-center items-center bg-yellow-300"
+          class="absolute -left-4 "
         >
-          <MaterialIcons.check class="fill-black" size={16} />
+          <div :if={@valid == :valid} class="rounded-full w-5 h-5 flex justify-center items-center bg-yellow-300">
+            <MaterialIcons.check class="fill-black" size={16} />
+          </div>
+          <div :if={@valid == :invalid} class="rounded-full w-5 h-5 flex justify-center items-center bg-red-300">
+            <MaterialIcons.close class="fill-black" size={16} />
+          </div>
         </div>
       </div>
     </div>

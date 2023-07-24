@@ -135,8 +135,6 @@ defmodule AlgoThink.CryptoArtifacts do
     end
   end
 
-
-  # TODO: improve
   def verify_message(%{message: message, signature: signature, public_key: public_key}) do
     changeset = AlgoThink.CryptoModuleValidation.changeset_verify(%{
       message: message,
@@ -146,6 +144,7 @@ defmodule AlgoThink.CryptoArtifacts do
     if (changeset.valid?) do
       {:ok, public_key} = ExPublicKey.loads(public_key.content)
       {:ok, signature_decoded} = Base.decode64(signature.content)
+      # TODO: handle errors where keys does not match or signature is invalid
       valid? = ExPublicKey.verify(message.content, signature_decoded, public_key)
       {:ok, %{valid: valid?, message: message}}
     else
