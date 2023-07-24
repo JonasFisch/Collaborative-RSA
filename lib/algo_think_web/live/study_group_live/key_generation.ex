@@ -64,6 +64,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
       _ -> raise "invalid type given! in key generation"
     end
 
+    # TODO: use add chip here!
     send(self(), "load_users_chips")
 
     {:noreply, socket |> assign(assigns)}

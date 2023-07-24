@@ -21,7 +21,6 @@ defmodule AlgoThinkWeb.StudyGroupLive.StorageModule do
 
   @impl true
   def handle_event("dropped", params, socket) do
-    IO.inspect("Dropped")
     send(self(), %{topic: "update_chip_location", dragged_id: params["draggedId"], drop_zone_id: params["dropzoneId"], location: "storage"})
     {:noreply, socket}
   end

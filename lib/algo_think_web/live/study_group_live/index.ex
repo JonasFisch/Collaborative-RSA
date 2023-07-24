@@ -7,7 +7,6 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
     AlgoThinkWeb.Endpoint.subscribe("study_group_#{study_group_id}")
 
-
     # crypto_modules = %{
     #   encryption: [
     #     %{module: :encryption, drop_zone_id: "drop-zone-encryption-message", name: "Plain Message", crypto_artifact: nil, placeholder: "Drop Message", expected_type: :message, encrypted: false, result: false},
@@ -64,7 +63,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
     # IO.inspect(users_crypo_artifacts)
 
-    {:ok, socket |> assign(crypto_artifacts: [],storage_artifacts: [], encryption_module_artifacts: [], chat_messages: [], study_group_id: study_group_id), layout: {AlgoThinkWeb.Layouts, :game}}
+    {:ok, socket |> assign(crypto_artifacts: [], chat_messages: [], study_group_id: study_group_id), layout: {AlgoThinkWeb.Layouts, :game}}
   end
 
   def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do
@@ -91,6 +90,9 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   end
 
   def handle_info(%{topic: "update_chip_location", dragged_id: dragged_id, drop_zone_id: drop_zone_id, location: location}, socket) do
+
+    IO.inspect(location)
+
     artifacts = (socket.assigns.crypto_artifacts)
     |> Enum.map(fn artifact ->
       if artifact.id == dragged_id do
@@ -104,15 +106,10 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         end
       end
     end)
-
     {:noreply, socket |> assign(
-      crypto_artifacts: artifacts,
+      crypto_artifacts: artifacts
     )}
   end
-
-  # def handle_info(%{topic: "check_crypto_module"}, socket) do
-  #   socket.assigns.crypto_artifact
-  # end
 
   def handle_info(%{topic: "add_new_chip", crypto_artifact: crypto_artifact, location: location, drop_zone_id: drop_zone_id}, socket) do
     IO.inspect("in add new chip")
@@ -122,6 +119,22 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     |> Map.put(:location_id, drop_zone_id)
 
     {:noreply, socket |> assign(crypto_artifacts: socket.assigns.crypto_artifacts ++ [crypto_artifact])}
+  end
+
+  def handle_info(%{topic: "mark_message_as_valid", message: message, valid: valid?}, socket) do
+    IO.inspect("in mark_message_as_valid")
+
+    # TODO: uncomment this when added valid prop to db
+    # socket.assigns.crypto_artifacts
+    # |> Enum.map(fn artifact ->
+    #   if (artifact.id == message.id) do
+    #     %{artifact | valid: true}
+    #   else
+    #     artifact
+    #   end
+    # end)
+
+    {:noreply, socket}
   end
 
   def handle_info("load_users_chips", socket) do

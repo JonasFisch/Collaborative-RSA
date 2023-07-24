@@ -25,6 +25,7 @@ export default {
     dropzone.classList.remove("phx-dragging")
     const draggable_id = e.dataTransfer.getData("text")
 
+    console.log(dropzone.id);
     // trigger dropped event in backend
     hook.pushEventTo(selector, 'dropped', {
       draggedId: Number(String(draggable_id).replace("crypto-artifact-", "")), // id of the dragged item

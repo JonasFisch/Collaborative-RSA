@@ -103,54 +103,63 @@ defmodule AlgoThink.CryptoArtifacts do
     end
   end
 
-  def decrypt_message(encrypted_message_id, private_key_id) do
-    crypto_artifact_encrypted_message = get_crypto_artifact!(encrypted_message_id)
-    crypto_artifact_private_key = get_crypto_artifact!(private_key_id)
-
-    if (crypto_artifact_encrypted_message.type == :message && crypto_artifact_encrypted_message.encrypted && crypto_artifact_private_key.type == :private_key) do
+  def decrypt_message(%{message: crypto_artifact_encrypted_message, private_key: crypto_artifact_private_key}) do
+    changeset = AlgoThink.CryptoModuleValidation.changeset_decryption(%{
+      message: crypto_artifact_encrypted_message,
+      private_key: crypto_artifact_private_key,
+    })
+    if (changeset.valid?) do
       {:ok, private_key} = ExPublicKey.loads(crypto_artifact_private_key.content)
 
       # decrypt and save to db
+      # TODO: check if decryption was successful otherwise set error in changeset accordingly
       {:ok, decrypted_message} = ExPublicKey.decrypt_private(crypto_artifact_encrypted_message.content, private_key)
       create_message(crypto_artifact_encrypted_message.owner_id, decrypted_message)
     else
-      raise "given crypo artifacts does not contain encrypted message or private key!"
+      {:error, changeset}
     end
   end
 
+  def create_signature(owner_id, %{message: crypto_artifact_message, private_key: crypto_artifact_private_key}) do
+    changeset = AlgoThink.CryptoModuleValidation.changeset_sign(%{
+      message: crypto_artifact_message,
+      private_key: crypto_artifact_private_key,
+    })
+    if (changeset.valid?) do
+      {:ok, private_key} = ExPublicKey.loads(crypto_artifact_private_key.content)
+      {:ok, signature} = ExPublicKey.sign(crypto_artifact_message.content, private_key)
+      # TODO: prevent user from signing wrong messages!!!
+      create_crypto_artifact(%{content: Base.encode64(signature), type: :signature, owner_id: owner_id})
+    else
+      {:error, changeset}
+    end
+  end
+
+
+  # TODO: improve
+  def verify_message(%{message: message, signature: signature, public_key: public_key}) do
+    changeset = AlgoThink.CryptoModuleValidation.changeset_verify(%{
+      message: message,
+      signature: signature,
+      public_key: public_key,
+    })
+    if (changeset.valid?) do
+      {:ok, public_key} = ExPublicKey.loads(public_key.content)
+      {:ok, signature_decoded} = Base.decode64(signature.content)
+      valid? = ExPublicKey.verify(message.content, signature_decoded, public_key)
+      {:ok, %{valid: valid?, message: message}}
+    else
+      {:error, changeset}
+    end
+  end
+
+  # TODO: improve
   def mark_message_as_verified(message_id) do
     %CryptoArtifact{} = message = get_crypto_artifact!(message_id)
     if (message.type == :message) do
       update_crypto_artifact(message, %{signed: true})
     else
       raise "given crypo artifact is not a message."
-    end
-  end
-
-  def create_signature(owner_id, message_id, private_key_id) do
-    crypto_artifact_message = get_crypto_artifact!(message_id)
-    crypto_artifact_private_key = get_crypto_artifact!(private_key_id)
-    # validate if key is private key
-    if (crypto_artifact_message.type == :message && crypto_artifact_private_key.type == :private_key) do
-      {:ok, private_key} = ExPublicKey.loads(crypto_artifact_private_key.content)
-      {:ok, signature} = ExPublicKey.sign(crypto_artifact_message.content, private_key)
-      create_crypto_artifact(%{content: Base.encode64(signature), type: :signature, owner_id: owner_id})
-    else
-      raise "given crypo artifact does not contain message or private key!"
-    end
-  end
-
-  def verify_message(message_id, signature_id, public_key_id) do
-    crypto_artifact_message = get_crypto_artifact!(message_id)
-    crypto_artifact_signature = get_crypto_artifact!(signature_id)
-    crypto_artifact_public_key = get_crypto_artifact!(public_key_id)
-
-    if (crypto_artifact_message.type == :message && crypto_artifact_signature.type == :signature && crypto_artifact_public_key.type == :public_key) do
-      {:ok, public_key} = ExPublicKey.loads(crypto_artifact_public_key.content)
-      {:ok, signature_decoded} = Base.decode64(crypto_artifact_signature.content)
-      ExPublicKey.verify(crypto_artifact_message.content, signature_decoded, public_key)
-    else
-      raise "given crypo artifact does not contain message or private key!"
     end
   end
 

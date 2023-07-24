@@ -6,7 +6,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
   @impl true
   def render(assigns) do
     ~H"""
-    <div phx-hook="drag" id="drag">
+    <div phx-hook="drag" id={"crypo-module-#{@type}"}>
       <AlgoThinkWeb.Accordion.accordion header={@name} open>
         <div class="flex flex-col gap-4">
           <%= for field <- @data do %>
@@ -86,43 +86,98 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
     {:ok, socket |> assign(data: [])}
   end
 
+  defp action(type, current_user_id, crypto_artifact_map) do
+    case type do
+      "encryption" ->
+        CryptoArtifacts.encrypt_message(
+          current_user_id,
+          crypto_artifact_map
+        )
+      "decryption" ->
+        CryptoArtifacts.decrypt_message(
+          crypto_artifact_map
+        )
+      "sign" ->
+        CryptoArtifacts.create_signature(
+          current_user_id,
+          crypto_artifact_map
+        )
+      "verify" ->
+        CryptoArtifacts.verify_message(
+          crypto_artifact_map
+        )
+      _ -> IO.warn("invalid action given")
+    end
+  end
+
+  defp post_action(type, current_user_id, result, study_group_id) do
+    if type == "verify" do
+      IO.inspect("post action verify")
+      # TODO: mark message as verified / or not valid
+
+      valid = true
+
+      {:ok, valid}
+    else
+      ChipStorage.create_crypto_artifact_user(%{
+        user_id: current_user_id,
+        crypto_artifact_id: result.id,
+        study_group_id: study_group_id
+      })
+    end
+  end
+
   def handle_event("encrypt", _params, socket) do
     zones = socket.assigns.data |> Enum.filter(fn drop_zone -> drop_zone.result == false end)
 
-    # TODO: make this method depend on the type
-    with {:ok, result} <- CryptoArtifacts.encrypt_message(
-        socket.assigns.current_user.id,
-        Enum.reduce(zones, %{}, fn zone, acc ->
-          Map.put(acc, zone.expected_type, zone.crypto_artifact)
-        end)
+    current_user_id = socket.assigns.current_user.id
+    crypto_artifact_map = Enum.reduce(zones, %{}, fn zone, acc ->
+      Map.put(acc, zone.expected_type, zone.crypto_artifact)
+    end)
+
+    with {:ok, result} <- action(
+        socket.assigns.type,
+        current_user_id,
+        crypto_artifact_map
       ),
-      {:ok, _crytpo_artifact_user} <- ChipStorage.create_crypto_artifact_user(%{
-        user_id: socket.assigns.current_user.id,
-        crypto_artifact_id: result.id,
-        study_group_id: socket.assigns.study_group_id
-      })
+      {:ok, _post_result} <- post_action(
+        socket.assigns.type,
+        current_user_id,
+        result,
+        socket.assigns.study_group_id
+      )
     do
-      send(self(), %{topic: "add_new_chip", crypto_artifact: result, location: socket.assigns.type, drop_zone_id: "drop-zone-encryption-result"})
+      if socket.assigns.type == "verify" do
+        valid = Map.get(result, :valid)
+        message = Map.get(result, :message)
+
+        IO.inspect(message)
+        # TODO: send update so that the validaded message is updated
+        send(self(), %{topic: "mark_message_as_valid", message: message, valid: valid})
+      else
+        send(self(), %{topic: "add_new_chip", crypto_artifact: result, location: socket.assigns.type, drop_zone_id: "drop-zone-#{socket.assigns.type}-result"})
+      end
       {:noreply, socket}
     else
       {:error, changeset} ->
+        # transform error message to format: {field, error_message}
         errors = changeset.errors
         |> Enum.reduce(Map.new(), fn error, acc ->
-          # transform error message to format: {field, error_message}
           {key, {msg, _other}} = error
           Map.put(acc, key, msg)
         end)
 
         {:noreply, socket |> assign(errors: errors)}
-      _err ->
+      err ->
         IO.warn("uncatched error in crypto module")
+        IO.inspect(err)
         {:noreply, socket}
     end
   end
 
   @impl true
   def handle_event("dropped", params, socket) do
-    send(self(), %{topic: "update_chip_location", dragged_id: params["draggedId"], drop_zone_id: params["dropzoneId"], location: "encryption"})
+    send(self(), %{topic: "update_chip_location", dragged_id: params["draggedId"], drop_zone_id: params["dropzoneId"], location: socket.assigns.type})
     {:noreply, socket}
   end
 end
