@@ -65,25 +65,50 @@
     </div>
   </.container>
 
-  <.container class="w-4/12 overflow-auto">
-    <div class="relative h-full">
-      <div class="h-full pb-12">
-        <div id="chat" class="chat overflow-y-scroll h-full gap-3 flex flex-col pb-2">
-          <%= for message <- @chat_messages do %>
-            <div id={"message-#{message.id}"} phx-mounted={JS.dispatch("algothink:newMessage")} class="flex flex-col">
-              <.message attachment={message.attachment} text={message.text} author={message.author.name} self={message.author.id == @current_user.id} time={Time.to_string(Time.add(message.inserted_at, 7200))} />
+  <%!-- <div class="h-full w-full drop-zone"> --%>
+      <%!-- drop popover --%>
+      <%!-- <div class="hidden left-0 top-0 transition-opacity absolute h-full phx-dragging:block w-full z-50">        
+        <div class="flex justify-center items-center w-full h-full">
+          <div class="bg-white rounded-md p-4">
+            <div class="border-2 border-dashed rounded-md border-gray-800 p-4 flex flex-col items-center">
+              <span class="font-bold text-lg">Send to public chat</span>
+              <span class="text-sm mt-2">Drop to instantly send to the public chat</span>
             </div>
-          <% end %>
-          <div id="chat-anchor"></div>
+          </div>
         </div>
       </div>
 
-      <form action="" phx-submit="send_message" class="flex flex-row gap-3 absolute bottom-0 w-full">
-        <input type="text" name="text" id="text" class="w-full rounded-xl bg-gray-300 border-gray-300 placeholder:text-gray-400 placeholder:font-bold" placeholder="Type a message">
-        <button type="submit">
-          <.icon name="hero-arrow-right-circle" class="h-10 w-10 bg-blue-500 hover:bg-blue-400 transition-colors" />
-        </button>
-      </form>
+      <%!-- backdrop --%>
+      <%!-- <div class="hidden absolute left-0 top-0 h-full w-full bg-gray-700 phx-dragging:block z-40 backdrop-blur-sm"></div> --%>
+
+
+  <.container class="w-4/12 overflow-auto">
+    <div class="relative h-full" phx-hook="drag" id="chat-drag" >
+
+      <div class="drop-zone h-full w-full">
+        <%!-- backdrop --%>
+        <div class="pointer-events-none hidden opacity-0 absolute left-0 top-0 h-full w-full phx-dragging:opacity-70 phx-dragging:block bg-gray-700 z-40 backdrop-blur-sm"></div>
+
+        <div class="relative h-full disable-pointer-events-dragging">
+          <div class="h-full pb-12 ">
+            <div id="chat" class="chat overflow-y-scroll h-full gap-3 flex flex-col pb-2 ">
+              <%= for message <- @chat_messages do %>
+                <div id={"message-#{message.id}"} phx-mounted={JS.dispatch("algothink:newMessage")} class="flex flex-col">
+                  <.message attachment={message.attachment} text={message.text} author={message.author.name} self={message.author.id == @current_user.id} time={Time.to_string(Time.add(message.inserted_at, 7200))} />
+                </div>
+              <% end %>
+              <div id="chat-anchor"></div>
+            </div>
+          </div>
+
+          <form action="" phx-submit="send_message" class="flex flex-row gap-3 absolute bottom-0 w-full">
+            <input type="text" name="text" id="text" class="w-full rounded-xl bg-gray-300 border-gray-300 placeholder:text-gray-400 placeholder:font-bold" placeholder="Type a message">
+            <button type="submit">
+              <.icon name="hero-arrow-right-circle" class="h-10 w-10 bg-blue-500 hover:bg-blue-400 transition-colors" />
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   </.container>
 

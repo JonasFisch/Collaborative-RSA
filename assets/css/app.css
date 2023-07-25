@@ -27,3 +27,6 @@
   }
 }
 
+.dragging .disable-pointer-events-dragging {
+  pointer-events: none;
+}

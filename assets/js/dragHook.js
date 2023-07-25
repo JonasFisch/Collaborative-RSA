@@ -16,7 +16,6 @@ export default {
   },
 
   dragEnter(e) {
-    console.log("dragenter");
   },
 
   dropped(e, dropzone, hook, selector) {
