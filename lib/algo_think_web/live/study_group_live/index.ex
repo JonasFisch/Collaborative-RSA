@@ -1,4 +1,5 @@
 defmodule AlgoThinkWeb.StudyGroupLive.Index do
+  alias AlgoThink.CryptoArtifacts
   alias AlgoThink.ChipStorage
   alias AlgoThink.ChatMessages
   use AlgoThinkWeb, :live_view
@@ -152,5 +153,29 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     users_crypo_artifacts = ChipStorage.list_cryptoartifact_for_user(socket.assigns.current_user.id, socket.assigns.study_group_id)
     users_crypo_artifacts = users_crypo_artifacts |> Enum.map(fn artifact -> artifact |> Map.put(:location, "storage") |> Map.put(:location_id, nil) end)
     {:noreply, socket |> assign(storage_artifacts: users_crypo_artifacts, crypto_artifacts: users_crypo_artifacts)}
+  end
+
+  @impl true
+  def handle_event("dropped", params, socket) do
+    crypto_artifact_id = Map.get(params, "draggedId")
+    crypto_artifact = CryptoArtifacts.get_crypto_artifact!(crypto_artifact_id)
+
+    # TODO: do some checkings if item can be dropped here!!!
+
+    # create new messsage with artifact attached
+    with {:ok, new_message} <- ChatMessages.create_chat_message(%{
+        text: "",
+        author_id: socket.assigns.current_user.id,
+        study_group_id: socket.assigns.study_group_id,
+        attachment_id: crypto_artifact_id
+    }) do
+      {:noreply, socket
+        |> assign(chat_messages: socket.assigns.chat_messages ++ [new_message])
+      }
+    else
+      {:error, _changeset} ->
+        IO.inspect("error")
+        {:noreply, socket}
+    end
   end
 end

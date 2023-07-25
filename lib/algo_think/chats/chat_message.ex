@@ -15,6 +15,6 @@ defmodule AlgoThink.ChatMessages.ChatMessage do
   def changeset(chat_message, attrs) do
     chat_message
     |> cast(attrs, [:text, :author_id, :study_group_id, :attachment_id])
-    |> validate_required([:text, :author_id, :study_group_id])
+    |> validate_required([:author_id, :study_group_id])
   end
 end
