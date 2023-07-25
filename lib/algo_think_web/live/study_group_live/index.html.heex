@@ -1,5 +1,5 @@
 <div class="h-full flex flex-row gap-8 w-full">
-  <.container class="w-3/12 p-7 ">
+  <.container class="w-3/12 p-7">
     <.live_component
       id={"storage"}
       module={AlgoThinkWeb.StudyGroupLive.StorageModule}
@@ -10,7 +10,7 @@
   <.container class="w-5/12">
     <div class="flex flex-col gap-4">
       <.live_component
-        id={"key_generation"}
+        id="key_generation"
         module={AlgoThinkWeb.StudyGroupLive.KeyGeneration}
         crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "key_generation" end)}
         current_user={@current_user}
@@ -57,7 +57,6 @@
         type="verify"
         action="Verify"
       />
-      
     </div>
   </.container>
 

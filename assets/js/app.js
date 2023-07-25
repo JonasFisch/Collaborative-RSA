@@ -22,6 +22,7 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import "./chatScroll.js"
+import "./singleAccordionOpenHook"
 import Drag from "./dragHook";
 import Draggable from "./draggableHook";
 

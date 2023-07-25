@@ -5,9 +5,10 @@ defmodule AlgoThinkWeb.Accordion do
   attr :open, :boolean, default: false
 
   slot :inner_block, required: false
+  @spec accordion(map) :: Phoenix.LiveView.Rendered.t()
   def accordion(assigns) do
     ~H"""
-    <details class="bg-gray-100 rounded-md p-3 group mx-6" open={@open}>
+    <details class="bg-gray-100 rounded-md p-3 group mx-6">
       <summary class="list-none cursor-pointer">
         <div class="flex justify-between items-center">
           <span class="font-medium text-xl"><%= @header %></span>

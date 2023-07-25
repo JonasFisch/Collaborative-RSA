@@ -7,7 +7,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
   def render(assigns) do
     ~H"""
     <div>
-      <.accordion header="Key Generation" open>
+      <AlgoThinkWeb.Accordion.accordion header="Key Generation">
         <div class="flex flex-col gap-4">
           <form class="self-center" action="" phx-submit="generate_keys" phx-target={@myself} >
             <.button class="w-fit" disabled={@button_state == :loaded} type="submit">Generate Keys</.button>
@@ -17,7 +17,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
             <.drop_zone id="drop-zone-private-key-result" placeholder={"Private Key"} is_result={true} crypto_artifact={@private_key} />
           </div>
         </div>
-      </.accordion>
+      </AlgoThinkWeb.Accordion.accordion>
     </div>
     """
   end

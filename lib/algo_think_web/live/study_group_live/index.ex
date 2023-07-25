@@ -63,7 +63,15 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
     # IO.inspect(users_crypo_artifacts)
 
-    {:ok, socket |> assign(crypto_artifacts: [], chat_messages: [], study_group_id: study_group_id), layout: {AlgoThinkWeb.Layouts, :game}}
+    {:ok, socket |>
+      assign(
+        crypto_artifacts: [],
+        chat_messages: [],
+        study_group_id: study_group_id,
+        open_accordion: "encryption"
+      ),
+      layout: {AlgoThinkWeb.Layouts, :game}
+    }
   end
 
   def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do
