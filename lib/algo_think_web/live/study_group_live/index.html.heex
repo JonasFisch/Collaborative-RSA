@@ -10,6 +10,14 @@
   <.container class="w-5/12">
     <div class="flex flex-col gap-4">
       <.live_component
+        id={"key_generation"}
+        module={AlgoThinkWeb.StudyGroupLive.KeyGeneration}
+        crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "key_generation" end)}
+        current_user={@current_user}
+        study_group_id={@study_group_id}
+        type="key_generation"
+      />
+      <.live_component
         id="encryption"
         module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
         crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "encryption" end)}
@@ -19,18 +27,16 @@
         type="encryption"
         action="Encrypt"
       />
-      <div>
-        <.live_component
-          id="decryption"
-          module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
-          crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "decryption" end)}
-          current_user={@current_user}
-          study_group_id={@study_group_id}
-          name="Decryption"
-          type="decryption"
-          action="Decrypt"
-        />
-      </div>
+      <.live_component
+        id="decryption"
+        module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
+        crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "decryption" end)}
+        current_user={@current_user}
+        study_group_id={@study_group_id}
+        name="Decryption"
+        type="decryption"
+        action="Decrypt"
+      />
       <.live_component
         id={"sign"}
         module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
@@ -51,12 +57,7 @@
         type="verify"
         action="Verify"
       />
-      <.live_component
-        id={"key_generation"}
-        module={AlgoThinkWeb.StudyGroupLive.KeyGeneration}
-        current_user={@current_user}
-        study_group_id={@study_group_id}
-      />
+      
     </div>
   </.container>
 

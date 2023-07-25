@@ -7,14 +7,14 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
   def render(assigns) do
     ~H"""
     <div>
-      <.accordion header="Key Generation">
+      <.accordion header="Key Generation" open>
         <div class="flex flex-col gap-4">
           <form class="self-center" action="" phx-submit="generate_keys" phx-target={@myself} >
             <.button class="w-fit" disabled={@button_state == :loaded} type="submit">Generate Keys</.button>
           </form>
           <div class="flex flex-row gap-4">
-            <.drop_zone id="result-key-generation-public" phx-click="add_key_to_storage" phx-target={@myself} placeholder={"Public Key"} is_result={true} crypto_artifact={@public_key} />
-            <.drop_zone id="result-key-generation-private" phx-click="add_key_to_storage" phx-target={@myself} placeholder={"Private Key"} is_result={true} crypto_artifact={@private_key} />
+            <.drop_zone id="drop-zone-public-key-result" placeholder={"Public Key"} is_result={true} crypto_artifact={@public_key} />
+            <.drop_zone id="drop-zone-private-key-result" placeholder={"Private Key"} is_result={true} crypto_artifact={@private_key} />
           </div>
         </div>
       </.accordion>
@@ -27,6 +27,8 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
     {:ok,
      socket
       |> assign(assigns)
+      |> assign(public_key: Enum.find(assigns.crypto_artifacts, fn crypto_artifact -> crypto_artifact.location_id == "drop-zone-public-key-result" end))
+      |> assign(private_key: Enum.find(assigns.crypto_artifacts, fn crypto_artifact -> crypto_artifact.location_id == "drop-zone-private-key-result" end))
     }
   end
 
@@ -41,32 +43,26 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
 
   @impl true
   def handle_event("generate_keys", _params, socket) do
-    {:ok, %{:public_key => public_key, :private_key => private_key}} = CryptoArtifacts.generate_public_private_key_pair(socket.assigns.current_user.id)
+    {:ok, %{:public_key => public_key, :private_key => private_key}} =
+      CryptoArtifacts.generate_public_private_key_pair(socket.assigns.current_user.id)
 
-    {:noreply, socket |> assign(
-        button_state: :loaded,
-        public_key: public_key,
-        private_key: private_key
-    )}
-  end
-
-  @impl true
-  def handle_event("add_key_to_storage", params, socket) do
+    # add public key
     ChipStorage.create_crypto_artifact_user(%{
       user_id: socket.assigns.current_user.id,
-      crypto_artifact_id: params["crypto-artifact-id"],
+      crypto_artifact_id: public_key.id,
       study_group_id: socket.assigns.study_group_id
     })
 
-    assigns = case params["crypto-artifact-type"] do
-      "public_key" -> %{public_key: nil}
-      "private_key" -> %{private_key: nil}
-      _ -> raise "invalid type given! in key generation"
-    end
+    # add private key
+    ChipStorage.create_crypto_artifact_user(%{
+      user_id: socket.assigns.current_user.id,
+      crypto_artifact_id: private_key.id,
+      study_group_id: socket.assigns.study_group_id
+    })
 
-    # TODO: use add chip here!
-    send(self(), "load_users_chips")
+    send(self(), %{topic: "add_new_chip", crypto_artifact: public_key, location: socket.assigns.type, drop_zone_id: "drop-zone-public-key-result"})
+    send(self(), %{topic: "add_new_chip", crypto_artifact: private_key, location: socket.assigns.type, drop_zone_id: "drop-zone-private-key-result"})
 
-    {:noreply, socket |> assign(assigns)}
+    {:noreply, socket |> assign(button_state: :loaded)}
   end
 end

@@ -44,7 +44,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     # # encryption
     # {:ok, message} = AlgoThink.CryptoArtifacts.create_message(socket.assigns.current_user.id, "Random Message")
     # {:ok, encrypted_message} = AlgoThink.CryptoArtifacts.encrypt_message(socket.assigns.current_user.id, message.id, public_key.id)
-    # {:ok, signature} = AlgoThink.CryptoArtifacts.create_signature(socket.assigns.current_user.id, message.id, private_key.id)
+    # {:ok, signature} = Alphx-click="add_key_to_storage" phx-target={@myself}goThink.CryptoArtifacts.create_signature(socket.assigns.current_user.id, message.id, private_key.id)
 
     # # decryption and validation
     # {:ok, decrypted_message} = AlgoThink.CryptoArtifacts.decrypt_message(encrypted_message.id, private_key.id)
