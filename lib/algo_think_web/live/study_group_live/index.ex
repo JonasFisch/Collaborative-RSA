@@ -92,6 +92,10 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     end
   end
 
+  def handle_event("accordion_toggled", params, socket) do
+    {:noreply, socket |> assign(open_accordion: Map.get(params, "type"))}
+  end
+
   def handle_info("load_messages", socket) do
     chat_messages = ChatMessages.list_chat_messages(socket.assigns.study_group_id)
     {:noreply, socket |> assign(chat_messages: chat_messages)}

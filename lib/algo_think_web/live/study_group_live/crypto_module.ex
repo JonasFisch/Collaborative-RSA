@@ -7,7 +7,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
   def render(assigns) do
     ~H"""
     <div phx-hook="drag" id={"crypo-module-#{@type}"}>
-      <AlgoThinkWeb.Accordion.accordion header={@name}>
+      <AlgoThinkWeb.Accordion.accordion header={@name} open={@open} phx-click="accordion_toggled" phx-value-type={@type}>
         <div class="flex flex-col gap-4">
           <%= for field <- @data do %>
             <div class="flex flex-row justify-between items-center gap-4">

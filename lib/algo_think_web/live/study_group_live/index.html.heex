@@ -16,6 +16,7 @@
         current_user={@current_user}
         study_group_id={@study_group_id}
         type="key_generation"
+        open={@open_accordion == "key_generation"}
       />
       <.live_component
         id="encryption"
@@ -26,6 +27,7 @@
         name="Encryption"
         type="encryption"
         action="Encrypt"
+        open={@open_accordion == "encryption"}
       />
       <.live_component
         id="decryption"
@@ -36,6 +38,7 @@
         name="Decryption"
         type="decryption"
         action="Decrypt"
+        open={@open_accordion == "decryption"}
       />
       <.live_component
         id={"sign"}
@@ -46,6 +49,7 @@
         name="Sign"
         type="sign"
         action="Create Signature"
+        open={@open_accordion == "sign"}
       />
       <.live_component
         id={"verify"}
@@ -56,6 +60,7 @@
         name="Verify"
         type="verify"
         action="Verify"
+        open={@open_accordion == "verify"}
       />
     </div>
   </.container>
