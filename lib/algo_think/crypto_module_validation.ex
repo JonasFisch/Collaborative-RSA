@@ -11,7 +11,8 @@ defmodule AlgoThink.CryptoModuleValidation do
   end
 
   defp validate_encrypted(changeset, field, encrypted?) do
-    if not encrypted? do
+    IO.inspect(encrypted?)
+    if not !!encrypted? do
       Ecto.Changeset.add_error(changeset, :message, "encrypted message needed")
     else
       changeset
@@ -19,7 +20,7 @@ defmodule AlgoThink.CryptoModuleValidation do
   end
 
   defp validate_unencrypted(changeset, field, encrypted?) do
-    if encrypted? do
+    if !!encrypted? do
       Ecto.Changeset.add_error(changeset, :message, "unencrypted message needed")
     else
       changeset

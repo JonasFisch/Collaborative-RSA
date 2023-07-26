@@ -112,9 +112,14 @@ defmodule AlgoThink.CryptoArtifacts do
       {:ok, private_key} = ExPublicKey.loads(crypto_artifact_private_key.content)
 
       # decrypt and save to db
-      # TODO: check if decryption was successful otherwise set error in changeset accordingly
-      {:ok, decrypted_message} = ExPublicKey.decrypt_private(crypto_artifact_encrypted_message.content, private_key)
-      create_message(crypto_artifact_encrypted_message.owner_id, decrypted_message)
+      with {:ok, decrypted_message} <- ExPublicKey.decrypt_private(crypto_artifact_encrypted_message.content, private_key) do
+        create_message(crypto_artifact_encrypted_message.owner_id, decrypted_message)
+      else
+        _err ->
+          {:error, changeset
+            |> Ecto.Changeset.add_error(:private_key, "This key can't decrypt the message.")
+          }
+      end
     else
       {:error, changeset}
     end
@@ -128,7 +133,6 @@ defmodule AlgoThink.CryptoArtifacts do
     if (changeset.valid?) do
       {:ok, private_key} = ExPublicKey.loads(crypto_artifact_private_key.content)
       {:ok, signature} = ExPublicKey.sign(crypto_artifact_message.content, private_key)
-      # TODO: prevent user from signing wrong messages!!!
       create_crypto_artifact(%{content: Base.encode64(signature), type: :signature, owner_id: owner_id})
     else
       {:error, changeset}
@@ -144,15 +148,14 @@ defmodule AlgoThink.CryptoArtifacts do
     if (changeset.valid?) do
       {:ok, public_key} = ExPublicKey.loads(public_key.content)
       {:ok, signature_decoded} = Base.decode64(signature.content)
-      # TODO: handle errors where keys does not match or signature is invalid
-      valid? = ExPublicKey.verify(message.content, signature_decoded, public_key)
+      {:ok, valid?} = ExPublicKey.verify(message.content, signature_decoded, public_key)
+      IO.inspect(valid?)
       {:ok, %{valid: valid?, message: message}}
     else
       {:error, changeset}
     end
   end
 
-  # TODO: improve
   def mark_message_as_verified(message_id) do
     %CryptoArtifact{} = message = get_crypto_artifact!(message_id)
     if (message.type == :message) do

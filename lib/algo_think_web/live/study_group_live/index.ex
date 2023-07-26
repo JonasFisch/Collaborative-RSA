@@ -102,8 +102,6 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   end
 
   def handle_info(%{topic: "mark_message_as_valid", message: message, valid: valid?}, socket) do
-    IO.inspect("in mark_message_as_valid")
-
     crypto_artifacts = socket.assigns.crypto_artifacts
     |> Enum.map(fn artifact ->
       if (artifact.id == message.id) do
@@ -122,6 +120,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     {:noreply, socket |> assign(storage_artifacts: users_crypo_artifacts, crypto_artifacts: users_crypo_artifacts)}
   end
 
+  # handle drop on chat
   @impl true
   def handle_event("dropped", params, socket) do
     crypto_artifact_id = Map.get(params, "draggedId")

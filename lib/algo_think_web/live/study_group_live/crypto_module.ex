@@ -163,6 +163,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
         valid = Map.get(result, :valid)
         message = Map.get(result, :message)
 
+        # TODO: do this in a more clean way (update the success state in the index!) right now the is valid / is invalid color change comes with an delay or does not appear at all (update after changing the color resets the color!)
         send(self(), %{topic: "mark_message_as_valid", message: message, valid: valid})
         {:noreply, socket |> assign(success: if valid do :success else :invalid end)}
       else
