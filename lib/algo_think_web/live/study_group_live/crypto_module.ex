@@ -14,7 +14,15 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
               <span class="w-2/6 font-medium">
                 <%= field.name %>:
               </span>
-              <AlgoThinkWeb.DropZone.drop_zone error={Map.get(@errors, field.expected_type)} placeholder={"#{field.placeholder}"} is_result={field.result} crypto_artifact={field.crypto_artifact} id={field.drop_zone_id} />
+              <%= if not field.result do %>
+                <AlgoThinkWeb.DropZone.drop_zone error={Map.get(@errors, field.expected_type)} placeholder={"#{field.placeholder}"} is_result={field.result} crypto_artifact={field.crypto_artifact} id={field.drop_zone_id} />
+              <% else %>
+                <%= if @success != nil do %>
+                  <AlgoThinkWeb.DropZone.drop_zone placeholder_class="text-gray-700" class={if @success == :success do "bg-green-300" else "bg-red-400" end} error={Map.get(@errors, field.expected_type)} placeholder={if @success == :success do "Valid" else "Invalid" end} is_result={field.result} crypto_artifact={field.crypto_artifact} id={field.drop_zone_id} />
+                <% else %>
+                  <AlgoThinkWeb.DropZone.drop_zone error={Map.get(@errors, field.expected_type)} placeholder={"#{field.placeholder}"} is_result={field.result} crypto_artifact={field.crypto_artifact} id={field.drop_zone_id} />
+                <% end %>
+              <% end %>
             </div>
           <% end %>
         </div>
@@ -78,12 +86,13 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
       |> assign(assigns)
       |> assign(:errors, %{})
       |> assign(:data, zones)
+      |> assign(:success, nil)
     }
   end
 
   @impl true
   def mount(socket) do
-    {:ok, socket |> assign(data: [])}
+    {:ok, socket |> assign(data: [], success: nil)}
   end
 
   defp action(type, current_user_id, crypto_artifact_map) do
@@ -112,19 +121,13 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
 
   defp post_action(type, current_user_id, result, study_group_id) do
     if type == "verify" do
-      IO.inspect("post action verify")
-      # TODO: mark message as verified / or not valid
 
       valid = if Map.get(result, :valid) do :valid else :invalid end
 
-      updated_message = CryptoArtifacts.update_crypto_artifact(
+      _updated_message = CryptoArtifacts.update_crypto_artifact(
         Map.get(result, :message),
         %{valid: valid}
       )
-
-      IO.inspect(updated_message)
-
-      valid = true
 
       {:ok, valid}
     else
@@ -161,10 +164,11 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
         message = Map.get(result, :message)
 
         send(self(), %{topic: "mark_message_as_valid", message: message, valid: valid})
+        {:noreply, socket |> assign(success: if valid do :success else :invalid end)}
       else
         send(self(), %{topic: "add_new_chip", crypto_artifact: result, location: socket.assigns.type, drop_zone_id: "drop-zone-#{socket.assigns.type}-result"})
+        {:noreply, socket}
       end
-      {:noreply, socket}
     else
       {:error, changeset} ->
         # transform error message to format: {field, error_message}

@@ -6,6 +6,7 @@ defmodule AlgoThinkWeb.DropZone do
   Renders a Drop Zone.
   """
   attr :class, :string, default: nil
+  attr :placeholder_class, :string, default: nil
   attr :error, :string, default: nil, required: false
   attr :placeholder, :string, default: "Drop Something"
   attr :is_result, :boolean, default: false
@@ -40,6 +41,7 @@ defmodule AlgoThinkWeb.DropZone do
               if @error != nil do
                 if not @is_result do "text-red-400" end
               end,
+              @placeholder_class
             ]}>
               <%= @placeholder %>
             </span>
