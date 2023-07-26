@@ -97,6 +97,22 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     {:noreply, socket |> assign(open_accordion: Map.get(params, "type"))}
   end
 
+  def handle_event("add_attachment_to_storage", params, socket) do
+    attachment_id = Map.get(params, "attachment-id")
+    IO.inspect(attachment_id)
+
+    # TODO: check if there is already a connnection (add unique constrain in db! and catch error!)
+    with {:ok, crypto_artifact_user}<- ChipStorage.create_crypto_artifact_user(%{user_id: socket.assigns.current_user.id, study_group_id: socket.assigns.study_group_id, crypto_artifact_id: attachment_id }) do
+      attachment = CryptoArtifacts.get_crypto_artifact!(attachment_id)
+      send(self(), %{topic: "add_new_chip", crypto_artifact: attachment, location: "storage", drop_zone_id: ""})
+    else
+      # TODO: unique entry contrain!
+      {:error, err} -> IO.inspect(err)
+    end
+
+    {:noreply, socket}
+  end
+
   def handle_info("load_messages", socket) do
     chat_messages = ChatMessages.list_chat_messages(socket.assigns.study_group_id)
     {:noreply, socket |> assign(chat_messages: chat_messages)}

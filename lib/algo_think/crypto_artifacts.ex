@@ -36,7 +36,7 @@ defmodule AlgoThink.CryptoArtifacts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_crypto_artifact!(id), do: Repo.get!(CryptoArtifact, id)
+  def get_crypto_artifact!(id), do: Repo.get!(CryptoArtifact, id) |> Repo.preload([:owner])
 
   @doc """
   Creates a crypto_artifact.

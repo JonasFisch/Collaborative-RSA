@@ -105,7 +105,7 @@
           <div id="chat" class="chat overflow-y-scroll h-full gap-3 flex flex-col pb-2 ">
             <%= for message <- @chat_messages do %>
               <div id={"message-#{message.id}"} phx-mounted={JS.dispatch("algothink:newMessage")} class="flex flex-col">
-                <.message attachment={message.attachment} text={message.text} author={message.author.name} self={message.author.id == @current_user.id} time={Time.to_string(Time.add(message.inserted_at, 7200))} />
+                <.message current_user={@current_user} attachment={message.attachment} text={message.text} author={message.author.name} self={message.author.id == @current_user.id} time={Time.to_string(Time.add(message.inserted_at, 7200))} />
               </div>
             <% end %>
             <div id="chat-anchor"></div>
