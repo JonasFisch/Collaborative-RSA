@@ -7,7 +7,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
   def render(assigns) do
     ~H"""
     <div>
-      <.accordion header="Key Generation" phx-click="accordion_toggled" phx-value-type={@type}>
+      <.accordion header="Key Generation" phx-click="accordion_toggled" phx-value-type={@type} open={@open}>
         <div class="flex flex-col gap-4">
           <form class="self-center" action="" phx-submit="generate_keys" phx-target={@myself} >
             <.button class="w-fit" disabled={@button_state == :loaded} type="submit">Generate Keys</.button>
