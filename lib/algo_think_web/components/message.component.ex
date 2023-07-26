@@ -6,6 +6,7 @@ defmodule AlgoThinkWeb.Message do
   attr :author, :string, required: true, doc: "Author of the message."
   attr :time, :string, required: false, doc: "Time the message was send."
   attr :attachment, CryptoArtifacts.CryptoArtifact, required: false, default: nil, doc: "An attached Crypto Artefact"
+  attr :attachment_already_added, :boolean, required: false, default: false, doc: "An attached Crypto Artefact"
   attr :self, :boolean, default: false, doc: "changes color and position of message indicates who is author."
   def message(assigns) do
     ~H"""
@@ -23,10 +24,9 @@ defmodule AlgoThinkWeb.Message do
           <AlgoThinkWeb.Chip.chip id={"message-attachment-#{@attachment.id}"} name={@attachment.owner.name} type={@attachment.type} encrypted={@attachment.encrypted} valid={@attachment.valid} />
         </div>
         <div class="flex">
-          <AlgoThinkWeb.Button.button :if={@attachment.owner.id != @current_user.id} phx-click="add_attachment_to_storage" phx-value-attachment-id={@attachment.id}>
-            <MaterialIcons.add class="fill-white" size={24} />
-            <%!-- TODO: implement button functionality --%>
-            Add to Storage
+          <AlgoThinkWeb.Button.button disabled={@attachment_already_added} :if={@attachment.owner.id != @current_user.id} phx-click="add_attachment_to_storage" phx-value-attachment-id={@attachment.id}>
+            <MaterialIcons.add class="fill-white" size={24} :if={not @attachment_already_added} />
+            <%= if @attachment_already_added do "already added" else "Add to Storage" end %>
           </AlgoThinkWeb.Button.button>
         </div>
       <% end %>

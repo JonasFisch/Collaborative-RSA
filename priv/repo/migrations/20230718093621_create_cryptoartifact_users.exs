@@ -10,6 +10,9 @@ defmodule AlgoThink.Repo.Migrations.CreateCryptoartifactUsers do
       timestamps()
     end
 
+    create unique_index(:crypto_artifact_users, [:user_id, :crypto_artifact_id])
+
+
     create index(:crypto_artifact_users, [:user_id])
     create index(:crypto_artifact_users, [:crypto_artifact_id])
     create index(:crypto_artifact_users, [:study_group_id])

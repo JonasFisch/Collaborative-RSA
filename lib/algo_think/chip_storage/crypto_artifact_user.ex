@@ -16,5 +16,6 @@ defmodule AlgoThink.ChipStorage.CryptoArtifactUser do
     crypto_artifact_user
     |> cast(attrs, [:user_id, :crypto_artifact_id, :study_group_id])
     |> validate_required([:user_id, :crypto_artifact_id, :study_group_id])
+    |> unique_constraint([:user_id, :crypto_artifact_id], name: :crypto_artifact_users_user_id_crypto_artifact_id_index, message: "chip already added")
   end
 end
