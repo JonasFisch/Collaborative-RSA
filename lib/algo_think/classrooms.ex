@@ -55,12 +55,20 @@ defmodule AlgoThink.Classrooms do
         preload: [:users]
       )
 
-    result = Repo.get!(Classroom, id) |> Repo.preload([:users]) |> Repo.preload(study_groups: study_group_users_query)
-    IO.inspect(result)
-    result
+    Repo.get!(Classroom, id) |> Repo.preload([:users]) |> Repo.preload(study_groups: study_group_users_query)
   end
 
+  @spec get_classroom_by_token(binary) :: {:ok, any}
   def get_classroom_by_token(token) when is_binary(token), do: {:ok, Repo.get_by(Classroom, token: token)}
+
+  def students_with_no_study_group(id) do
+    Repo.all(from(
+      user in User,
+      join: cu in ClassroomUser,
+      on: cu.user_id == user.id,
+      where: cu.classroom_id == ^id and is_nil(cu.study_group_id),
+    ))
+  end
 
   def add_user_classroom(%User{} = user, %Classroom{} = classroom) do
     %ClassroomUser{}

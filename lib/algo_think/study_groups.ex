@@ -78,7 +78,22 @@ defmodule AlgoThink.StudyGroups do
     else
       {:error, "already full"}
     end
+  end
 
+  def join_no_group(%Classroom{} = classroom, %User{} = user) do
+
+    classroom_user = Repo.one(from classroom_user in ClassroomUser, where: classroom_user.user_id == ^user.id and classroom_user.classroom_id == ^classroom.id)
+
+    result = classroom_user
+      |> ClassroomUser.changeset_update_no_group(%{study_group_id: nil})
+      |> Repo.update()
+
+    IO.inspect("in no group join")
+    IO.inspect(result)
+
+    Classrooms.notify_subscribers("classroom_updated")
+
+    {:ok, result}
   end
 
   def study_group_full(%StudyGroup{} = study_group) do

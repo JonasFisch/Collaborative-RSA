@@ -29,4 +29,10 @@ defmodule AlgoThink.Classrooms.ClassroomUser do
     |> cast(attrs, [:study_group_id])
     |> validate_required([:study_group_id])
   end
+
+  def changeset_update_no_group(classroom_user, attrs) do
+    classroom_user
+    |> cast(attrs, [:study_group_id])
+    |> validate_required([])
+  end
 end
