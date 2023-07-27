@@ -21,7 +21,8 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         crypto_artifacts: [],
         chat_messages: [],
         study_group_id: study_group_id,
-        open_accordion: "none"
+        open_accordion: "none",
+        drag_origin: "storage"
       ),
       layout: {AlgoThinkWeb.Layouts, :game}
     }
@@ -149,5 +150,14 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         IO.inspect("error")
         {:noreply, socket}
     end
+  end
+
+  def handle_info(%{topic: "start_drag", params: _params, origin: origin}, socket) do
+    {:noreply, socket |> assign(drag_origin: origin)}
+  end
+
+  def handle_info(%{topic: "end_drag", params: _params}, socket) do
+    # needed to fix bugs
+    {:noreply, socket |> assign(drag_origin: "storage")}
   end
 end

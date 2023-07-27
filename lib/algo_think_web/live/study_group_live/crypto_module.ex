@@ -192,4 +192,15 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
     send(self(), %{topic: "update_chip_location", dragged_id: params["draggedId"], drop_zone_id: params["dropzoneId"], location: socket.assigns.type})
     {:noreply, socket}
   end
+
+  @impl true
+  def handle_event("start_drag", params, socket) do
+    send(self(), %{topic: "start_drag", params: params, origin: socket.assigns.type})
+    {:noreply, socket}
+  end
+
+  def handle_event("end_drag", params, socket) do
+    send(self(), %{topic: "end_drag", params: params})
+    {:noreply, socket}
+  end
 end

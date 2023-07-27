@@ -65,4 +65,15 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
 
     {:noreply, socket |> assign(button_state: :loaded)}
   end
+
+  @impl true
+  def handle_event("start_drag", params, socket) do
+    send(self(), %{topic: "start_drag", params: params, origin: socket.assigns.type})
+    {:noreply, socket}
+  end
+
+  def handle_event("end_drag", params, socket) do
+    send(self(), %{topic: "end_drag", params: params})
+    {:noreply, socket}
+  end
 end
