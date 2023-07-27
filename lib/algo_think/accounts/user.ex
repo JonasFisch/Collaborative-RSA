@@ -74,7 +74,7 @@ defmodule AlgoThink.Accounts.User do
     changeset
     |> validate_required([:name])
     |> unique_constraint(:name)
-    |> validate_length(:name, min: 1)
+    |> validate_length(:name, min: 1, max: 9, message: "maximum of 9 characters allowed")
   end
 
   defp validate_role(changeset, _opts) do

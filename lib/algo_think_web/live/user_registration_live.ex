@@ -9,13 +9,6 @@ defmodule AlgoThinkWeb.UserRegistrationLive do
     <div class="mx-auto max-w-sm">
       <.header class="text-center">
         Please enter your name
-        <%!-- <:subtitle>
-          Already registered?
-          <.link navigate={~p"/users/log_in"} class="font-semibold text-brand hover:underline">
-            Sign in
-          </.link>
-          to your account now.
-        </:subtitle> --%>
       </.header>
 
       <.simple_form
@@ -27,9 +20,9 @@ defmodule AlgoThinkWeb.UserRegistrationLive do
         action={~p"/users/log_in?_action=registered"}
         method="post"
       >
-        <.error :if={@check_errors}>
+        <%!-- <.error :if={@check_errors}>
           Oops, something went wrong! Please check the errors below.
-        </.error>
+        </.error> --%>
 
         <.input field={@form[:name]} label="Name" required />
         <.input field={@form[:password]} type="hidden" value="jonrocktrot123" required />
