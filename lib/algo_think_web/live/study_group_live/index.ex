@@ -47,7 +47,13 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   end
 
   def handle_event("accordion_toggled", params, socket) do
-    {:noreply, socket |> assign(open_accordion: Map.get(params, "type"))}
+    {:noreply, socket |> assign(
+      open_accordion: Map.get(params, "type"),
+      crypto_artifacts: Enum.map(socket.assigns.crypto_artifacts, fn crypto_artifact ->
+        # put all chips back into the storage
+        Map.put(crypto_artifact, :location, "storage")
+      end)
+    )}
   end
 
   def handle_event("add_attachment_to_storage", params, socket) do
