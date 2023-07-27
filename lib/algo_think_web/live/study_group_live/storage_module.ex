@@ -5,16 +5,15 @@ defmodule AlgoThinkWeb.StudyGroupLive.StorageModule do
   def render(assigns) do
     ~H"""
     <div class="w-3/12">
-      <.container class="w-full p-7 relative" phx-hook="drag" id="storage-drag">
-        <div class="drop-zone h-full w-full">
+      <.container class="w-full p-7 relative overflow-y-scroll" phx-hook="drag" id="storage-drag">
+        <div class="drop-zone h-full w-full ">
           <.drag_modal :if={@drag_origin != "storage"} primary_text="Put in storage" secondary_text="Drop to place chip in storage" />
 
           <div class={[
             "h-full",
             if @drag_origin != "storage" do "disable-pointer-events-dragging" end
           ]}>
-          <%!-- phx-dragging:border-gray-300 phx-dragging:bg-gray-50 --%>
-            <div class="h-full p-2 overflow-y-scroll">
+            <div class="h-full p-2">
               <%= for crypto_artifact <- @storage_artifacts do %>
                 <.chip id={crypto_artifact.id} type={crypto_artifact.type} name={crypto_artifact.owner.name} signed={crypto_artifact.signed} encrypted={crypto_artifact.encrypted} valid={crypto_artifact.valid}  />
               <% end %>
