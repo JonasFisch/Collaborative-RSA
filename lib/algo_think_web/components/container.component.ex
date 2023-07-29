@@ -2,6 +2,8 @@ defmodule AlgoThinkWeb.Container do
   use Phoenix.Component
 
   attr :class, :string, default: nil
+  attr :title, :string, default: " "
+
   attr :rest, :global
 
   slot :inner_block, required: true
@@ -10,10 +12,13 @@ defmodule AlgoThinkWeb.Container do
   def container(assigns) do
     ~H"""
     <div class={[
-      "rounded-xl border-2 shadow-default p-2 bg-white max-h-128 overflow-hidden",
+      "rounded-xl border-2 shadow-default p-2 bg-white h-full overflow-hidden",
       @class
     ]} {@rest}>
-      <%= render_slot(@inner_block) %>
+      <h2 class="text-lg font-bold text-center"><%= @title %></h2>
+      <div>
+        <%= render_slot(@inner_block) %>
+      </div>
     </div>
     """
   end

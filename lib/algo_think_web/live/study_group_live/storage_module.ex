@@ -5,8 +5,8 @@ defmodule AlgoThinkWeb.StudyGroupLive.StorageModule do
   def render(assigns) do
     ~H"""
     <div class="w-3/12">
-      <.container class="w-full p-7 relative overflow-y-scroll" phx-hook="drag" id="storage-drag">
-        <div class="drop-zone h-full w-full ">
+      <.container class="w-full p-7 relative" phx-hook="drag" id="storage-drag">
+        <div class="drop-zone h-full w-full overflow-y-scroll">
           <.drag_modal :if={@drag_origin != "storage"} primary_text="Put in storage" secondary_text="Drop to place chip in storage" />
 
           <div class={[

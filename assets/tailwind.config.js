@@ -39,6 +39,7 @@ module.exports = {
       },
       height: {
         "chip": "62px",
+        "game": "calc(100% - 25px)"
       }
     },
   },

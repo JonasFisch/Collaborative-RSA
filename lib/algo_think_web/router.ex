@@ -76,7 +76,12 @@ defmodule AlgoThinkWeb.Router do
 
       live "/classroom/:id", ClassroomLive.Show, :show
       live "/classroom/:id/show/edit", ClassroomLive.Show, :edit
-      live "/classroom/:id/studygroup/:study_group_id", StudyGroupLive.Index, :index
+    end
+
+    live_session :game, root_layout: {AlgoThinkWeb.Layouts, :root_game},
+      on_mount: [{AlgoThinkWeb.UserAuth, :ensure_authenticated}] do
+
+      live "/classroom/:id/studygroup/:study_group_id", StudyGroupLive.Index, :index, container: {:div, class: "h-game"}
     end
   end
 

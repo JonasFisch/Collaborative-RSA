@@ -24,7 +24,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         open_accordion: "none",
         drag_origin: "storage"
       ),
-      layout: {AlgoThinkWeb.Layouts, :game}
+      layout: {AlgoThinkWeb.Layouts, :game},
     }
   end
 
