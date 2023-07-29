@@ -82,8 +82,8 @@
         <%!-- <div class="hidden absolute left-0 top-0 h-full w-full bg-gray-700 phx-dragging:block z-40 backdrop-blur-sm"></div> --%>
 
 
-    <.container class="w-4/12 overflow-auto relative" phx-hook="drag" id="chat-drag">
-      <div class="drop-zone h-full w-full">
+    <.container class="w-4/12 relative" phx-hook="drag" id="chat-drag" title="Chat">
+      <div class="h-full w-full">
         
         <.drag_modal primary_text="Send to public chat" secondary_text="Drop to instantly send to the public chat" />
 
@@ -111,7 +111,7 @@
     </.container>
   </div>
 
-  <.container class="relative -bottom-6 w-2/6 z-50 left-1/2 -translate-x-1/2">
+  <.container class="relative -bottom-6 w-2/6 z-50 left-1/2 -translate-x-1/2" title="Lösung">
     Lösungswort
   </.container>
 </div>

@@ -8,7 +8,7 @@ defmodule AlgoThinkWeb.DragModal do
     ~H"""
     <div>
       <%!-- backdrop --%>
-      <div class="pointer-events-none opacity-0 transition-opacity absolute left-0 top-0 h-full w-full phx-dragging:opacity-70 phx-dragging:block bg-gray-700 z-40 backdrop-blur-sm"></div>
+      <div class="rounded-xl pointer-events-none opacity-0 transition-opacity absolute left-0 top-0 h-full w-full phx-dragging:opacity-70 phx-dragging:block bg-gray-700 z-40 backdrop-blur-sm"></div>
 
       <%!-- hover info --%>
       <div class="scale-90 phx-dragging:scale-100 transition-transform pointer-events-none opacity-0 left-0 top-0 absolute h-full phx-dragging:opacity-100 w-full z-50">
