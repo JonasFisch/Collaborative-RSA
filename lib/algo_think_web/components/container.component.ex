@@ -12,11 +12,11 @@ defmodule AlgoThinkWeb.Container do
   def container(assigns) do
     ~H"""
     <div class={[
-      "rounded-xl border-2 shadow-default p-2 bg-white h-full overflow-hidden",
+      "rounded-xl border-2 shadow-default p-4 bg-white h-full overflow-hidden",
       @class
     ]} {@rest}>
       <h2 class="text-lg font-bold text-center"><%= @title %></h2>
-      <div>
+      <div class="h-full">
         <%= render_slot(@inner_block) %>
       </div>
     </div>
