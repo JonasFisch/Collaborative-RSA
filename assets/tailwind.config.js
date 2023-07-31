@@ -55,6 +55,7 @@ module.exports = {
     plugin(({addVariant}) => addVariant("phx-submit-loading", [".phx-submit-loading&", ".phx-submit-loading &"])),
     plugin(({addVariant}) => addVariant("phx-change-loading", [".phx-change-loading&", ".phx-change-loading &"])),
     plugin(({addVariant}) => addVariant("phx-dragging", [".phx-dragging&", ".phx-dragging &"])),
+    plugin(({addVariant}) => addVariant("phx-dragged", [".phx-dragged&", ".phx-dragged &"])),
 
     // Embeds Hero Icons (https://heroicons.com) into your app.css bundle
     // See your `CoreComponents.icon/1` for more information.

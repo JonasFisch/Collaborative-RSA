@@ -12,6 +12,7 @@ export default {
       event.dataTransfer.clearData()
       event.dataTransfer.setData("text/plain", event.target.id); 
       body.classList.add("dragging")
+      hook.el.classList.add("phx-dragged")
     });
 
     hook.el.addEventListener("dragend", (event) => {      
@@ -20,6 +21,7 @@ export default {
       }); 
 
       body.classList.remove("dragging")
+      hook.el.classList.remove("phx-dragged")
     });
   },
 }
