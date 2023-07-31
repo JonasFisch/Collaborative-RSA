@@ -5,6 +5,7 @@
       module={AlgoThinkWeb.StudyGroupLive.StorageModule}
       storage_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "storage" end)}
       drag_origin={@drag_origin}
+      current_user={@current_user}
     />
     
     <.container class="w-5/12">

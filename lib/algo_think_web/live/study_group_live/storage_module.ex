@@ -1,5 +1,6 @@
 defmodule AlgoThinkWeb.StudyGroupLive.StorageModule do
   use AlgoThinkWeb, :live_component
+  import Enum
 
   @impl true
   def render(assigns) do
@@ -13,8 +14,15 @@ defmodule AlgoThinkWeb.StudyGroupLive.StorageModule do
           if @drag_origin != "storage" do "disable-pointer-events-dragging" end
         ]}>
           <div class="h-full p-2 overflow-y-scroll">
-            <%= for crypto_artifact <- @storage_artifacts do %>
-              <.chip id={crypto_artifact.id} type={crypto_artifact.type} name={crypto_artifact.owner.name} signed={crypto_artifact.signed} encrypted={crypto_artifact.encrypted} valid={crypto_artifact.valid}  />
+            <%= for {{owner}, crypto_artifacts} <- @grouped_artifacts do %>
+              <div class="bg-slate-100 mb-2">
+                <h3 class="text-lg font-bold m-1">
+                  <%= owner %>
+                </h3>
+                <%= for crypto_artifact <- crypto_artifacts do %>
+                  <.chip id={crypto_artifact.id} type={crypto_artifact.type} name={crypto_artifact.owner.name} signed={crypto_artifact.signed} encrypted={crypto_artifact.encrypted} valid={crypto_artifact.valid}  />
+                <% end %>
+              </div>
             <% end %>
           </div>
         </div>
@@ -24,8 +32,33 @@ defmodule AlgoThinkWeb.StudyGroupLive.StorageModule do
   end
 
   @impl true
-  def mount(socket) do
-    {:ok, socket}
+  def update(assigns, socket) do
+
+    artifacts = Map.get(assigns, :storage_artifacts, [])
+
+    grouped_artifacts = artifacts
+      |> Enum.group_by(&{&1.owner.name})
+      |> Enum.sort(fn {{key1}, artifact1}, {{key2}, artifact2} ->
+        # always show current user on top
+        if (key1 == assigns.current_user.name) do
+          true
+        else
+          false
+        end
+      end)
+      |> Enum.map(fn {{key1}, artifact1} = element ->
+        # mark current user
+        if (key1 == assigns.current_user.name) do
+          {{"#{key1} (You)"}, artifact1}
+        else
+          element
+        end
+      end)
+
+    {:ok, socket
+      |> assign(assigns)
+      |> assign(:grouped_artifacts, grouped_artifacts)
+    }
   end
 
   @impl true
