@@ -6,6 +6,7 @@ defmodule AlgoThinkWeb.Chip do
   attr :class, :string, default: nil
   attr :id, :string, required: true
   attr :encrypted, :boolean, default: false
+  attr :draggable, :boolean, default: true
 
   attr :type, :atom,
     values: [:public_key, :private_key, :message, :signature],
@@ -14,7 +15,7 @@ defmodule AlgoThinkWeb.Chip do
 
   def chip(assigns) do
     ~H"""
-    <div draggable="true" id={"crypto-artifact-#{@id}"} phx-hook="draggable" class={[
+    <div draggable={"#{@draggable}"} id={"crypto-artifact-#{@id}"} phx-hook="draggable" class={[
       "draggable bg-white border border-slate-200 flex flex-row items-center w-full p-3 justify-between h-chip",
       @class
     ]}
