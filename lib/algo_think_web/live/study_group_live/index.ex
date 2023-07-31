@@ -118,7 +118,9 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
       end
     end)
 
-    {:noreply, socket |> assign(crypto_artifacts: crypto_artifacts)}
+    {:noreply, socket
+      |> assign(crypto_artifacts: crypto_artifacts)
+    }
   end
 
   def handle_info("load_users_chips", socket) do

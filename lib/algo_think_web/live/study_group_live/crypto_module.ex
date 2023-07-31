@@ -18,7 +18,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
                 <AlgoThinkWeb.DropZone.drop_zone error={Map.get(@errors, field.expected_type)} placeholder={"#{field.placeholder}"} is_result={field.result} crypto_artifact={field.crypto_artifact} id={field.drop_zone_id} />
               <% else %>
                 <%= if @success != nil do %>
-                  <AlgoThinkWeb.DropZone.drop_zone placeholder_class="text-gray-700" class={if @success == :success do "bg-green-300" else "bg-red-400" end} error={Map.get(@errors, field.expected_type)} placeholder={if @success == :success do "Valid" else "Invalid" end} is_result={field.result} crypto_artifact={field.crypto_artifact} id={field.drop_zone_id} />
+                  <AlgoThinkWeb.DropZone.drop_zone placeholder_class="text-gray-700" class={if @success == :valid do "bg-green-300" else "bg-red-400" end} error={Map.get(@errors, field.expected_type)} placeholder={if @success == :valid do "Valid" else "Invalid" end} is_result={field.result} crypto_artifact={field.crypto_artifact} id={field.drop_zone_id} />
                 <% else %>
                   <AlgoThinkWeb.DropZone.drop_zone error={Map.get(@errors, field.expected_type)} placeholder={"#{field.placeholder}"} is_result={field.result} crypto_artifact={field.crypto_artifact} id={field.drop_zone_id} />
                 <% end %>
@@ -81,12 +81,29 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
         }
       end)
 
+    # check if message already signed as valid
+    success = if (assigns.type == "verify") do
+      crypto_artifact = zones
+      |> Enum.find(fn zone -> zone.expected_type == :message end)
+      |> Map.get(:crypto_artifact, nil)
+
+      # IO.inspect(crypto_artifact)
+      if (crypto_artifact != nil) do
+        IO.inspect(crypto_artifact.valid)
+        crypto_artifact.valid
+      else
+        nil
+      end
+    else
+      nil
+    end
+
     {:ok,
      socket
       |> assign(assigns)
       |> assign(:errors, %{})
       |> assign(:data, zones)
-      |> assign(:success, nil)
+      |> assign(:success, success)
     }
   end
 
@@ -163,9 +180,8 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
         valid = Map.get(result, :valid)
         message = Map.get(result, :message)
 
-        # TODO: do this in a more clean way (update the success state in the index!) right now the is valid / is invalid color change comes with an delay or does not appear at all (update after changing the color resets the color!)
         send(self(), %{topic: "mark_message_as_valid", message: message, valid: valid})
-        {:noreply, socket |> assign(success: if valid do :success else :invalid end)}
+        {:noreply, socket}
       else
         send(self(), %{topic: "add_new_chip", crypto_artifact: result, location: socket.assigns.type, drop_zone_id: "drop-zone-#{socket.assigns.type}-result"})
         {:noreply, socket}
