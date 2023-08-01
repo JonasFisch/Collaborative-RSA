@@ -6,6 +6,7 @@ defmodule AlgoThink.Repo.Migrations.CreateStudyGroups do
       add :name, :string
       add :classroom_id, references(:classrooms, on_delete: :delete_all)
       add :max_users, :integer
+      add :state, :string
 
       timestamps()
     end

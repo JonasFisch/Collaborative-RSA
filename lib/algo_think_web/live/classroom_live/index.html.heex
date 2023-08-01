@@ -3,14 +3,16 @@
   <.header>
     Listing Classroom
     <:actions>
-      <%= if @current_user.role == :teacher do %>
-        <.link patch={~p"/classroom/new"}>
-          <.button>New Classroom</.button>
-        </.link>
-      <% end %>
+      <div class="flex flex-row gap-4">
+        <%= if @current_user.role == :teacher do %>
+          <.link patch={~p"/classroom/new"}>
+            <.button>New Classroom</.button>
+          </.link>
+        <% end %>
         <.link patch={~p"/classroom/join"}>
           <.button>Join</.button>
         </.link>
+      </div>
     </:actions>
 
     <:col>

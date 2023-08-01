@@ -22,7 +22,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         chat_messages: [],
         study_group_id: study_group_id,
         open_accordion: "none",
-        drag_origin: "storage"
+        drag_origin: "storage",
       ),
       layout: {AlgoThinkWeb.Layouts, :game},
     }
@@ -77,9 +77,6 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   end
 
   def handle_info(%{topic: "update_chip_location", dragged_id: dragged_id, drop_zone_id: drop_zone_id, location: location}, socket) do
-
-    IO.inspect(location)
-
     artifacts = (socket.assigns.crypto_artifacts)
     |> Enum.map(fn artifact ->
       if artifact.id == dragged_id do
