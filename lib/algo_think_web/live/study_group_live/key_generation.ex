@@ -1,4 +1,5 @@
 defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
+  alias AlgoThink.StudyGroups
   alias AlgoThink.ChipStorage
   alias AlgoThink.CryptoArtifacts
   use AlgoThinkWeb, :live_component
@@ -24,11 +25,18 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
 
   @impl true
   def update(assigns, socket) do
+
+    IO.inspect(Map.get(socket.assigns, :user_has_key_pair, nil))
+
+    # check if user already generated public and private key!
+    user_has_key_pair? = StudyGroups.user_has_key_pair?(assigns.current_user.id, assigns.study_group_id)
+
     {:ok,
      socket
       |> assign(assigns)
       |> assign(public_key: Enum.find(assigns.crypto_artifacts, fn crypto_artifact -> crypto_artifact.location_id == "drop-zone-public-key-result" end))
       |> assign(private_key: Enum.find(assigns.crypto_artifacts, fn crypto_artifact -> crypto_artifact.location_id == "drop-zone-private-key-result" end))
+      |> assign(button_state: if user_has_key_pair? do :loaded else nil end)
     }
   end
 
@@ -60,10 +68,13 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
       study_group_id: socket.assigns.study_group_id
     })
 
+    # set user has key pair in db
+    StudyGroups.set_user_has_key_pair(socket.assigns.current_user.id, socket.assigns.study_group_id)
+
     send(self(), %{topic: "add_new_chip", crypto_artifact: public_key, location: socket.assigns.type, drop_zone_id: "drop-zone-public-key-result"})
     send(self(), %{topic: "add_new_chip", crypto_artifact: private_key, location: socket.assigns.type, drop_zone_id: "drop-zone-private-key-result"})
 
-    {:noreply, socket |> assign(button_state: :loaded)}
+    {:noreply, socket}
   end
 
   @impl true

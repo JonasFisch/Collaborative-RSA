@@ -41,6 +41,27 @@ defmodule AlgoThink.StudyGroups do
   """
   def get_study_group!(id), do: Repo.get!(StudyGroup, id) |> Repo.preload(:users)
 
+  def user_has_key_pair?(user_id, studygroup_id) do
+    Repo.one(from(
+      cu in ClassroomUser,
+      where: cu.study_group_id == ^studygroup_id
+        and cu.user_id == ^user_id,
+      select: cu.has_key_pair
+    ))
+  end
+
+  def set_user_has_key_pair(user_id, studygroup_id) do
+    classroom_user = Repo.one(from(
+      cu in ClassroomUser,
+      where: cu.study_group_id == ^studygroup_id
+        and cu.user_id == ^user_id,
+    ))
+
+    classroom_user
+    |> ClassroomUser.changeset_update_has_key_pair(%{has_key_pair: true})
+    |> Repo.update()
+  end
+
   @doc """
   Creates a study_group.
 
@@ -104,6 +125,7 @@ defmodule AlgoThink.StudyGroups do
     user = user |> Repo.preload(:study_groups)
     user.study_groups
   end
+
 
   def get_study_group_for_classroom(%User{} = user, %Classroom{} = classroom) do
     classroom_user = Repo.one(from classroom_user in ClassroomUser, where: classroom_user.user_id == ^user.id and classroom_user.classroom_id == ^classroom.id)

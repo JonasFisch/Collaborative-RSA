@@ -7,7 +7,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   use AlgoThinkWeb, :live_view
 
   @impl true
-  def mount(%{"id" => _classroom_id, "study_group_id" => study_group_id}, _session, socket) do
+  def mount(%{"id" => classroom_id, "study_group_id" => study_group_id}, _session, socket) do
 
     AlgoThinkWeb.Endpoint.subscribe("study_group_#{study_group_id}")
 
@@ -26,7 +26,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         open_accordion: "key_generation",
         drag_origin: "storage",
         state: StudyGroups.get_study_group!(study_group_id) |> Map.get(:state),
-        page_title: "Edit Classroom"
+        page_title: "Edit Classroom",
       ),
       layout: {AlgoThinkWeb.Layouts, :game},
     }
@@ -127,7 +127,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   def handle_info("load_users_chips", socket) do
     users_crypo_artifacts = ChipStorage.list_cryptoartifact_for_user(socket.assigns.current_user.id, socket.assigns.study_group_id)
     users_crypo_artifacts = users_crypo_artifacts |> Enum.map(fn artifact -> artifact |> Map.put(:location, "storage") |> Map.put(:location_id, nil) end)
-    {:noreply, socket |> assign(storage_artifacts: users_crypo_artifacts, crypto_artifacts: users_crypo_artifacts)}
+    {:noreply, socket |> assign(crypto_artifacts: users_crypo_artifacts)}
   end
 
   # handle drop on chat

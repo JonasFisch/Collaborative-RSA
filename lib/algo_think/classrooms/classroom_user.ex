@@ -9,6 +9,8 @@ defmodule AlgoThink.Classrooms.ClassroomUser do
   alias AlgoThink.Accounts.User
 
   schema "classroom_users" do
+    field :has_key_pair, :boolean, default: false
+
     belongs_to(:user, User)
     belongs_to(:classroom, Classroom)
     belongs_to(:study_group, StudyGroup)
@@ -26,8 +28,14 @@ defmodule AlgoThink.Classrooms.ClassroomUser do
 
   def changeset_update(classroom_user, attrs) do
     classroom_user
-    |> cast(attrs, [:study_group_id])
+    |> cast(attrs, [:study_group_id, :has_key_pair])
     |> validate_required([:study_group_id])
+  end
+
+  def changeset_update_has_key_pair(classroom_user, attrs) do
+    classroom_user
+    |> cast(attrs, [:has_key_pair])
+    |> validate_required(:has_key_pair)
   end
 
   def changeset_update_no_group(classroom_user, attrs) do
