@@ -2,6 +2,8 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   alias AlgoThink.CryptoArtifacts
   alias AlgoThink.ChipStorage
   alias AlgoThink.ChatMessages
+  alias AlgoThink.StudyGroups
+
   use AlgoThinkWeb, :live_view
 
   @impl true
@@ -21,8 +23,10 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         crypto_artifacts: [],
         chat_messages: [],
         study_group_id: study_group_id,
-        open_accordion: "none",
+        open_accordion: "key_generation",
         drag_origin: "storage",
+        state: StudyGroups.get_study_group!(study_group_id) |> Map.get(:state),
+        page_title: "Edit Classroom"
       ),
       layout: {AlgoThinkWeb.Layouts, :game},
     }

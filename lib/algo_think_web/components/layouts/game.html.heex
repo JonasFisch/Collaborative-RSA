@@ -6,8 +6,15 @@
         <div>
           <h1 class="font-bold text-lg text-center mb-1">Aufgabe</h1>
           <p class="text-md text-center max-w-2xl">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati aspernatur possimus odio ratione.
-            <%!-- <%= assigns[:task] || "Task Description goes here" %> --%>
+            <%= 
+              case assigns[:state] do
+                :key_gen -> "Generate your Keys by using the Key Generation Module."
+                :rsa -> "WIP rsa"
+                :rsa_with_evial -> "WIP rsa with evil"
+                :rsa_with_signatures -> "WIP rsa with signatures"
+                _ -> "Task Description goes here"
+              end
+            %>
           </p>
         </div>
       </div>

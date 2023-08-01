@@ -18,51 +18,54 @@
           study_group_id={@study_group_id}
           type="key_generation"
           open={@open_accordion == "key_generation"}
+          :if={@state == :key_gen}
         />
-        <.live_component
-          id="encryption"
-          module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
-          crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "encryption" end)}
-          current_user={@current_user}
-          study_group_id={@study_group_id}
-          name="Encryption"
-          type="encryption"
-          action="Encrypt"
-          open={@open_accordion == "encryption"}
-        />
-        <.live_component
-          id="decryption"
-          module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
-          crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "decryption" end)}
-          current_user={@current_user}
-          study_group_id={@study_group_id}
-          name="Decryption"
-          type="decryption"
-          action="Decrypt"
-          open={@open_accordion == "decryption"}
-        />
-        <.live_component
-          id={"sign"}
-          module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
-          crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "sign" end)}
-          current_user={@current_user}
-          study_group_id={@study_group_id}
-          name="Sign"
-          type="sign"
-          action="Create Signature"
-          open={@open_accordion == "sign"}
-        />
-        <.live_component
-          id={"verify"}
-          module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
-          crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "verify" end)}
-          current_user={@current_user}
-          study_group_id={@study_group_id}
-          name="Verify"
-          type="verify"
-          action="Verify"
-          open={@open_accordion == "verify"}
-        />
+        <div class="flex flex-col gap-4" :if={@state != :key_gen}>
+          <.live_component
+            id="encryption"
+            module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
+            crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "encryption" end)}
+            current_user={@current_user}
+            study_group_id={@study_group_id}
+            name="Encryption"
+            type="encryption"
+            action="Encrypt"
+            open={@open_accordion == "encryption"}
+          />
+          <.live_component
+            id="decryption"
+            module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
+            crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "decryption" end)}
+            current_user={@current_user}
+            study_group_id={@study_group_id}
+            name="Decryption"
+            type="decryption"
+            action="Decrypt"
+            open={@open_accordion == "decryption"}
+          />
+          <.live_component
+            id={"sign"}
+            module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
+            crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "sign" end)}
+            current_user={@current_user}
+            study_group_id={@study_group_id}
+            name="Sign"
+            type="sign"
+            action="Create Signature"
+            open={@open_accordion == "sign"}
+          />
+          <.live_component
+            id={"verify"}
+            module={AlgoThinkWeb.StudyGroupLive.CryptoModule}
+            crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "verify" end)}
+            current_user={@current_user}
+            study_group_id={@study_group_id}
+            name="Verify"
+            type="verify"
+            action="Verify"
+            open={@open_accordion == "verify"}
+          />
+        </div>
       </div>
     </.container>
 
@@ -83,7 +86,7 @@
         <%!-- <div class="hidden absolute left-0 top-0 h-full w-full bg-gray-700 phx-dragging:block z-40 backdrop-blur-sm"></div> --%>
 
 
-    <.container class="w-4/12 relative" phx-hook="drag" id="chat-drag" title="Chat">
+    <.container class="w-4/12 relative" phx-hook="drag" id="chat-drag" title="Chat" :if={@state != :key_gen}>
       <div class="h-full w-full">
         
         <.drag_modal primary_text="Send to public chat" secondary_text="Drop to instantly send to the public chat" />
@@ -112,7 +115,7 @@
     </.container>
   </div>
 
-  <.container class="relative -bottom-6 w-2/6 z-50 left-1/2 -translate-x-1/2" title="Lösung">
+  <.container class="relative -bottom-6 w-2/6 z-50 left-1/2 -translate-x-1/2 max-h-44" title="Lösung">
     Lösungswort
   </.container>
 </div>
