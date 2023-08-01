@@ -2,9 +2,15 @@
   <%= @classroom.name %>
   <:subtitle>This is a classroom. You can already join one of the small study groups below.</:subtitle>
   <:actions>
-    <.link :if={@current_user.role == :teacher} patch={~p"/classroom/#{@classroom}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit classroom</.button>
-    </.link>
+    <div class="flex flex-row gap-4" :if={@current_user.role == :teacher}>
+      <.link patch={~p"/classroom/#{@classroom}/show/edit"} phx-click={JS.push_focus()}>
+        <.button>        
+          <MaterialIcons.edit class="fill-white" size={20} />
+          Edit classroom
+        </.button>
+      </.link>
+      <.button phx-click="start_game" disabled={length(@user_no_study_group) > 0} no_icon color="green">Start</.button>
+    </div>
   </:actions>
 </.header>
 

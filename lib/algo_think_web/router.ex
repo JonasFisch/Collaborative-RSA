@@ -68,6 +68,7 @@ defmodule AlgoThinkWeb.Router do
     get "/", PageController, :home
 
     live_session :require_authenticated_user,
+      root_layout: {AlgoThinkWeb.Layouts, :root},
       on_mount: [{AlgoThinkWeb.UserAuth, :ensure_authenticated}] do
       live "/classroom", ClassroomLive.Index, :index
       live "/classroom/new", ClassroomLive.Index, :new
