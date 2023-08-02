@@ -32,14 +32,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     }
   end
 
-  @impl true
-  def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do
-    if (topic == "study_group_#{socket.assigns.study_group_id}") do
-      {:noreply, socket |> assign(chat_messages: socket.assigns.chat_messages ++ [new_message])}
-    else
-      {:noreply, socket}
-    end
-  end
+  # EVENTS
 
   def handle_event("send_message", params, socket) do
     with {:ok, new_message} <- ChatMessages.create_chat_message(%{text: params["text"], author_id: socket.assigns.current_user.id, study_group_id: socket.assigns.study_group_id}) do
@@ -72,6 +65,42 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     else
       {:error, _err} ->
         {:noreply, socket |> put_flash(:info, "Chip already added")}
+    end
+  end
+
+   # handle drop on chat
+   @impl true
+   def handle_event("dropped", params, socket) do
+     crypto_artifact_id = Map.get(params, "draggedId")
+     _crypto_artifact = CryptoArtifacts.get_crypto_artifact!(crypto_artifact_id)
+
+     # TODO: do some checkings if item can be dropped here!!!
+
+     # create new messsage with artifact attached
+     with {:ok, new_message} <- ChatMessages.create_chat_message(%{
+         text: "",
+         author_id: socket.assigns.current_user.id,
+         study_group_id: socket.assigns.study_group_id,
+         attachment_id: crypto_artifact_id
+     }) do
+       {:noreply, socket
+         |> assign(chat_messages: socket.assigns.chat_messages ++ [new_message])
+       }
+     else
+       {:error, _changeset} ->
+         IO.inspect("error")
+         {:noreply, socket}
+     end
+   end
+
+  #  INFOS
+
+  @impl true
+  def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do
+    if (topic == "study_group_#{socket.assigns.study_group_id}") do
+      {:noreply, socket |> assign(chat_messages: socket.assigns.chat_messages ++ [new_message])}
+    else
+      {:noreply, socket}
     end
   end
 
@@ -131,31 +160,6 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     users_crypo_artifacts = ChipStorage.list_cryptoartifact_for_user(socket.assigns.current_user.id, socket.assigns.study_group_id)
     users_crypo_artifacts = users_crypo_artifacts |> Enum.map(fn artifact -> artifact |> Map.put(:location, "storage") |> Map.put(:location_id, nil) end)
     {:noreply, socket |> assign(crypto_artifacts: users_crypo_artifacts)}
-  end
-
-  # handle drop on chat
-  @impl true
-  def handle_event("dropped", params, socket) do
-    crypto_artifact_id = Map.get(params, "draggedId")
-    _crypto_artifact = CryptoArtifacts.get_crypto_artifact!(crypto_artifact_id)
-
-    # TODO: do some checkings if item can be dropped here!!!
-
-    # create new messsage with artifact attached
-    with {:ok, new_message} <- ChatMessages.create_chat_message(%{
-        text: "",
-        author_id: socket.assigns.current_user.id,
-        study_group_id: socket.assigns.study_group_id,
-        attachment_id: crypto_artifact_id
-    }) do
-      {:noreply, socket
-        |> assign(chat_messages: socket.assigns.chat_messages ++ [new_message])
-      }
-    else
-      {:error, _changeset} ->
-        IO.inspect("error")
-        {:noreply, socket}
-    end
   end
 
   def handle_info(%{topic: "start_drag", params: _params, origin: origin}, socket) do

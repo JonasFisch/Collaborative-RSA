@@ -14,19 +14,6 @@ defmodule AlgoThinkWeb.ClassroomLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  def handle_event("handle_shortcuts", %{"altKey" => true, "key" => key}, socket) do
-    case key do
-      "n" -> {:noreply, socket |> redirect(to: ~p"/classroom/new")}
-      "j" -> {:noreply, socket |> redirect(to: ~p"/classroom/join")}
-      _ -> {:noreply, socket}
-    end
-  end
-
-  def handle_event("handle_shortcuts", _params, socket) do
-    {:noreply, socket}
-  end
-
-
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Classroom")
@@ -62,5 +49,17 @@ defmodule AlgoThinkWeb.ClassroomLive.Index do
     {:ok, _} = Classrooms.delete_classroom(classroom)
 
     {:noreply, stream_delete(socket, :classroom_collection, classroom)}
+  end
+
+  def handle_event("handle_shortcuts", %{"altKey" => true, "key" => key}, socket) do
+    case key do
+      "n" -> {:noreply, socket |> redirect(to: ~p"/classroom/new")}
+      "j" -> {:noreply, socket |> redirect(to: ~p"/classroom/join")}
+      _ -> {:noreply, socket}
+    end
+  end
+
+  def handle_event("handle_shortcuts", _params, socket) do
+    {:noreply, socket}
   end
 end
