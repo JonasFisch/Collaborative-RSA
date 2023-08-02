@@ -9,12 +9,12 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
     <div class="mt-14">
       <dl class="-my-4 divide-y divide-zinc-100">
         <%!-- not joined yet list --%>
-        <div class="flex gap-4 py-4 text-sm leading-6 sm:gap-8 relative">
+        <%!-- <div class="flex gap-4 py-4 text-sm leading-6 sm:gap-8 relative">
           <dt class="w-1/4 flex flex-row h-6 text-zinc-500">
             <p class="font-medium">
               No group
             </p>
-            <%= if @current_study_group_id != nil do %>
+            <%= if @current_study_group_id != nil && not @is_teacher do %>
               <button phx-value-id={nil} phx-click="join_no_group" phx-target={@myself} class="bg-blue-500 hover:bg-blue-600 transition-colors text-white px-3 rounded-xl ml-3">
                 join
               </button>
@@ -25,33 +25,115 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
               <%= user.name %>
             </p>
           </dd>
-        </div>
+        </div> --%>
         <%!-- study groups --%>
-        <div :for={study_group <- @classroom.study_groups} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8 relative mt-6">
-          <div class="absolute top-4 right-4">
-            <p><%= length(study_group.users) %>/<%= study_group.max_users %></p>
-          </div>
+        <%!-- <div :for={study_group <- @classroom.study_groups} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8 relative mt-6">
+
           <dt class="w-1/4 flex flex-row h-6 text-zinc-500">
             <p class="font-medium">
               <%= study_group.name %>
             </p>
-            <%= if @current_study_group_id == study_group.id do %>
-              <button phx-value-id={study_group.id} class="bg-green-500 transition-colors text-white px-3 rounded-xl ml-3 flex justify-center items-center">
-                <.icon name="hero-check-mini" class="h-4 w-4" />
-              </button>
-            <% else %>
-              <button phx-value-id={study_group.id} phx-click="join_study_group" phx-target={@myself} class="bg-blue-500 hover:bg-blue-600 transition-colors text-white px-3 rounded-xl ml-3">
-                join
-              </button>
-            <% end %>
+            <div :if={not @is_teacher}>
+              <%= if @current_study_group_id == study_group.id do %>
+                <button phx-value-id={study_group.id} class="bg-green-500 transition-colors text-white px-3 rounded-xl ml-3 flex justify-center items-center">
+                  <.icon name="hero-check-mini" class="h-4 w-4" />
+                </button>
+              <% else %>
+                <button phx-value-id={study_group.id} phx-click="join_study_group" phx-target={@myself} class="bg-blue-500 hover:bg-blue-600 transition-colors text-white px-3 rounded-xl ml-3">
+                  join
+                </button>
+              <% end %>
+            </div>
           </dt>
           <dd class="text-zinc-700 h-24 w-full  ml-12">
             <p :for={user <- Enum.sort_by(study_group.users, fn user -> user.name end)} class="animate-fade-in">
               <%= user.name %>
             </p>
           </dd>
-        </div>
+          <dd class="">
+            <div class="bg-red-300">
+              Key Generation
+            </div>
+          </dd>
+          <dd>
+            <div>
+              <p><%= length(study_group.users) %>/<%= study_group.max_users %></p>
+            </div>
+          </dd>
+        </div> --%>
       </dl>
+
+      <table class="w-full">
+
+        <%!-- not joined yet list --%>
+        <tr class="gap-4 text-sm leading-6 sm:gap-8">
+          <th class="h-8 text-zinc-500 align-top text-left flex flex-row items-center">
+            <p class="font-medium whitespace-nowrap">
+              No group
+            </p>
+            <%= if @current_study_group_id != nil && not @is_teacher do %>
+              <button phx-value-id={nil} phx-click="join_no_group" phx-target={@myself} class="bg-blue-500 hover:bg-blue-600 transition-colors text-white px-3 rounded-xl ml-3">
+                join
+              </button>
+            <% end %>
+          </th>
+          <th class="text-zinc-700 h-24 overflow-y-auto ml-12 text-left align-top">
+            <p :for={user <- Enum.sort_by(@user_no_study_group, fn user -> user.name end)} class="animate-fade-in">
+              <%= user.name %>
+            </p>
+          </th>
+          <th></th>
+          <th></th>
+        </tr>
+
+        <tr class="text-center">
+          <th class="text-left"></th>
+          <th class="text-left pb-5">Participants</th>
+          <th class="pb-5">State</th>
+          <th class="text-right"></th>
+        </tr>
+
+        <%!-- study groups --%>
+        <tr :for={study_group <- @classroom.study_groups} class="text-sm leading-6 sm:gap-8 relative mt-6">
+          <th class="h-8 text-zinc-500 align-top text-left flex flex-row items-center">
+            <p class="font-medium whitespace-nowrap">
+              <%= study_group.name %>
+            </p>
+            <div :if={not @is_teacher}>
+              <%= if @current_study_group_id == study_group.id do %>
+                <button phx-value-id={study_group.id} class="bg-green-500 transition-colors text-white px-3 rounded-xl ml-3 h-6">
+                  <.icon name="hero-check-mini" class="h-4 w-4 table my-auto" />
+                </button>
+              <% else %>
+                <button phx-value-id={study_group.id} phx-click="join_study_group" phx-target={@myself} class="bg-blue-500 hover:bg-blue-600 transition-colors text-white px-3 rounded-xl ml-3">
+                  join
+                </button>
+              <% end %>
+            </div>
+          </th>
+          <th class="text-zinc-700 h-24 ml-12 align-top text-left">
+            <p :for={user <- Enum.sort_by(study_group.users, fn user -> user.name end)} class="animate-fade-in">
+              <%= user.name %>
+            </p>
+          </th>
+          <th class="align-top text-center">
+            <div class="bg-red-300">
+              <%= case study_group.state do
+                :key_gen -> "Key Generation"
+                :rsa -> "RSA Generation"
+                :rsa_with_evil -> "RSA with Evil"
+                :rsa_with_signatures -> "RSA with Signatures"
+                _ -> "Waiting ..."
+              end %>
+            </div>
+          </th>
+          <th class="align-top text-right">
+            <div>
+              <p><%= length(study_group.users) %>/<%= study_group.max_users %></p>
+            </div>
+          </th>
+        </tr>
+      </table>
 
     </div>
     """
@@ -63,12 +145,16 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
     classroom = assigns.classroom
     current_study_group_id = StudyGroups.get_study_group_for_classroom(current_user, classroom)
     user_no_study_group = Classrooms.students_with_no_study_group(classroom.id)
+    is_teacher = current_user.role == :teacher
 
     {:ok,
       socket
-      |> assign(user_no_study_group: user_no_study_group)
-      |> assign(current_study_group_id: current_study_group_id)
       |> assign(assigns)
+      |> assign(
+        user_no_study_group: user_no_study_group,
+        current_study_group_id: current_study_group_id,
+        is_teacher: is_teacher
+      )
     }
   end
 

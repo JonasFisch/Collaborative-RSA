@@ -9,7 +9,11 @@
           Edit classroom
         </.button>
       </.link>
-      <.button phx-click="start_game" disabled={length(@user_no_study_group) > 0} no_icon color="green">Start</.button>
+      <.button phx-click="start_game" disabled={length(@user_no_study_group) > 0 || not is_nil(@classroom.state)} no_icon color="green">
+        <%= if is_nil(@classroom.state) do "Start" else "Running ..." end %>
+      </.button>
+      <% IO.inspect(@classroom.state) %>
+      <% IO.inspect(length(@user_no_study_group)) %>
     </div>
   </:actions>
 </.header>
@@ -20,7 +24,7 @@
   <:item title="#User"><%= length(@classroom.users) %></:item>
   <:item title="User">
     <%= for user <- @classroom.users do %>
-      <p class="text-gray-500"><%= user.name %></p>
+      <p class="text-gray-500"><%= "#{user.name} #{if user.role == :teacher do "(lecturer)" end}" %></p>
     <%= end %>
   </:item>
 </.list>

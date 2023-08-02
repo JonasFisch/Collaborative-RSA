@@ -27,6 +27,10 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
     }
   end
 
+  def handle_info("reload_classroom", socket) do
+    {:noreply, assign(socket, classroom: Classrooms.get_classroom!(socket.assigns.classroom.id))}
+  end
+
   @impl true
   def handle_info(%{topic: @topic, event: event, payload: _classroom}, socket) do
     case event do
@@ -64,10 +68,14 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
 
   @impl true
   def handle_event("start_game", _params, socket) do
-    IO.inspect("starting the game ...")
+    IO.inspect("starting the Game")
+    {:ok, classroom} = Classrooms.update_classroom(socket.assigns.classroom, %{state: :running})
 
-    Classrooms.update_classroom(socket.assigns.classroom, %{state: :running})
+    for study_group <- classroom.study_groups do
+      StudyGroups.update_study_group(study_group, %{state: :key_gen})
+    end
 
+    send(self(), "reload_classroom")
     {:noreply, socket}
   end
 

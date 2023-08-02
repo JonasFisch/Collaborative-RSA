@@ -79,7 +79,7 @@ defmodule AlgoThink.StudyGroups do
   """
   def create_study_group(attrs \\ %{}) do
     %StudyGroup{}
-    |> StudyGroup.changeset(Map.put(attrs, :state, :key_gen))
+    |> StudyGroup.changeset(Map.put(attrs, :state, nil))
     |> Repo.insert()
   end
 

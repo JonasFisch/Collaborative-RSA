@@ -66,7 +66,7 @@ defmodule AlgoThink.Classrooms do
       user in User,
       join: cu in ClassroomUser,
       on: cu.user_id == user.id,
-      where: cu.classroom_id == ^id and is_nil(cu.study_group_id),
+      where: cu.classroom_id == ^id and is_nil(cu.study_group_id) and user.role == :student,
     ))
   end
 
