@@ -26,16 +26,21 @@ defmodule AlgoThinkWeb.StudyGroupLive.KeyGeneration do
   @impl true
   def update(assigns, socket) do
 
-    IO.inspect(Map.get(socket.assigns, :user_has_key_pair, nil))
-
     # check if user already generated public and private key!
     user_has_key_pair? = StudyGroups.user_has_key_pair?(assigns.current_user.id, assigns.study_group_id)
+
+    public_key = Enum.find(assigns.crypto_artifacts, fn crypto_artifact -> crypto_artifact.location_id == "drop-zone-public-key-result" end)
+    private_key = Enum.find(assigns.crypto_artifacts, fn crypto_artifact -> crypto_artifact.location_id == "drop-zone-private-key-result" end)
+
+    if (is_nil(public_key) and is_nil(private_key) and user_has_key_pair?) do
+      send(self(), %{topic: "task_done"})
+    end
 
     {:ok,
      socket
       |> assign(assigns)
-      |> assign(public_key: Enum.find(assigns.crypto_artifacts, fn crypto_artifact -> crypto_artifact.location_id == "drop-zone-public-key-result" end))
-      |> assign(private_key: Enum.find(assigns.crypto_artifacts, fn crypto_artifact -> crypto_artifact.location_id == "drop-zone-private-key-result" end))
+      |> assign(public_key: public_key)
+      |> assign(private_key: private_key)
       |> assign(button_state: if user_has_key_pair? do :loaded else nil end)
     }
   end

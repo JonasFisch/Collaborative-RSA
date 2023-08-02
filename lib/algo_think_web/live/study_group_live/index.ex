@@ -108,6 +108,9 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
     {:noreply, socket |> assign(crypto_artifacts: socket.assigns.crypto_artifacts ++ [crypto_artifact])}
   end
+  def handle_info(%{topic: "task_done"}, socket) do
+    {:noreply, socket |> assign(task_done: true)}
+  end
 
   def handle_info(%{topic: "mark_message_as_valid", message: message, valid: valid?}, socket) do
     crypto_artifacts = socket.assigns.crypto_artifacts

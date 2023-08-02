@@ -53,9 +53,12 @@ defmodule AlgoThink.StudyGroups do
   def set_user_has_key_pair(user_id, studygroup_id) do
     classroom_user = Repo.one(from(
       cu in ClassroomUser,
-      where: cu.study_group_id == ^studygroup_id
-        and cu.user_id == ^user_id,
+      where: cu.study_group_id == ^studygroup_id and cu.user_id == ^user_id
     ))
+
+    if classroom_user == nil do
+      raise "user has no classroom user relation!!!"
+    end
 
     classroom_user
     |> ClassroomUser.changeset_update_has_key_pair(%{has_key_pair: true})
