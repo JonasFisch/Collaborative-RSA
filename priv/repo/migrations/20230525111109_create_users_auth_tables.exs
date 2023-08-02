@@ -1,6 +1,5 @@
 defmodule AlgoThink.Repo.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
-  alias AlgoThink.Accounts.UserRole
 
   def change do
     execute "CREATE EXTENSION IF NOT EXISTS citext", ""

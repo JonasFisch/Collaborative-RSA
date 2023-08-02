@@ -41,6 +41,15 @@ defmodule AlgoThink.StudyGroups do
   """
   def get_study_group!(id), do: Repo.get!(StudyGroup, id) |> Repo.preload(:users)
 
+  def add_task_finished_state(study_group) do
+    user_finished_task = Repo.aggregate(from(
+      cu in ClassroomUser,
+      where: cu.study_group_id == ^study_group.id and cu.task_done,
+    ), :count)
+
+    Map.put(study_group, :task_finished, user_finished_task)
+  end
+
   def user_has_key_pair?(user_id, studygroup_id) do
     Repo.one(from(
       cu in ClassroomUser,
@@ -61,8 +70,9 @@ defmodule AlgoThink.StudyGroups do
     end
 
     classroom_user
-    |> ClassroomUser.changeset_update_has_key_pair(%{has_key_pair: true})
+    |> ClassroomUser.changeset_update_has_key_pair(%{has_key_pair: true, task_done: true})
     |> Repo.update()
+    |> Classrooms.notify_subscribers("classroom_updated")
   end
 
   @doc """

@@ -19,6 +19,10 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
     classroom = Classrooms.get_classroom!(id)
     user_no_study_group = Classrooms.students_with_no_study_group(classroom.id)
 
+    classroom = Map.put(classroom, :study_groups, Enum.map(classroom.study_groups, fn study_group ->
+      StudyGroups.add_task_finished_state(study_group)
+    end))
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
@@ -38,9 +42,12 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
         classroom = Classrooms.get_classroom!(socket.assigns.classroom.id)
         user_no_study_group = Classrooms.students_with_no_study_group(classroom.id)
 
-        if (classroom.state == :running) do
-          current_study_group_id = StudyGroups.get_study_group_for_classroom(socket.assigns.current_user, classroom)
+        classroom = Map.put(classroom, :study_groups, Enum.map(classroom.study_groups, fn study_group ->
+          StudyGroups.add_task_finished_state(study_group)
+        end))
 
+        if (classroom.state == :running && socket.assigns.current_user.role == :student) do
+          current_study_group_id = StudyGroups.get_study_group_for_classroom(socket.assigns.current_user, classroom)
           {:noreply, socket
             |> push_navigate(to: "/classroom/#{classroom.id}/studygroup/#{current_study_group_id}")
           }

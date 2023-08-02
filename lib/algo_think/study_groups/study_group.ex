@@ -10,6 +10,7 @@ defmodule AlgoThink.StudyGroups.StudyGroup do
     field :name, :string
     field :max_users, :integer, default: 4
     field :state, Ecto.Enum, values: @states
+    field :task_finished, :integer, virtual: true
 
     belongs_to :classroom, AlgoThink.Classrooms.Classroom
     many_to_many :users, AlgoThink.Accounts.User, join_through: "classroom_users"
