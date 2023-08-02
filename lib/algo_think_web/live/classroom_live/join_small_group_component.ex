@@ -60,7 +60,7 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
             </p>
           </th>
           <th class="align-top text-center">
-            <div class={[
+            <div :if={study_group.state != nil && length(study_group.users) > 0} class={[
               if length(study_group.users) > 0 && study_group.task_finished == length(study_group.users) do "bg-green-300" else "bg-red-300" end,
               "rounded-xl w-56 m-auto"
             ]}>

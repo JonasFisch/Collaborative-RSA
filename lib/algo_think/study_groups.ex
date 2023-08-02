@@ -44,7 +44,7 @@ defmodule AlgoThink.StudyGroups do
   def add_task_finished_state(study_group) do
     user_finished_task = Repo.aggregate(from(
       cu in ClassroomUser,
-      where: cu.study_group_id == ^study_group.id and cu.task_done,
+      where: cu.study_group_id == ^study_group.id and cu.task_done
     ), :count)
 
     Map.put(study_group, :task_finished, user_finished_task)
