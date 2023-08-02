@@ -14,12 +14,6 @@
         </.link>
       </div>
     </:actions>
-
-    <:col>
-      <p>
-        Name
-      </p>
-    </:col>
   </.header>
 
   <.table
@@ -57,7 +51,7 @@
         </.link>
       <% end %>
     </:action>
-    <:action :let={{id, classroom}}>
+    <:action :let={{_id, classroom}}>
       <.link navigate={~p"/classroom/#{classroom}"}>Open</.link>
     </:action>
   </.table>
@@ -70,7 +64,7 @@
   >
     <%= if @live_action == :join do %>
       <.live_component module={AlgoThinkWeb.ClassroomLive.JoinComponent} id={@classroom.id || :join} current_user={@current_user}/>
-    <%= else %>
+    <% else %>
       <.live_component
         module={AlgoThinkWeb.ClassroomLive.FormComponent}
         id={@classroom.id || :new}
@@ -80,6 +74,6 @@
         patch={~p"/classroom"}
         current_user={@current_user}
       />
-    <%= end %>
+    <% end %>
   </.modal>
 </div>
