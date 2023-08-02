@@ -4,7 +4,6 @@ defmodule AlgoThink.CryptoArtifacts do
   """
 
   import Ecto.Query, warn: false
-  alias AlgoThinkWeb.StudyGroupLive.EncryptionModule
   alias AlgoThink.Repo
 
   alias AlgoThink.CryptoArtifacts.CryptoArtifact
@@ -149,7 +148,6 @@ defmodule AlgoThink.CryptoArtifacts do
       {:ok, public_key} = ExPublicKey.loads(public_key.content)
       {:ok, signature_decoded} = Base.decode64(signature.content)
       {:ok, valid?} = ExPublicKey.verify(message.content, signature_decoded, public_key)
-      IO.inspect(valid?)
       {:ok, %{valid: valid?, message: message}}
     else
       {:error, changeset}

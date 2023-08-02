@@ -1,5 +1,5 @@
 <div class="h-full w-full flex flex-col gap-4">
-  <div class="flex flex-row gap-8 h-3/4">
+  <div class="flex flex-row gap-8 h-3/4 justify-center">
     <.live_component
       id={"storage"}
       module={AlgoThinkWeb.StudyGroupLive.StorageModule}
@@ -8,7 +8,9 @@
       current_user={@current_user}
     />
     
-    <.container class="w-5/12">
+    <.container class={[
+      "w-5/12"
+    ]}>
       <div class="flex flex-col gap-4 h-full overflow-y-scroll py-4">
         <.live_component
           id="key_generation"
@@ -115,7 +117,7 @@
     </.container>
   </div>
 
-  <.container class="relative -bottom-6 w-2/6 z-50 left-1/2 -translate-x-1/2 max-h-44" title="Lösung">
+  <.container class="relative -bottom-6 w-2/6 z-50 left-1/2 -translate-x-1/2 max-h-44" title="Lösung" :if={@state != :key_gen}>
     Lösungswort
   </.container>
 </div>

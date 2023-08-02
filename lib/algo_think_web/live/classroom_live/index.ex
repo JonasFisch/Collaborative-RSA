@@ -6,11 +6,6 @@ defmodule AlgoThinkWeb.ClassroomLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-
-    # study_group = StudyGroups.get_study_group!(3)
-    # IO.inspect(study_group)
-
-
     {:ok, stream(socket, :classroom_collection, Classrooms.list_classroom_for_owner(socket.assigns.current_user))}
   end
 

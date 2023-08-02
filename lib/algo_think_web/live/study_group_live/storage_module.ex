@@ -1,6 +1,5 @@
 defmodule AlgoThinkWeb.StudyGroupLive.StorageModule do
   use AlgoThinkWeb, :live_component
-  import Enum
 
   @impl true
   def render(assigns) do
@@ -38,7 +37,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.StorageModule do
 
     grouped_artifacts = artifacts
       |> Enum.group_by(&{&1.owner.name})
-      |> Enum.sort(fn {{key1}, artifact1}, {{key2}, artifact2} ->
+      |> Enum.sort(fn {{key1}, _artifact1}, {{_key2}, _artifact2} ->
         # always show current user on top
         if (key1 == assigns.current_user.name) do
           true

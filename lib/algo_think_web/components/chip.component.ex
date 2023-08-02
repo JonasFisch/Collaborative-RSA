@@ -42,7 +42,6 @@ defmodule AlgoThinkWeb.Chip do
           :signature -> "bg-yellow-400"
         end
       ]}>
-        <%!-- <%= IO.inspect(@type) %> --%>
         <%= case @type do %>
           <% :public_key -> %>
             <MaterialIcons.vpn_key style="outlined" class="fill-black" size={25} />

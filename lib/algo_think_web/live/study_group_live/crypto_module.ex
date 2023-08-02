@@ -87,9 +87,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
       |> Enum.find(fn zone -> zone.expected_type == :message end)
       |> Map.get(:crypto_artifact, nil)
 
-      # IO.inspect(crypto_artifact)
       if (crypto_artifact != nil) do
-        IO.inspect(crypto_artifact.valid)
         crypto_artifact.valid
       else
         nil

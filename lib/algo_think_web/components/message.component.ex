@@ -21,7 +21,7 @@ defmodule AlgoThinkWeb.Message do
       <% end %>
       <%= if @attachment != nil do %>
         <div class="mb-2">
-          <AlgoThinkWeb.Chip.chip draggable="false" id={"message-attachment-#{@attachment.id}"} name={@attachment.owner.name} type={@attachment.type} encrypted={@attachment.encrypted} valid={@attachment.valid} />
+          <AlgoThinkWeb.Chip.chip draggable={false} id={"message-attachment-#{@attachment.id}"} name={@attachment.owner.name} type={@attachment.type} encrypted={@attachment.encrypted} valid={@attachment.valid} />
         </div>
         <div class="flex">
           <AlgoThinkWeb.Button.button disabled={@attachment_already_added} :if={@attachment.owner.id != @current_user.id} phx-click="add_attachment_to_storage" phx-value-attachment-id={@attachment.id}>

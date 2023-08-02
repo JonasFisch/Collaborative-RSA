@@ -12,8 +12,6 @@
       <.button phx-click="start_game" disabled={length(@user_no_study_group) > 0 || not is_nil(@classroom.state)} no_icon color="green">
         <%= if is_nil(@classroom.state) do "Start" else "Running ..." end %>
       </.button>
-      <% IO.inspect(@classroom.state) %>
-      <% IO.inspect(length(@user_no_study_group)) %>
     </div>
   </:actions>
 </.header>

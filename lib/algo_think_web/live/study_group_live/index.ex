@@ -7,7 +7,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   use AlgoThinkWeb, :live_view
 
   @impl true
-  def mount(%{"id" => classroom_id, "study_group_id" => study_group_id}, _session, socket) do
+  def mount(%{"id" => _classroom_id, "study_group_id" => study_group_id}, _session, socket) do
 
     AlgoThinkWeb.Endpoint.subscribe("study_group_#{study_group_id}")
 
@@ -26,7 +26,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         open_accordion: "key_generation",
         drag_origin: "storage",
         state: StudyGroups.get_study_group!(study_group_id) |> Map.get(:state),
-        page_title: "Edit Classroom",
+        page_title: "Edit Classroom"
       ),
       layout: {AlgoThinkWeb.Layouts, :game},
     }
@@ -137,7 +137,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   @impl true
   def handle_event("dropped", params, socket) do
     crypto_artifact_id = Map.get(params, "draggedId")
-    crypto_artifact = CryptoArtifacts.get_crypto_artifact!(crypto_artifact_id)
+    _crypto_artifact = CryptoArtifacts.get_crypto_artifact!(crypto_artifact_id)
 
     # TODO: do some checkings if item can be dropped here!!!
 

@@ -112,9 +112,6 @@ defmodule AlgoThink.StudyGroups do
       |> ClassroomUser.changeset_update_no_group(%{study_group_id: nil})
       |> Repo.update()
 
-    IO.inspect("in no group join")
-    IO.inspect(result)
-
     Classrooms.notify_subscribers("classroom_updated")
 
     {:ok, result}
