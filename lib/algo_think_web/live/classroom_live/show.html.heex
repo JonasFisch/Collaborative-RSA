@@ -26,6 +26,14 @@
   </:item>
 </.list>
 
+<%!-- TODO: make this nice --%>
+<div :if={@current_user.role == :teacher}>
+  <h3>Progress:</h3>
+  <.button phx-click="start_next_task">
+    Start Next Task
+  </.button>
+</div>
+
 <.live_component
     module={AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent}
     id={@classroom.id}

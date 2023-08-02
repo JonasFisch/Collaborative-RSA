@@ -39,6 +39,12 @@ defmodule AlgoThink.Classrooms.ClassroomUser do
     |> validate_required(:has_key_pair)
   end
 
+  def changeset_update_task_done(classroom_user, attrs) do
+    classroom_user
+    |> cast(attrs, [:task_done])
+    |> validate_required(:task_done)
+  end
+
   def changeset_update_no_group(classroom_user, attrs) do
     classroom_user
     |> cast(attrs, [:study_group_id])

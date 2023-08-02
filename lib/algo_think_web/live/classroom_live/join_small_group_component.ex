@@ -67,7 +67,7 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
               <p class="ml-3 mr-0 flex flex-row gap-1">
                 <%= case study_group.state do
                   :key_gen -> "Key Generation"
-                  :rsa -> "RSA Generation"
+                  :rsa -> "RSA"
                   :rsa_with_evil -> "RSA with Evil"
                   :rsa_with_signatures -> "RSA with Signatures"
                   _ -> "Waiting ..."

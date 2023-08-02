@@ -7,7 +7,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   use AlgoThinkWeb, :live_view
 
   @impl true
-  def mount(%{"id" => _classroom_id, "study_group_id" => study_group_id}, _session, socket) do
+  def mount(%{"id" => classroom_id, "study_group_id" => study_group_id}, _session, socket) do
 
     AlgoThinkWeb.Endpoint.subscribe("study_group_#{study_group_id}")
 
@@ -23,6 +23,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         crypto_artifacts: [],
         chat_messages: [],
         study_group_id: study_group_id,
+        classroom_id: classroom_id,
         open_accordion: "key_generation",
         drag_origin: "storage",
         state: StudyGroups.get_study_group!(study_group_id) |> Map.get(:state),
@@ -96,9 +97,13 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   #  INFOS
 
   @impl true
-  def handle_info(%{topic: topic, event: "new_message", payload: new_message}, socket) do
+  def handle_info(%{topic: topic, event: event, payload: payload}, socket) do
     if (topic == "study_group_#{socket.assigns.study_group_id}") do
-      {:noreply, socket |> assign(chat_messages: socket.assigns.chat_messages ++ [new_message])}
+      case event do
+        "new_message" -> {:noreply, socket |> assign(chat_messages: socket.assigns.chat_messages ++ [payload])}
+        "state_updated" -> {:noreply, socket |> redirect(to: ~p"/classroom/#{socket.assigns.classroom_id}/studygroup/#{socket.assigns.study_group_id}")}
+        _ -> {:noreply, socket}
+      end
     else
       {:noreply, socket}
     end

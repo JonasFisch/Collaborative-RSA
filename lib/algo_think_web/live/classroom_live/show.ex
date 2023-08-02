@@ -31,10 +31,6 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
     }
   end
 
-  def handle_info("reload_classroom", socket) do
-    {:noreply, assign(socket, classroom: Classrooms.get_classroom!(socket.assigns.classroom.id))}
-  end
-
   @impl true
   def handle_info(%{topic: @topic, event: event, payload: _classroom}, socket) do
     case event do
@@ -82,7 +78,34 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
       StudyGroups.update_study_group(study_group, %{state: :key_gen})
     end
 
-    send(self(), "reload_classroom")
+    send(self(), %{topic: @topic, event: "classroom_updated", payload: ""})
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("start_next_task", _params, socket) do
+    IO.inspect("starting the next Task")
+
+    # reset task done
+    for study_group <- socket.assigns.classroom.study_groups do
+      StudyGroups.reset_user_done_task(study_group.id)
+    end
+
+    # set study group state
+    for study_group <- socket.assigns.classroom.study_groups do
+      {:ok, _update_study_group} = StudyGroups.update_study_group(study_group, %{state: :rsa})
+      # TODO: send websocket message to all clients that the state has updated
+
+      AlgoThinkWeb.Endpoint.broadcast_from(
+        self(),
+        "study_group_#{study_group.id}",
+        "state_updated",
+        study_group
+      )
+    end
+
+    # update classroom for teacher
+    send(self(), %{topic: @topic, event: "classroom_updated", payload: ""})
     {:noreply, socket}
   end
 

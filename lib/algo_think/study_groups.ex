@@ -75,6 +75,20 @@ defmodule AlgoThink.StudyGroups do
     |> Classrooms.notify_subscribers("classroom_updated")
   end
 
+  def reset_user_done_task(study_group_id) do
+    classroom_users = Repo.all(from(
+      cu in ClassroomUser,
+      where: cu.study_group_id == ^study_group_id
+    ))
+
+    for classroom_user <- classroom_users do
+      classroom_user
+      |> ClassroomUser.changeset_update_has_key_pair(%{task_done: false})
+      |> Repo.update()
+      |> Classrooms.notify_subscribers("classroom_updated")
+    end
+  end
+
   @doc """
   Creates a study_group.
 
