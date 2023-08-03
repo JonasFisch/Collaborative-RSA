@@ -1,4 +1,3 @@
-
 defmodule AlgoThinkWeb.DragModal do
   use Phoenix.Component
 

@@ -2,7 +2,6 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   alias AlgoThink.CryptoArtifacts
   alias AlgoThink.ChipStorage
   alias AlgoThink.ChatMessages
-  alias AlgoThink.StudyGroups
   alias AlgoThink.Classrooms
 
   use AlgoThinkWeb, :live_view

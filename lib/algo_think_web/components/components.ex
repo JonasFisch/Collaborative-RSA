@@ -8,6 +8,6 @@ defmodule AlgoThinkWeb.Components do
   ExExport.export(AlgoThinkWeb.Button)
   ExExport.export(AlgoThinkWeb.DropZone)
   ExExport.export(AlgoThinkWeb.Accordion)
+  ExExport.export(AlgoThinkWeb.Stepper)
   ExExport.export(AlgoThinkWeb.DragModal)
-
 end

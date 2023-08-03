@@ -22,17 +22,10 @@
   <:item title="User">
     <%= for user <- @classroom.users do %>
       <p class="text-gray-500"><%= "#{user.name} #{if user.role == :teacher do "(lecturer)" end}" %></p>
-    <%= end %>
+    <% end %>
   </:item>
 </.list>
 
-<%!-- TODO: make this nice --%>
-<div :if={@current_user.role == :teacher}>
-  <h3>Progress:</h3>
-  <.button phx-click="start_next_task">
-    Start Next Task
-  </.button>
-</div>
 
 <.live_component
     module={AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent}
@@ -42,6 +35,13 @@
     classroom={@classroom}
     current_user={@current_user}
 />
+
+<div :if={@current_user.role == :teacher}>
+  <.button phx-click="start_next_task">
+    Start Next Task
+  </.button>
+  <.stepper current_state={@classroom.state} />
+</div>
 
 <.back navigate={~p"/classroom"}>Back to classroom</.back>
 

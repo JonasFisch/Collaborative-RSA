@@ -65,14 +65,6 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
               "rounded-xl w-56 m-auto"
             ]}>
               <p class="ml-3 mr-0 flex flex-row justify-center gap-1 items-center">
-                <%!-- <%= case study_group.state do
-                  :key_gen -> "Key Generation"
-                  :rsa -> "RSA"
-                  :rsa_with_evil -> "RSA with Evil"
-                  :rsa_with_signatures -> "RSA with Signatures"
-                  _ -> "Waiting ..."
-                end %> --%>
-                <%!-- TODO: recycle this --%>
                 Done
                 <MaterialIcons.check :if={length(study_group.users) > 0 && study_group.task_finished == length(study_group.users)} class="fill-gray-700" size={20} />
               </p>
