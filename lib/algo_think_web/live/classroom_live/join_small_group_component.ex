@@ -6,33 +6,13 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="mt-14">
+    <div class="mt-7">
       <table class="w-full">
-        <%!-- not joined yet list --%>
-        <tr class="gap-4 text-sm leading-6 sm:gap-8">
-          <th class="h-8 text-zinc-500 align-top text-left flex flex-row items-center">
-            <p class="font-medium whitespace-nowrap">
-              No group
-            </p>
-            <%= if @current_study_group_id != nil && not @is_teacher do %>
-              <button phx-value-id={nil} phx-click="join_no_group" phx-target={@myself} class="bg-blue-500 hover:bg-blue-600 transition-colors text-white px-3 rounded-xl ml-3">
-                join
-              </button>
-            <% end %>
-          </th>
-          <th class="text-zinc-700 h-24 overflow-y-auto ml-12 text-left align-top">
-            <p :for={user <- Enum.sort_by(@user_no_study_group, fn user -> user.name end)} class="animate-fade-in">
-              <%= user.name %>
-            </p>
-          </th>
-          <th></th>
-          <th></th>
-        </tr>
 
         <tr>
           <th class="text-left"></th>
           <th class="text-left pb-5">Participants</th>
-          <th class="text-center pb-5">Current Task</th>
+          <th class="text-center pb-5">Task Progress</th>
           <th class="text-right"></th>
         </tr>
 
@@ -76,8 +56,28 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
             </div>
           </th>
         </tr>
-      </table>
 
+        <%!-- not joined yet list --%>
+        <tr class="gap-4 text-sm leading-6 sm:gap-8">
+          <th class="h-8 text-zinc-500 align-top text-left flex flex-row items-center">
+            <p class="font-medium whitespace-nowrap">
+              No group
+            </p>
+            <%= if @current_study_group_id != nil && not @is_teacher do %>
+              <button phx-value-id={nil} phx-click="join_no_group" phx-target={@myself} class="bg-blue-500 hover:bg-blue-600 transition-colors text-white px-3 rounded-xl ml-3">
+                join
+              </button>
+            <% end %>
+          </th>
+          <th class="text-zinc-700 h-24 overflow-y-auto ml-12 text-left align-top">
+            <p :for={user <- Enum.sort_by(@user_no_study_group, fn user -> user.name end)} class="animate-fade-in">
+              <%= user.name %>
+            </p>
+          </th>
+          <th></th>
+          <th></th>
+        </tr>
+      </table>
     </div>
     """
   end

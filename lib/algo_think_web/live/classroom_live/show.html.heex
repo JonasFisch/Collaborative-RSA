@@ -26,7 +26,7 @@
   </:item>
 </.list>
 
-
+<h3 class="font-bold text-lg leading-8 mt-5">Small Groups</h3>
 <.live_component
     module={AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent}
     id={@classroom.id}
@@ -37,10 +37,11 @@
 />
 
 <div :if={@current_user.role == :teacher}>
+  <h3 class="font-bold text-lg leading-8 mb-3">Current Task</h3>
+  <.stepper current_state={@classroom.state} />
   <.button phx-click="start_next_task">
     Start Next Task
   </.button>
-  <.stepper current_state={@classroom.state} />
 </div>
 
 <.back navigate={~p"/classroom"}>Back to classroom</.back>
