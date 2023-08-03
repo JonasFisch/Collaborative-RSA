@@ -60,19 +60,21 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
             </p>
           </th>
           <th class="align-top text-center">
-            <div :if={study_group.state != nil && length(study_group.users) > 0} class={[
+            <div :if={length(study_group.users) > 0} class={[
               if length(study_group.users) > 0 && study_group.task_finished == length(study_group.users) do "bg-green-300" else "bg-red-300" end,
               "rounded-xl w-56 m-auto"
             ]}>
-              <p class="ml-3 mr-0 flex flex-row gap-1">
-                <%= case study_group.state do
+              <p class="ml-3 mr-0 flex flex-row justify-center gap-1 items-center">
+                <%!-- <%= case study_group.state do
                   :key_gen -> "Key Generation"
                   :rsa -> "RSA"
                   :rsa_with_evil -> "RSA with Evil"
                   :rsa_with_signatures -> "RSA with Signatures"
                   _ -> "Waiting ..."
-                end %>
-                <MaterialIcons.check :if={length(study_group.users) > 0 && study_group.task_finished == length(study_group.users)} class="fill-gray-700" size={24} />
+                end %> --%>
+                <%!-- TODO: recycle this --%>
+                Done
+                <MaterialIcons.check :if={length(study_group.users) > 0 && study_group.task_finished == length(study_group.users)} class="fill-gray-700" size={20} />
               </p>
             </div>
           </th>

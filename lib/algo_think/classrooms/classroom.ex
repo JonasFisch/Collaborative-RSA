@@ -6,7 +6,7 @@ defmodule AlgoThink.Classrooms.Classroom do
   alias AlgoThink.Accounts.User
   alias AlgoThink.StudyGroups.StudyGroup
 
-  @states [:group_finding, :running, :finished]
+  @states [:group_finding, :key_gen, :rsa, :rsa_with_evil, :rsa_with_signatures, :finished]
 
   schema "classrooms" do
     field :name, :string

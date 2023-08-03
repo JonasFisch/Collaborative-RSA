@@ -42,7 +42,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
           StudyGroups.add_task_finished_state(study_group)
         end))
 
-        if (classroom.state == :running && socket.assigns.current_user.role == :student) do
+        if (classroom.state == :key_gen && socket.assigns.current_user.role == :student) do
           current_study_group_id = StudyGroups.get_study_group_for_classroom(socket.assigns.current_user, classroom)
           {:noreply, socket
             |> push_navigate(to: "/classroom/#{classroom.id}/studygroup/#{current_study_group_id}")
@@ -72,7 +72,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
   @impl true
   def handle_event("start_game", _params, socket) do
     IO.inspect("starting the Game")
-    {:ok, classroom} = Classrooms.update_classroom(socket.assigns.classroom, %{state: :running})
+    {:ok, classroom} = Classrooms.update_classroom(socket.assigns.classroom, %{state: :key_gen})
 
     for study_group <- classroom.study_groups do
       StudyGroups.update_study_group(study_group, %{state: :key_gen})
@@ -91,18 +91,20 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
       StudyGroups.reset_user_done_task(study_group.id)
     end
 
-    # set study group state
-    for study_group <- socket.assigns.classroom.study_groups do
-      {:ok, _update_study_group} = StudyGroups.update_study_group(study_group, %{state: :rsa})
-      # TODO: send websocket message to all clients that the state has updated
+    {:ok, classroom} = Classrooms.update_classroom(socket.assigns.classroom, %{state: :rsa})
 
-      AlgoThinkWeb.Endpoint.broadcast_from(
-        self(),
-        "study_group_#{study_group.id}",
-        "state_updated",
-        study_group
-      )
-    end
+    AlgoThinkWeb.Endpoint.broadcast_from(
+      self(),
+      "classroom",
+      "state_update",
+      classroom
+    )
+    # set study group state
+    # for study_group <- socket.assigns.classroom.study_groups do
+    #   {:ok, _update_study_group} = StudyGroups.update_study_group(study_group, %{state: :rsa})
+    #   # TODO: send websocket message to all clients that the state has updated
+
+    # end
 
     # update classroom for teacher
     send(self(), %{topic: @topic, event: "classroom_updated", payload: ""})

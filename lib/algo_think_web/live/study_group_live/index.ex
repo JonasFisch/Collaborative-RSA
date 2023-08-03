@@ -3,6 +3,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   alias AlgoThink.ChipStorage
   alias AlgoThink.ChatMessages
   alias AlgoThink.StudyGroups
+  alias AlgoThink.Classrooms
 
   use AlgoThinkWeb, :live_view
 
@@ -10,6 +11,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   def mount(%{"id" => classroom_id, "study_group_id" => study_group_id}, _session, socket) do
 
     AlgoThinkWeb.Endpoint.subscribe("study_group_#{study_group_id}")
+    AlgoThinkWeb.Endpoint.subscribe("classroom")
 
     # create message
     # {:ok, message} = AlgoThink.CryptoArtifacts.create_message(socket.assigns.current_user.id, "Random Message")
@@ -26,7 +28,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         classroom_id: classroom_id,
         open_accordion: "key_generation",
         drag_origin: "storage",
-        state: StudyGroups.get_study_group!(study_group_id) |> Map.get(:state),
+        state: Classrooms.get_classroom!(classroom_id) |> Map.get(:state),
         page_title: "Edit Classroom"
       ),
       layout: {AlgoThinkWeb.Layouts, :game},
@@ -96,12 +98,18 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
   #  INFOS
 
+  def handle_info(%{topic: "classroom", event: event, payload: _payload}, socket) do
+    case event do
+      "state_update" -> {:noreply, socket |> redirect(to: ~p"/classroom/#{socket.assigns.classroom_id}/studygroup/#{socket.assigns.study_group_id}")}
+      _ -> {:noreply, socket}
+    end
+  end
+
   @impl true
   def handle_info(%{topic: topic, event: event, payload: payload}, socket) do
     if (topic == "study_group_#{socket.assigns.study_group_id}") do
       case event do
         "new_message" -> {:noreply, socket |> assign(chat_messages: socket.assigns.chat_messages ++ [payload])}
-        "state_updated" -> {:noreply, socket |> redirect(to: ~p"/classroom/#{socket.assigns.classroom_id}/studygroup/#{socket.assigns.study_group_id}")}
         _ -> {:noreply, socket}
       end
     else
