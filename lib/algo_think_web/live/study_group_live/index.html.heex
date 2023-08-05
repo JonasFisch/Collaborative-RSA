@@ -55,6 +55,7 @@
             type="sign"
             action="Create Signature"
             open={@open_accordion == "sign"}
+            :if={@state != :rsa}
           />
           <.live_component
             id={"verify"}
@@ -66,6 +67,7 @@
             type="verify"
             action="Verify"
             open={@open_accordion == "verify"}
+            :if={@state != :rsa}
           />
         </div>
       </div>
