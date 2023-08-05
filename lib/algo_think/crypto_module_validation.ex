@@ -1,4 +1,5 @@
 defmodule AlgoThink.CryptoModuleValidation do
+alias AlgoThink.CryptoArtifacts
 
   @available_types [:private_key, :public_key, :signature, :message]
 
@@ -10,7 +11,7 @@ defmodule AlgoThink.CryptoModuleValidation do
     end
   end
 
-  defp validate_encrypted(changeset, _field, encrypted?) do
+  defp validate_encrypted(changeset, encrypted?) do
     if not !!encrypted? do
       Ecto.Changeset.add_error(changeset, :message, "encrypted message needed")
     else
@@ -18,7 +19,7 @@ defmodule AlgoThink.CryptoModuleValidation do
     end
   end
 
-  defp validate_unencrypted(changeset, _field, encrypted?) do
+  defp validate_unencrypted(changeset, encrypted?) do
     if !!encrypted? do
       Ecto.Changeset.add_error(changeset, :message, "unencrypted message needed")
     else
@@ -40,7 +41,7 @@ defmodule AlgoThink.CryptoModuleValidation do
     |> Ecto.Changeset.validate_required([:message, :public_key])
     |> Ecto.Changeset.validate_inclusion(:message, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:public_key, [:public_key], message: "public key required")
-    |> validate_unencrypted(:message, get_attribute(message, :encrypted))
+    |> validate_unencrypted(get_attribute(message, :encrypted))
   end
 
   def changeset_decryption(%{message: message, private_key: private_key}) do
@@ -57,7 +58,7 @@ defmodule AlgoThink.CryptoModuleValidation do
     |> Ecto.Changeset.validate_required([:message, :private_key])
     |> Ecto.Changeset.validate_inclusion(:message, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:private_key, [:private_key], message: "private key required")
-    |> validate_encrypted(:message, get_attribute(message, :encrypted))
+    |> validate_encrypted(get_attribute(message, :encrypted))
   end
 
   def changeset_sign(%{message: message, private_key: private_key}) do
@@ -74,7 +75,7 @@ defmodule AlgoThink.CryptoModuleValidation do
     |> Ecto.Changeset.validate_required([:message, :private_key])
     |> Ecto.Changeset.validate_inclusion(:message, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:private_key, [:private_key], message: "private key required")
-    |> validate_unencrypted(:message, get_attribute(message, :encrypted))
+    |> validate_unencrypted(get_attribute(message, :encrypted))
   end
 
   def changeset_verify(%{message: message, signature: signature, public_key: public_key}) do
@@ -93,6 +94,13 @@ defmodule AlgoThink.CryptoModuleValidation do
     |> Ecto.Changeset.validate_inclusion(:message, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:public_key, [:public_key], message: "public key required")
     |> Ecto.Changeset.validate_inclusion(:signature, [:signature], message: "signature required")
-    |> validate_unencrypted(:message, get_attribute(message, :encrypted))
+    |> validate_unencrypted(get_attribute(message, :encrypted))
+  end
+
+  def changeset_solution(message) do
+    %CryptoArtifacts.CryptoArtifact{}
+    |> Ecto.Changeset.cast(message, [:type, :content, :encrypted, :signed, :owner_id, :valid])
+    |> Ecto.Changeset.validate_inclusion(:type, [:message], message: "message required")
+    |> validate_unencrypted(get_attribute(message, :encrypted))
   end
 end

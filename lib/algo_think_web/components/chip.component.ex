@@ -18,7 +18,7 @@ defmodule AlgoThinkWeb.Chip do
     ~H"""
     <div draggable={"#{@draggable}"} id={"crypto-artifact-#{@id}"} phx-hook="draggable" class={[
       "draggable bg-white border border-slate-200 flex flex-row items-center w-full p-3 justify-between h-chip",
-      "phx-dragged:opacity-30 transition-opacity",
+      "phx-dragged:opacity-30 transition-opacity cursor-grab",
       @class
     ]}
     >
