@@ -74,11 +74,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
     IO.inspect("starting the Game")
     {:ok, classroom} = Classrooms.update_classroom(socket.assigns.classroom, %{state: :key_gen})
 
-    for study_group <- classroom.study_groups do
-      StudyGroups.update_study_group(study_group, %{state: :key_gen})
-    end
-
-    send(self(), %{topic: @topic, event: "classroom_updated", payload: ""})
+    send(self(), %{topic: @topic, event: "classroom_updated", payload: classroom})
     {:noreply, socket}
   end
 

@@ -71,23 +71,6 @@
       </div>
     </.container>
 
-    <%!-- <div class="h-full w-full drop-zone"> --%>
-        <%!-- drop popover --%>
-        <%!-- <div class="hidden left-0 top-0 transition-opacity absolute h-full phx-dragging:block w-full z-50">        
-          <div class="flex justify-center items-center w-full h-full">
-            <div class="bg-white rounded-md p-4">
-              <div class="border-2 border-dashed rounded-md border-gray-800 p-4 flex flex-col items-center">
-                <span class="font-bold text-lg">Send to public chat</span>
-                <span class="text-sm mt-2">Drop to instantly send to the public chat</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <%!-- backdrop --%>
-        <%!-- <div class="hidden absolute left-0 top-0 h-full w-full bg-gray-700 phx-dragging:block z-40 backdrop-blur-sm"></div> --%>
-
-
     <.container class="w-4/12 relative" phx-hook="drag" id="chat-drag" title="Chat" :if={@state != :key_gen}>
       <div class="h-full w-full">
         
@@ -117,7 +100,15 @@
     </.container>
   </div>
 
-  <.container class="relative -bottom-6 w-2/6 z-50 left-1/2 -translate-x-1/2 max-h-44" title="Lösung" :if={@state != :key_gen}>
-    Lösungswort
+  <.container class="relative -bottom-6 w-3/6 z-50 left-1/2 -translate-x-1/2 max-h-44" title="Lösung" :if={@state != :key_gen}>
+    <.live_component
+      id={"solution_word"}
+      module={AlgoThinkWeb.StudyGroupLive.SolutionWord}
+      crypto_artifacts={Enum.filter(@crypto_artifacts, fn artifact -> artifact.location == "solution_word" end)}
+      current_user={@current_user}
+      study_group_id={@study_group_id}
+      name="solution_word"
+      type="solution_word"
+    />
   </.container>
 </div>

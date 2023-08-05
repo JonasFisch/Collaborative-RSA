@@ -22,7 +22,7 @@ defmodule AlgoThinkWeb.Container do
           if not @always_show_title do "phx-dragging:opacity-0" end
         ]}
         ><%= @title %></h2>
-        <div class="h-full overflow-hidden rounded-xl">
+        <div class="h-full overflow-hidden rounded-xl w-full">
           <%= render_slot(@inner_block) %>
         </div>
       </div>
