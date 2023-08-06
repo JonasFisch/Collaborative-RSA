@@ -19,7 +19,10 @@ defmodule AlgoThinkWeb.DropZone do
 
   def drop_zone(assigns) do
     ~H"""
-    <div class="w-full relative mb-5">
+    <div class={[
+      "w-full relative",
+      if not @small do "mb-5" end
+    ]}>
 
       <div id={@id} class={[
         "rounded-md border-2 border-dashed border-gray-300 flex flex-row justify-center w-full items-center transition-colors phx-dragging:bg-white",
@@ -38,7 +41,7 @@ defmodule AlgoThinkWeb.DropZone do
           <div class="w-full p-1 relative">
             <AlgoThinkWeb.Chip.chip id={"placeholder-crypto-module-#{@id}"} name={"nil"} type={:message} class="invisible" />
             <span class={[
-              "text-gray-400 font-medium absolute bottom-0 left-0 flex flex-row justify-center items-center w-full h-full",
+              "text-gray-400 font-medium absolute bottom-0 left-0 flex flex-row justify-center items-center w-full h-full text-center",
               if @error != nil do
                 if not @is_result do "text-red-400" end
               end,
@@ -49,7 +52,7 @@ defmodule AlgoThinkWeb.DropZone do
           </div>
         <% end %>
       </div>
-      <span class="mb-1 absolute h-7 text-red-400"><%= if not @is_result do @error end %></span>
+      <span class="mb-1 ml-1 absolute h-7 text-red-400 left-0"><%= if not @is_result do @error end %></span>
     </div>
     """
   end

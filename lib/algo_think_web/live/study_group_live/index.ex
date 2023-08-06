@@ -12,10 +12,6 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     AlgoThinkWeb.Endpoint.subscribe("study_group_#{study_group_id}")
     AlgoThinkWeb.Endpoint.subscribe("classroom")
 
-    # create message
-    # {:ok, message} = AlgoThink.CryptoArtifacts.create_message(socket.assigns.current_user.id, "Random Message")
-    # ChipStorage.create_crypto_artifact_user(%{user_id: socket.assigns.current_user.id, study_group_id: study_group_id, crypto_artifact_id: message.id })
-
     send(self(), "load_messages")
     send(self(), "load_users_chips")
 

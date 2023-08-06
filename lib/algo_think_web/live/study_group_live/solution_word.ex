@@ -1,4 +1,5 @@
 defmodule AlgoThinkWeb.StudyGroupLive.SolutionWord do
+  alias AlgoThink.StudyGroups
   alias AlgoThink.CryptoModuleValidation
   alias AlgoThink.CryptoArtifacts
   use AlgoThinkWeb, :live_component
@@ -6,11 +7,28 @@ defmodule AlgoThinkWeb.StudyGroupLive.SolutionWord do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="w-full mt-4" phx-hook="drag" id="solution-module">
+    <div class="w-full" phx-hook="drag" id="solution-module">
       <div class="flex justify-between items-center">
-        <%= for number <- 0..3 do %>
-          <div class="w-1/5">
-            <.drop_zone small={true} error={Map.get(@errors, "result_#{number}")} class="phx-dragging:bg-gray-100" id={"result_#{number}"} crypto_artifact={Enum.find(@crypto_artifacts, fn artifact -> artifact.location_id == "result_#{number}" end)}></.drop_zone>
+        <%= for user <- @users do %>
+          <% crytpo_artifact = Enum.find(@crypto_artifacts, fn artifact -> artifact.location_id == "result_#{user.id}" end) %>
+          <div class="w-1/4 text-center">
+            <span class="flex flex-row justify-center gap-2 items-center mb-1 font-medium">
+              <%= user.name %>
+              <div class="bg-green-300 rounded-full p-1" :if={crytpo_artifact != nil && Map.get(@errors, "result_#{user.id}") == nil}>
+                <MaterialIcons.check class="fill-black" size={18} />
+              </div>
+            </span>
+            <.drop_zone
+              small={true}
+              placeholder="Drop Message"
+              error={Map.get(@errors, "result_#{user.id}")}
+              class={[
+                "phx-dragging:!bg-gray-100",
+                if crytpo_artifact != nil && Map.get(@errors, "result_#{user.id}") == nil do "!border-green-300" end
+              ]}
+              id={"result_#{user.id}"}
+              crypto_artifact={crytpo_artifact}
+            />
           </div>
         <% end %>
       </div>
@@ -20,7 +38,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.SolutionWord do
 
   @impl true
   def mount(socket) do
-    {:ok, assign(socket, errors: %{})}
+    {:ok, assign(socket, errors: %{}, users: [])}
   end
 
   @impl true
@@ -36,20 +54,30 @@ defmodule AlgoThinkWeb.StudyGroupLive.SolutionWord do
       end
     end)
 
+    users = if (length(socket.assigns.users) == 0) do
+      StudyGroups.get_study_group!(assigns.study_group_id) |> Map.get(:users)
+    else
+      socket.assigns.users
+    end
+
     {:ok, socket
       |> assign(assigns)
       |> assign(errors: updated_errors)
+      |> assign(users: users)
     }
   end
 
   @impl true
   def handle_event("dropped", params, socket) do
+    drop_zone_id = params["dropzoneId"]
     crypto_artifact_id = Map.get(params, "draggedId")
     crypto_artifact = CryptoArtifacts.get_crypto_artifact!(crypto_artifact_id)
 
-    send(self(), %{topic: "update_chip_location", dragged_id: crypto_artifact_id, drop_zone_id: params["dropzoneId"], location: "solution_word"})
+    send(self(), %{topic: "update_chip_location", dragged_id: crypto_artifact_id, drop_zone_id: drop_zone_id, location: "solution_word"})
 
-    changeset = CryptoModuleValidation.changeset_solution(Map.from_struct(crypto_artifact))
+    artifact_owner_id = String.replace(drop_zone_id, "result_", "")
+
+    changeset = CryptoModuleValidation.changeset_solution(Map.from_struct(crypto_artifact), artifact_owner_id)
 
     if (length(changeset.errors) > 0) do
       # extract error message from changeset

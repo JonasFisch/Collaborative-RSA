@@ -1,4 +1,5 @@
 defmodule AlgoThinkWeb.ClassroomLive.Show do
+  alias AlgoThink.ChipStorage
   alias AlgoThink.StudyGroups
   use AlgoThinkWeb, :live_view
 
@@ -19,16 +20,22 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
     classroom = Classrooms.get_classroom!(id)
     user_no_study_group = Classrooms.students_with_no_study_group(classroom.id)
 
+    # add finished state to each study group
     classroom = Map.put(classroom, :study_groups, Enum.map(classroom.study_groups, fn study_group ->
       StudyGroups.add_task_finished_state(study_group)
     end))
+
+    # determine is all students are finished
+    all_finished = Enum.reduce(classroom.study_groups, true, fn study_group, acc ->
+      acc && study_group.task_finished == length(study_group.users)
+    end)
 
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:classroom, classroom)
      |> assign(:user_no_study_group, user_no_study_group)
-     |> assign(:all_finished, false)
+     |> assign(:all_finished, all_finished)
     }
   end
 
@@ -93,13 +100,18 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
     # reset task done
     for study_group <- socket.assigns.classroom.study_groups do
       StudyGroups.reset_user_done_task(study_group.id)
+
+      for user <- study_group.users do
+        # TODO: remove all artifacts except of the users public and private key
+
+        # create message for each user
+        {:ok, message} = AlgoThink.CryptoArtifacts.create_message(user.id, "Random Message")
+        ChipStorage.create_crypto_artifact_user(%{user_id: user.id, study_group_id: study_group.id, crypto_artifact_id: message.id })
+
+        # TODO: use a useful message (mabye let the user decide what message they want to send)
+
+      end
     end
-
-    # TODO: remove all artifacts except of the users public and private key
-
-    # TODO: add a message for the user
-    # TODO: use a useful message (mabye let the user decide what message they want to send)
-
 
     # TODO: make this more generic
     {:ok, classroom} = Classrooms.update_classroom(socket.assigns.classroom, %{state: :rsa})
