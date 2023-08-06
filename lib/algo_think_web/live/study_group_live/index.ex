@@ -145,6 +145,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
     {:noreply, socket |> assign(crypto_artifacts: socket.assigns.crypto_artifacts ++ [crypto_artifact])}
   end
+
   def handle_info(%{topic: "task_done"}, socket) do
     {:noreply, socket |> assign(task_done: true)}
   end

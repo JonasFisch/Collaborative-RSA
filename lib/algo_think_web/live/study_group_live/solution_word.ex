@@ -60,6 +60,15 @@ defmodule AlgoThinkWeb.StudyGroupLive.SolutionWord do
       socket.assigns.users
     end
 
+    # check for task done
+    if (Enum.all?(Enum.map(users, fn user ->
+      crytpo_artifact = Enum.find(assigns.crypto_artifacts, fn artifact -> artifact.location_id == "result_#{user.id}" end)
+      crytpo_artifact != nil && Map.get(updated_errors, "result_#{user.id}") == nil
+    end))) do
+      StudyGroups.set_user_done_task(assigns.current_user.id, assigns.study_group_id)
+      send(self(), %{topic: "task_done"})
+    end
+
     {:ok, socket
       |> assign(assigns)
       |> assign(errors: updated_errors)

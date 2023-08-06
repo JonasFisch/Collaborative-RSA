@@ -75,6 +75,22 @@ defmodule AlgoThink.StudyGroups do
     |> Classrooms.notify_subscribers("classroom_updated")
   end
 
+  def set_user_done_task(user_id, study_group_id) do
+    classroom_user = Repo.one(from(
+      cu in ClassroomUser,
+      where: cu.study_group_id == ^study_group_id and cu.user_id == ^user_id
+    ))
+
+    if classroom_user == nil do
+      raise "user has no classroom user relation!!!"
+    end
+
+    classroom_user
+    |> ClassroomUser.changeset_update_task_done(%{task_done: true})
+    |> Repo.update()
+    |> Classrooms.notify_subscribers("classroom_updated")
+  end
+
   def reset_user_done_task(study_group_id) do
     classroom_users = Repo.all(from(
       cu in ClassroomUser,
