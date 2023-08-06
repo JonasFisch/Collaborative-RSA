@@ -28,6 +28,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:classroom, classroom)
      |> assign(:user_no_study_group, user_no_study_group)
+     |> assign(:all_finished, false)
     }
   end
 
@@ -38,9 +39,15 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
         classroom = Classrooms.get_classroom!(socket.assigns.classroom.id)
         user_no_study_group = Classrooms.students_with_no_study_group(classroom.id)
 
+        # add task finished state
         classroom = Map.put(classroom, :study_groups, Enum.map(classroom.study_groups, fn study_group ->
           StudyGroups.add_task_finished_state(study_group)
         end))
+
+        # determine is all students are finished
+        all_finished = Enum.reduce(classroom.study_groups, true, fn study_group, acc ->
+          acc && study_group.task_finished == length(study_group.users)
+        end)
 
         if (classroom.state == :key_gen && socket.assigns.current_user.role == :student) do
           current_study_group_id = StudyGroups.get_study_group_for_classroom(socket.assigns.current_user, classroom)
@@ -51,6 +58,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
           {:noreply, socket
             |> assign(:classroom, classroom)
             |> assign(:user_no_study_group, user_no_study_group)
+            |> assign(:all_finished, all_finished)
           }
         end
 
@@ -87,6 +95,13 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
       StudyGroups.reset_user_done_task(study_group.id)
     end
 
+    # TODO: remove all artifacts except of the users public and private key
+
+    # TODO: add a message for the user
+    # TODO: use a useful message (mabye let the user decide what message they want to send)
+
+
+    # TODO: make this more generic
     {:ok, classroom} = Classrooms.update_classroom(socket.assigns.classroom, %{state: :rsa})
 
     AlgoThinkWeb.Endpoint.broadcast_from(
