@@ -37,6 +37,9 @@ module.exports = {
       minWidth: {
         "chip": "20rem"
       },
+      maxWidth: {
+        "8/10": "80%"
+      },
       height: {
         "chip": "62px",
         "game": "calc(100% - 25px)"
@@ -45,6 +48,8 @@ module.exports = {
   },
   plugins: [
     require("@tailwindcss/forms"),
+    require('tailwindcss-animated'),
+
     // Allows prefixing tailwind classes with LiveView classes to add rules
     // only when LiveView classes are applied, for example:
     //

@@ -77,6 +77,7 @@
       <div class="h-full w-full">
         
         <.drag_modal primary_text="Send to public chat" secondary_text="Drop to instantly send to the public chat" />
+        <.error_modal visible={length(@chat_errors) > 0} primary_text="Cannot send this Artifact" secondary_text={Enum.at(@chat_errors, 0)} />
 
         <%!-- chat --%>
         <div class="relative h-full disable-pointer-events-dragging">

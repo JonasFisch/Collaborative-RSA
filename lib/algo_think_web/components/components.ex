@@ -10,4 +10,5 @@ defmodule AlgoThinkWeb.Components do
   ExExport.export(AlgoThinkWeb.Accordion)
   ExExport.export(AlgoThinkWeb.Stepper)
   ExExport.export(AlgoThinkWeb.DragModal)
+  ExExport.export(AlgoThinkWeb.ErrorModal)
 end

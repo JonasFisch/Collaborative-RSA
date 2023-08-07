@@ -1,4 +1,5 @@
 defmodule AlgoThinkWeb.StudyGroupLive.Index do
+  alias AlgoThink.CryptoModuleValidation
   alias AlgoThink.StudyGroups
   alias AlgoThink.CryptoArtifacts
   alias AlgoThink.ChipStorage
@@ -25,7 +26,8 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         open_accordion: "key_generation",
         drag_origin: "storage",
         state: Classrooms.get_classroom!(classroom_id) |> Map.get(:state),
-        page_title: "Edit Classroom"
+        page_title: "Edit Classroom",
+        chat_errors: []
       ),
       layout: {AlgoThinkWeb.Layouts, :game},
     }
@@ -53,6 +55,12 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     )}
   end
 
+  def handle_event("error_modal_ok_pressed", params, socket) do
+    IO.inspect("error_modal_ok_pressed!!!")
+
+    {:noreply, socket |> assign(:chat_errors, [])}
+  end
+
   def handle_event("add_attachment_to_storage", params, socket) do
     attachment_id = Map.get(params, "attachment-id")
 
@@ -69,28 +77,38 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
    # handle drop on chat
    @impl true
-   def handle_event("dropped", params, socket) do
-     crypto_artifact_id = Map.get(params, "draggedId")
-     _crypto_artifact = CryptoArtifacts.get_crypto_artifact!(crypto_artifact_id)
+  def handle_event("dropped", params, socket) do
+    crypto_artifact_id = Map.get(params, "draggedId")
+    crypto_artifact = CryptoArtifacts.get_crypto_artifact!(crypto_artifact_id)
 
-     # TODO: do some checkings if item can be dropped here!!!
+    # create new messsage with artifact attached
+    with  {:ok, changeset} <- CryptoModuleValidation.changeset_encrypted_message(Map.from_struct(crypto_artifact)),
+          {:ok, new_message} <- ChatMessages.create_chat_message(%{
+            text: "",
+            author_id: socket.assigns.current_user.id,
+            study_group_id: socket.assigns.study_group_id,
+            attachment_id: crypto_artifact_id
+          })
+    do
+      {:noreply, socket
+        |> assign(chat_messages: socket.assigns.chat_messages ++ [new_message])
+      }
+    else
+      {:error, changeset} ->
 
-     # create new messsage with artifact attached
-     with {:ok, new_message} <- ChatMessages.create_chat_message(%{
-         text: "",
-         author_id: socket.assigns.current_user.id,
-         study_group_id: socket.assigns.study_group_id,
-         attachment_id: crypto_artifact_id
-     }) do
-       {:noreply, socket
-         |> assign(chat_messages: socket.assigns.chat_messages ++ [new_message])
-       }
-     else
-       {:error, _changeset} ->
-         IO.inspect("error")
-         {:noreply, socket}
-     end
-   end
+        # extract error message
+        errors = changeset.errors
+        |> Enum.reduce([], fn error, acc ->
+          {key, {msg, _other}} = error
+          acc ++ [msg]
+        end)
+
+        IO.inspect(errors)
+
+        {:noreply, socket |> assign(chat_errors: errors)}
+    end
+
+  end
 
   #  INFOS
 

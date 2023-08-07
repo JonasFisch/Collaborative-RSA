@@ -24,7 +24,7 @@ defmodule AlgoThinkWeb.Button do
     <button
       type={@type}
       class={[
-        "rounded-lg  py-2 px-3 flex flex-row items-center gap-2 transition-colors",
+        "rounded-xl  py-2 px-3 flex flex-row items-center justify-center gap-2 transition-colors",
         "text-sm font-semibold leading-6 text-white active:text-white/80",
         "phx-submit-loading:spinner-visible phx-submit-loading:pointer-events-none",
         @class,
@@ -32,6 +32,7 @@ defmodule AlgoThinkWeb.Button do
         else
           case @color do
             "green" -> "bg-green-500 hover:bg-green-400"
+            "red" -> "bg-red-400 hover:bg-red-300"
             _ -> "bg-zinc-900 hover:bg-zinc-700"
           end
         end
