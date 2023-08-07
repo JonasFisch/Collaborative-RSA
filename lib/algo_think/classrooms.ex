@@ -106,7 +106,7 @@ defmodule AlgoThink.Classrooms do
   def create_classroom(attrs \\ %{}, %User{} = user) do
     {:ok, classroom} =
       %Classroom{}
-      |> Classroom.changeset(attrs)
+      |> Classroom.changeset(Map.put(attrs, "state", :group_finding))
       |> Repo.insert()
 
     add_user_classroom(user, classroom)

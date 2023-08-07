@@ -9,8 +9,8 @@
           Edit classroom
         </.button>
       </.link>
-      <.button phx-click="start_game" disabled={length(@user_no_study_group) > 0 || not is_nil(@classroom.state)} no_icon color="green">
-        <%= if is_nil(@classroom.state) do "Start" else "Running ..." end %>
+      <.button phx-click="start_game" disabled={length(@user_no_study_group) > 0 || @classroom.state != :group_finding} no_icon color="green">
+        <%= if @classroom.state == :group_finding do "Start" else "Running ..." end %>
       </.button>
     </div>
   </:actions>

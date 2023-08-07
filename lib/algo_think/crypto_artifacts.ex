@@ -4,9 +4,12 @@ defmodule AlgoThink.CryptoArtifacts do
   """
 
   import Ecto.Query, warn: false
+  alias AlgoThink.ChipStorage.CryptoArtifactUser
+  alias AlgoThink.StudyGroups
   alias AlgoThink.Repo
 
   alias AlgoThink.CryptoArtifacts.CryptoArtifact
+  alias AlgoThink.Accounts.User
 
   @doc """
   Returns the list of crypto_artifacts.
@@ -195,6 +198,21 @@ defmodule AlgoThink.CryptoArtifacts do
   """
   def delete_crypto_artifact(%CryptoArtifact{} = crypto_artifact) do
     Repo.delete(crypto_artifact)
+  end
+
+  def delete_crypto_artifacts_for_user(%User{} = user, %StudyGroups.StudyGroup{} = study_group) do
+    from(
+      cau in CryptoArtifactUser,
+      join: ca in CryptoArtifact,
+      on: ca.id == cau.crypto_artifact_id,
+      where: cau.user_id == ^user.id
+        and cau.study_group_id == ^study_group.id
+        and (
+          ca.type not in [:public_key, :private_key]
+          or
+          ca.owner_id != ^user.id
+        )
+    ) |> Repo.delete_all()
   end
 
   @doc """

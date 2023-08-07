@@ -1,7 +1,9 @@
 defmodule AlgoThinkWeb.ClassroomLive.Show do
+  use AlgoThinkWeb, :live_view
+  alias AlgoThink.ChatMessages
+  alias AlgoThink.CryptoArtifacts
   alias AlgoThink.ChipStorage
   alias AlgoThink.StudyGroups
-  use AlgoThinkWeb, :live_view
 
   alias AlgoThink.Classrooms
 
@@ -100,9 +102,11 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
     # reset task done
     for study_group <- socket.assigns.classroom.study_groups do
       StudyGroups.reset_user_done_task(study_group.id)
+      ChatMessages.clear_chat_history(study_group)
 
       for user <- study_group.users do
-        # TODO: remove all artifacts except of the users public and private key
+        # delete all crypto artifacts except the users key pair
+        CryptoArtifacts.delete_crypto_artifacts_for_user(user, study_group)
 
         # create message for each user
         {:ok, message} = AlgoThink.CryptoArtifacts.create_message(user.id, "Random Message")
@@ -113,8 +117,14 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
       end
     end
 
-    # TODO: make this more generic
-    {:ok, classroom} = Classrooms.update_classroom(socket.assigns.classroom, %{state: :rsa})
+    # get next phase of the game
+    next_state = case socket.assigns.classroom.state do
+      :key_gen -> :rsa
+      :rsa -> :rsa_with_signatures
+      :rsa_with_signatures -> :finished
+      _ -> IO.warn("invalid next state given!")
+    end
+    {:ok, classroom} = Classrooms.update_classroom(socket.assigns.classroom, %{state: next_state})
 
     AlgoThinkWeb.Endpoint.broadcast_from(
       self(),
@@ -122,12 +132,6 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
       "state_update",
       classroom
     )
-    # set study group state
-    # for study_group <- socket.assigns.classroom.study_groups do
-    #   {:ok, _update_study_group} = StudyGroups.update_study_group(study_group, %{state: :rsa})
-    #   # TODO: send websocket message to all clients that the state has updated
-
-    # end
 
     # update classroom for teacher
     send(self(), %{topic: @topic, event: "classroom_updated", payload: ""})

@@ -1,4 +1,5 @@
 defmodule AlgoThinkWeb.StudyGroupLive.Index do
+  alias AlgoThink.StudyGroups
   alias AlgoThink.CryptoArtifacts
   alias AlgoThink.ChipStorage
   alias AlgoThink.ChatMessages

@@ -97,6 +97,13 @@ defmodule AlgoThink.ChatMessages do
     Repo.delete(chat_message)
   end
 
+  def clear_chat_history(%StudyGroup{} = study_group) do
+    from(
+      cm in ChatMessage,
+      where: cm.study_group_id == ^study_group.id
+    ) |> Repo.delete_all()
+  end
+
   @doc """
   Returns a data structure for tracking chat_message changes.
 

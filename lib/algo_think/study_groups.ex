@@ -39,7 +39,7 @@ defmodule AlgoThink.StudyGroups do
       ** (Ecto.NoResultsError)
 
   """
-  def get_study_group!(id), do: Repo.get!(StudyGroup, id) |> Repo.preload(:users)
+  def get_study_group!(id), do: Repo.get!(StudyGroup, id) |> Repo.preload(:users) |> Repo.preload(:chat_messages)
 
   def add_task_finished_state(study_group) do
     user_finished_task = Repo.aggregate(from(
