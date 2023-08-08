@@ -156,48 +156,53 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
 
   def handle_event("encrypt", _params, socket) do
     zones = socket.assigns.data |> Enum.filter(fn drop_zone -> drop_zone.result == false end)
+    result_zone = Enum.find(socket.assigns.data, fn drop_zone -> drop_zone.result == true end)
 
     current_user_id = socket.assigns.current_user.id
     crypto_artifact_map = Enum.reduce(zones, %{}, fn zone, acc ->
       Map.put(acc, zone.expected_type, zone.crypto_artifact)
     end)
 
-    with {:ok, result} <- action(
-        socket.assigns.type,
-        current_user_id,
-        crypto_artifact_map
-      ),
-      {:ok, _post_result} <- post_action(
-        socket.assigns.type,
-        current_user_id,
-        result,
-        socket.assigns.study_group_id
-      )
-    do
-      if socket.assigns.type == "verify" do
-        valid = Map.get(result, :valid)
-        message = Map.get(result, :message)
+    if result_zone.crypto_artifact == nil do
+      with {:ok, result} <- action(
+          socket.assigns.type,
+          current_user_id,
+          crypto_artifact_map
+        ),
+        {:ok, _post_result} <- post_action(
+          socket.assigns.type,
+          current_user_id,
+          result,
+          socket.assigns.study_group_id
+        )
+      do
+        if socket.assigns.type == "verify" do
+          valid = Map.get(result, :valid)
+          message = Map.get(result, :message)
 
-        send(self(), %{topic: "mark_message_as_valid", message: message, valid: valid})
-        {:noreply, socket}
+          send(self(), %{topic: "mark_message_as_valid", message: message, valid: valid})
+          {:noreply, socket}
+        else
+          send(self(), %{topic: "add_new_chip", crypto_artifact: result, location: socket.assigns.type, drop_zone_id: "drop-zone-#{socket.assigns.type}-result"})
+          {:noreply, socket}
+        end
       else
-        send(self(), %{topic: "add_new_chip", crypto_artifact: result, location: socket.assigns.type, drop_zone_id: "drop-zone-#{socket.assigns.type}-result"})
-        {:noreply, socket}
+        {:error, changeset} ->
+          # transform error message to format: {field, error_message}
+          errors = changeset.errors
+          |> Enum.reduce(Map.new(), fn error, acc ->
+            {key, {msg, _other}} = error
+            Map.put(acc, key, msg)
+          end)
+
+          {:noreply, socket |> assign(errors: errors)}
+        err ->
+          IO.warn("uncatched error in crypto module")
+          IO.inspect(err)
+          {:noreply, socket}
       end
     else
-      {:error, changeset} ->
-        # transform error message to format: {field, error_message}
-        errors = changeset.errors
-        |> Enum.reduce(Map.new(), fn error, acc ->
-          {key, {msg, _other}} = error
-          Map.put(acc, key, msg)
-        end)
-
-        {:noreply, socket |> assign(errors: errors)}
-      err ->
-        IO.warn("uncatched error in crypto module")
-        IO.inspect(err)
-        {:noreply, socket}
+      {:noreply, socket}
     end
   end
 
