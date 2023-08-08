@@ -26,7 +26,9 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         drag_origin: "storage",
         state: Classrooms.get_classroom!(classroom_id) |> Map.get(:state),
         page_title: "Edit Classroom",
-        chat_errors: []
+        chat_errors: [],
+        task_done: false,
+        task_modal_open: true
       ),
       layout: {AlgoThinkWeb.Layouts, :game},
     }
@@ -105,6 +107,10 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         {:noreply, socket |> assign(chat_errors: errors)}
     end
 
+  end
+
+  def handle_event("close_task_modal", params, socket) do
+    {:noreply, socket |> assign(task_modal_open: false)}
   end
 
   #  INFOS

@@ -12,6 +12,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.StorageModule do
           "h-full",
           if @drag_origin != "storage" do "disable-pointer-events-dragging" end
         ]}>
+          <%= if length(@grouped_artifacts) > 0 do %>
           <div class="h-full p-2 overflow-y-scroll">
             <%= for {{owner}, crypto_artifacts} <- @grouped_artifacts do %>
               <div class="bg-slate-100 mb-2">
@@ -24,6 +25,12 @@ defmodule AlgoThinkWeb.StudyGroupLive.StorageModule do
               </div>
             <% end %>
           </div>
+          <% else %>
+          <div class="flex flex-col justify-center items-center h-full">
+          <MaterialIcons.info style="round" class="fill-gray-400" size={24} />
+            <span class="text-md max-w-5/10 font-medium text-gray-400 text-center">Here you can save all the artifact you generate during the tasks.</span>
+          </div>
+          <% end %>
         </div>
       </.container>
     </div>

@@ -12,4 +12,5 @@ defmodule AlgoThinkWeb.Components do
   ExExport.export(AlgoThinkWeb.DragModal)
   ExExport.export(AlgoThinkWeb.ErrorModal)
   ExExport.export(AlgoThinkWeb.FinishedModal)
+  ExExport.export(AlgoThinkWeb.TaskCompletedModal)
 end

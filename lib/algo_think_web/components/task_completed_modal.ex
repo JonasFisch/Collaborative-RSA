@@ -1,9 +1,10 @@
-defmodule AlgoThinkWeb.FinishedModal do
+defmodule AlgoThinkWeb.TaskCompletedModal do
   use Phoenix.Component
 
   attr :visible, :boolean, default: false
+  attr :on_ok_clicked, :string
 
-  def finished_modal(assigns) do
+  def task_completed_modal(assigns) do
     ~H"""
     <div>
       <%!-- backdrop --%>
@@ -21,14 +22,9 @@ defmodule AlgoThinkWeb.FinishedModal do
         <div class="flex justify-center items-center w-full h-full">
           <div class="max-w-3/10 bg-white rounded-md p-6 flex flex-col justify-center items-center gap-2">
             <MaterialIcons.check_circle style="round" class="fill-green-400" size={50} />
-            <span class="font-bold text-xl">Finished</span>
-            <span class="text-sm text-gray-400 font-bold max-w-8/10 text-center">Thanks for participating on the Evaluation of my Master Thesis! Please fill out the Questionaire linked below! Thank you very much!</span>
-            <a href="http://www.google.com" target="_blank">
-              <span class="flex flex-row gap-2 items-center justify-cente border-2 border-blue-300 rounded-md p-1 hover:bg-blue-100">
-                <span class="text-md font-bold">Questionaire</span>
-                <MaterialIcons.arrow_forward style="round" class="fill-blue-300" size={24} />
-              </span>
-            </a>
+            <span class="font-bold text-xl">Task Done</span>
+            <span class="text-sm text-gray-400 font-bold max-w-8/10 text-center">Waiting for others to complete Task. You may also need to help others to complete their task.</span>
+            <AlgoThinkWeb.Button.button phx-click={@on_ok_clicked} class="w-20">OK</AlgoThinkWeb.Button.button>
           </div>
         </div>
       </div>
