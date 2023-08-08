@@ -28,7 +28,8 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         page_title: "Edit Classroom",
         chat_errors: [],
         task_done: false,
-        task_modal_open: true
+        task_modal_open: true,
+        page_title: "RSA Game"
       ),
       layout: {AlgoThinkWeb.Layouts, :game},
     }

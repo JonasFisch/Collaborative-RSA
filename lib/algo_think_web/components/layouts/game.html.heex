@@ -5,15 +5,14 @@
         <%!-- Task description --%>
         <div>
           <h1 class="font-bold text-lg text-center mb-1">Task</h1>
-          <div class="flex flex-row gap-1 items-center">
-            <p class="text-md text-center max-w-2xl">
-              <%!-- TODO: write tast descrptions --%>
+          <div class="flex flex-row gap-2 items-center justify-center">
+            <p class="text-md text-center max-w-2xl font-medium animate-jump-in">
               <%= 
                 case assigns[:state] do
                   :key_gen -> "Generate your Keys by using the Key Generation Module."
-                  :rsa -> "WIP rsa"
-                  :rsa_with_evial -> "WIP rsa with evil"
-                  :rsa_with_signatures -> "WIP rsa with signatures"
+                  :rsa -> "The next Task ist to exchange your Message with the other People in your Group. When you got all the Messages from your group Members, place them in the solution module on the bottom."
+                  :rsa_with_signatures -> "This Task is similar to the one before (exchange your Message with all other people in the your group). In Addition you have to validate the received message to be sure the message was send by that Person."
+                  :finished -> "Finished, all Tasks done!"
                   _ -> "Task Description goes here"
                 end
               %>
