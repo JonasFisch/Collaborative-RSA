@@ -17,7 +17,7 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
         </tr>
 
         <%!-- study groups --%>
-        <tr :for={study_group <- @classroom.study_groups} class="text-sm leading-6 sm:gap-8 relative mt-6">
+        <tr :for={study_group <- @classroom.study_groups} class="text-sm leading-6 sm:gap-8 relative mt-6" :if={@classroom.state == :group_finding || length(study_group.users) > 0}>
           <th class="h-8 text-zinc-500 align-top text-left flex flex-row items-center">
             <p class="font-medium whitespace-nowrap">
               <%= study_group.name %>
@@ -45,14 +45,24 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
               "rounded-xl w-56 m-auto"
             ]}>
               <p class="ml-3 mr-0 flex flex-row justify-center gap-1 items-center">
-                Done
+                <span>
+                  <%= if length(study_group.users) > 0 && study_group.task_finished == length(study_group.users) do "Done" else "In Progress ..." end %>
+                </span>
                 <MaterialIcons.check :if={length(study_group.users) > 0 && study_group.task_finished == length(study_group.users)} class="fill-gray-700" size={20} />
               </p>
             </div>
           </th>
           <th class="align-top text-right">
             <div>
-              <p><%= length(study_group.users) %>/<%= study_group.max_users %></p>
+              <p>
+                <%=
+                if @classroom.state == :group_finding do
+                  "#{length(study_group.users)} / #{study_group.max_users}"
+                else
+                  "#{study_group.task_finished} / #{length(study_group.users)}"
+                end
+                %>
+              </p>
             </div>
           </th>
         </tr>
