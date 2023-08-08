@@ -38,7 +38,8 @@ module.exports = {
         "chip": "20rem"
       },
       maxWidth: {
-        "8/10": "80%"
+        "8/10": "80%",
+        "3/10": "30%"
       },
       height: {
         "chip": "62px",
