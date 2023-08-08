@@ -106,6 +106,16 @@ alias AlgoThink.CryptoArtifacts
     |> validate_unencrypted(get_attribute(message, :encrypted))
   end
 
+  def changeset_solution_with_signature(message, expected_user_id) do
+    {owner_id, _} = Integer.parse(expected_user_id)
+    %CryptoArtifacts.CryptoArtifact{}
+    |> Ecto.Changeset.cast(message, [:type, :content, :encrypted, :signed, :owner_id, :valid])
+    |> Ecto.Changeset.validate_acceptance(:valid, message: "message must be verified!")
+    |> Ecto.Changeset.validate_inclusion(:type, [:message], message: "message required")
+    |> Ecto.Changeset.validate_inclusion(:owner_id, [owner_id], message: "wrong author")
+    |> validate_unencrypted(get_attribute(message, :encrypted))
+  end
+
   def validate_if_true(changeset, validator ,condition) do
     if (condition) do
       validator

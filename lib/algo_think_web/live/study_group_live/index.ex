@@ -1,6 +1,5 @@
 defmodule AlgoThinkWeb.StudyGroupLive.Index do
   alias AlgoThink.CryptoModuleValidation
-  alias AlgoThink.StudyGroups
   alias AlgoThink.CryptoArtifacts
   alias AlgoThink.ChipStorage
   alias AlgoThink.ChatMessages
@@ -55,9 +54,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     )}
   end
 
-  def handle_event("error_modal_ok_pressed", params, socket) do
-    IO.inspect("error_modal_ok_pressed!!!")
-
+  def handle_event("error_modal_ok_pressed", _params, socket) do
     {:noreply, socket |> assign(:chat_errors, [])}
   end
 
@@ -82,7 +79,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     crypto_artifact = CryptoArtifacts.get_crypto_artifact!(crypto_artifact_id)
 
     # create new messsage with artifact attached
-    with  {:ok, changeset} <- CryptoModuleValidation.changeset_encrypted_message(Map.from_struct(crypto_artifact)),
+    with  {:ok, _changeset} <- CryptoModuleValidation.changeset_encrypted_message(Map.from_struct(crypto_artifact)),
           {:ok, new_message} <- ChatMessages.create_chat_message(%{
             text: "",
             author_id: socket.assigns.current_user.id,
@@ -99,7 +96,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
         # extract error message
         errors = changeset.errors
         |> Enum.reduce([], fn error, acc ->
-          {key, {msg, _other}} = error
+          {_key, {msg, _other}} = error
           acc ++ [msg]
         end)
 

@@ -80,13 +80,18 @@ defmodule AlgoThinkWeb.StudyGroupLive.SolutionWord do
   def handle_event("dropped", params, socket) do
     drop_zone_id = params["dropzoneId"]
     crypto_artifact_id = Map.get(params, "draggedId")
-    crypto_artifact = CryptoArtifacts.get_crypto_artifact!(crypto_artifact_id)
+    %CryptoArtifacts.CryptoArtifact{} = crypto_artifact = CryptoArtifacts.get_crypto_artifact!(crypto_artifact_id)
 
     send(self(), %{topic: "update_chip_location", dragged_id: crypto_artifact_id, drop_zone_id: drop_zone_id, location: "solution_word"})
 
     artifact_owner_id = String.replace(drop_zone_id, "result_", "")
 
-    changeset = CryptoModuleValidation.changeset_solution(Map.from_struct(crypto_artifact), artifact_owner_id)
+    # check if mode is with signatures
+    changeset = if socket.assigns.classroom_state == :rsa || crypto_artifact.owner_id == socket.assigns.current_user.id do
+      CryptoModuleValidation.changeset_solution(Map.from_struct(crypto_artifact), artifact_owner_id)
+    else
+      CryptoModuleValidation.changeset_solution_with_signature(Map.from_struct(crypto_artifact), artifact_owner_id)
+    end
 
     if (length(changeset.errors) > 0) do
       # extract error message from changeset
