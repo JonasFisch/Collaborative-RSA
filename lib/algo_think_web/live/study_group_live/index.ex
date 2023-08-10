@@ -51,8 +51,12 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
     {:noreply, socket |> assign(
       open_accordion: Map.get(params, "type"),
       crypto_artifacts: Enum.map(socket.assigns.crypto_artifacts, fn crypto_artifact ->
-        # put all chips back into the storage
-        Map.put(crypto_artifact, :location, "storage")
+        # put all chips back into the storage except the ones in the solution module
+        if (crypto_artifact.location != "solution_word") do
+          Map.put(crypto_artifact, :location, "storage")
+        else
+          crypto_artifact
+        end
       end)
     )}
   end
