@@ -1,5 +1,5 @@
 <div class="h-full w-full flex flex-col gap-4">
-  <div class="flex flex-row gap-8 h-3/4 justify-center">
+  <div class="flex flex-row gap-8 h-7/10 justify-center">
     <.live_component
       id={"storage"}
       module={AlgoThinkWeb.StudyGroupLive.StorageModule}
@@ -101,7 +101,7 @@
     </.container>
   </div>
 
-  <.container class="relative -bottom-6 w-4/6 z-50 left-1/2 -translate-x-1/2 max-h-44" title="Solution" :if={@state != :key_gen}>
+  <.container class="relative -bottom-6 w-4/6 z-50 left-1/2 -translate-x-1/2 min-h-solution" title="Solution" :if={@state != :key_gen}>
     <.live_component
       id={"solution_word"}
       module={AlgoThinkWeb.StudyGroupLive.SolutionWord}

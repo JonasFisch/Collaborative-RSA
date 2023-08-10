@@ -49,7 +49,7 @@ alias AlgoThink.CryptoArtifacts
     |> Ecto.Changeset.validate_required([:message, :public_key])
     |> Ecto.Changeset.validate_inclusion(:message, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:public_key, [:public_key], message: "public key required")
-    |> validate_public_key_self_encrypt(get_attribute(message, :owner_id), current_user_id)
+    |> validate_public_key_self_encrypt(get_attribute(public_key, :owner_id), current_user_id)
     |> validate_unencrypted(get_attribute(message, :encrypted))
   end
 
@@ -116,10 +116,12 @@ alias AlgoThink.CryptoArtifacts
   end
 
   def changeset_solution_with_signature(message, expected_user_id) do
+    IO.inspect(message)
     {owner_id, _} = Integer.parse(expected_user_id)
     %CryptoArtifacts.CryptoArtifact{}
     |> Ecto.Changeset.cast(message, [:type, :content, :encrypted, :signed, :owner_id, :valid])
-    |> Ecto.Changeset.validate_acceptance(:valid, message: "message must be verified!")
+    |> Ecto.Changeset.validate_required([:valid], message: "message must be verified!")
+    |> Ecto.Changeset.validate_inclusion(:valid, [:valid], message: "message must be verified!")
     |> Ecto.Changeset.validate_inclusion(:type, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:owner_id, [owner_id], message: "wrong author")
     |> validate_unencrypted(get_attribute(message, :encrypted))

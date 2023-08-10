@@ -32,7 +32,10 @@ module.exports = {
         "128": "32rem"
       },
       maxHeight: {
-        "128": "38rem"
+        "128": "38rem",
+      },
+      minHeight: {
+        "solution": "10rem"
       },
       minWidth: {
         "chip": "20rem"
@@ -44,7 +47,9 @@ module.exports = {
       },
       height: {
         "chip": "62px",
-        "game": "calc(100% - 25px)"
+        "game": "calc(100% - 25px)",
+        "6/10": "60%",
+        "7/10": "70%"
       }
     },
   },
