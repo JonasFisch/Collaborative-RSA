@@ -27,7 +27,15 @@ alias AlgoThink.CryptoArtifacts
     end
   end
 
-  def changeset_encryption(%{message: message, public_key: public_key}) do
+  defp validate_public_key_self_encrypt(changeset, public_key_owner_id, current_user_id) do
+    if public_key_owner_id == current_user_id do
+      Ecto.Changeset.add_error(changeset, :public_key, "use public key from another person")
+    else
+      changeset
+    end
+  end
+
+  def changeset_encryption(%{message: message, public_key: public_key}, current_user_id) do
     encryption_module = %AlgoThink.CryptoModules.EncryptionModuleStruct{}
     types = %{
       message: Ecto.ParameterizedType.init(Ecto.Enum, values: @available_types),
@@ -41,6 +49,7 @@ alias AlgoThink.CryptoArtifacts
     |> Ecto.Changeset.validate_required([:message, :public_key])
     |> Ecto.Changeset.validate_inclusion(:message, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:public_key, [:public_key], message: "public key required")
+    |> validate_public_key_self_encrypt(get_attribute(message, :owner_id), current_user_id)
     |> validate_unencrypted(get_attribute(message, :encrypted))
   end
 

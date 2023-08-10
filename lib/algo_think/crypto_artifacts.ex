@@ -95,7 +95,7 @@ defmodule AlgoThink.CryptoArtifacts do
     changeset = AlgoThink.CryptoModuleValidation.changeset_encryption(%{
       message: crypto_artifact_message,
       public_key: crypto_artifact_public_key,
-    })
+    }, owner_id)
     if (changeset.valid?) do
       {:ok, public_key} = ExPublicKey.loads(crypto_artifact_public_key.content)
       {:ok, cipher_text} = ExPublicKey.encrypt_public(crypto_artifact_message.content, public_key)
