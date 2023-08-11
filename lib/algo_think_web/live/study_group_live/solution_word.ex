@@ -11,7 +11,16 @@ defmodule AlgoThinkWeb.StudyGroupLive.SolutionWord do
       <div class="flex justify-between items-center">
         <%= for user <- @users do %>
           <% crytpo_artifact = Enum.find(@crypto_artifacts, fn artifact -> artifact.location_id == "result_#{user.id}" end) %>
-          <div class="w-1/4 text-center">
+          <div class={[
+            "text-center",
+            case length(@users) do
+              1 -> "w-full"
+              2 -> "w-5/12"
+              3 -> "w-3/12"
+              4 -> "w-2/12"
+              _ -> "w-1/4"
+            end
+          ]}>
             <span class="flex flex-row justify-center gap-2 items-center mb-1 font-medium">
               <%= user.name %>
               <div class="bg-green-300 rounded-full p-1" :if={crytpo_artifact != nil && Map.get(@errors, "result_#{user.id}") == nil}>
