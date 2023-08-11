@@ -54,6 +54,18 @@
     <:action :let={{_id, classroom}}>
       <.link navigate={~p"/classroom/#{classroom}"}>Open</.link>
     </:action>
+
+    <:alt>
+      <div class="h-96 flex flex-col justify-center items-center" id="alt">
+        <div class="bg-gray-100 p-4 rounded-lg flex flex-col gap-4 items-center">
+          <MaterialIcons.info style="round" class="fill-gray-400" size={32} />
+          <span class="text-md font-bold text-gray-500 w-50 text-center">No Classrooms yet, you can use the Button to join one.</span>
+          <.link patch={~p"/classroom/join"}>
+            <.button>Join</.button>
+          </.link>
+        </div>
+      </div>
+    </:alt>
   </.table>
 
   <.modal
