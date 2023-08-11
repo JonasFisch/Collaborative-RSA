@@ -5,7 +5,7 @@ defmodule AlgoThinkWeb.Chip do
   attr :valid, :boolean, default: false, required: false, doc: "chip is valid"
   attr :class, :string, default: nil
   attr :id, :string, required: true
-  attr :encrypted, :boolean, default: false
+  attr :encrypted_for, AlgoThink.Accounts.User, default: nil
   attr :draggable, :boolean, default: true
   attr :minimal, :boolean, default: false
 
@@ -25,21 +25,23 @@ defmodule AlgoThinkWeb.Chip do
       <MaterialIcons.drag_indicator class="fill-gray-300 mr-2" size={32} :if={not @minimal} />
       <span class="font-bold text-left w-1/3"><%= @name %></span>
       <span class="text-gray-500 w-1/3 text-sm text-left" :if={not @minimal}>
-
         <%= case @type do
           :public_key -> "Public Key"
           :private_key -> "Private"
-          :message -> if @encrypted do "Encrypted Message" else "Message" end
+          :message -> if @encrypted_for != nil do "Encrypted for" else "Message" end
           :signature -> "Signature"
-          _ -> "unknown"
+          _ -> ""
         end %>
+        <b :if={@encrypted_for != nil}>
+          <%= @encrypted_for.name %>
+        </b>
       </span>
       <div class={[
         "rounded-full w-9 h-9 flex justify-center items-center relative ml-6",
         case @type do
           :public_key -> "bg-green-400"
           :private_key -> "bg-green-400"
-          :message -> if @encrypted do "bg-red-400" else "bg-blue-400" end
+          :message -> if @encrypted_for != nil do "bg-red-400" else "bg-blue-400" end
           :signature -> "bg-yellow-400"
         end
       ]}>
@@ -49,7 +51,7 @@ defmodule AlgoThinkWeb.Chip do
           <% :private_key -> %>
             <MaterialIcons.vpn_key style="outlined" class="fill-black" size={25} />
           <% :message -> %>
-            <%= if @encrypted do %>
+            <%= if @encrypted_for do %>
               <MaterialIcons.lock style="outlined" class="fill-black" size={25} />
             <% else %>
               <MaterialIcons.mail style="outlined" class="fill-black" size={25} />

@@ -29,7 +29,7 @@ defmodule AlgoThink.ChipStorage do
       join: cau in assoc(c, :crypto_artifact_user),
       where: cau.user_id == ^user_id and cau.study_group_id == ^study_group_id,
       order_by: cau.inserted_at,
-      preload: [:owner]
+      preload: [:owner, :encrypted_for]
     ))
   end
 

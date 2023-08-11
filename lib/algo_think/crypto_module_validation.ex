@@ -11,16 +11,16 @@ alias AlgoThink.CryptoArtifacts
     end
   end
 
-  defp validate_encrypted(changeset, encrypted?, validate \\ true) do
-    if not !!encrypted? and validate do
+  defp validate_encrypted(changeset, encrypted_for, validate \\ true) do
+    if is_nil(encrypted_for) and validate do
       Ecto.Changeset.add_error(changeset, :message, "encrypted message needed")
     else
       changeset
     end
   end
 
-  defp validate_unencrypted(changeset, encrypted?) do
-    if !!encrypted? do
+  defp validate_unencrypted(changeset, encrypted_for) do
+    if not is_nil(encrypted_for) do
       Ecto.Changeset.add_error(changeset, :message, "unencrypted message needed")
     else
       changeset
@@ -50,7 +50,7 @@ alias AlgoThink.CryptoArtifacts
     |> Ecto.Changeset.validate_inclusion(:message, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:public_key, [:public_key], message: "public key required")
     |> validate_public_key_self_encrypt(get_attribute(public_key, :owner_id), current_user_id)
-    |> validate_unencrypted(get_attribute(message, :encrypted))
+    |> validate_unencrypted(get_attribute(message, :encrypted_for))
   end
 
   def changeset_decryption(%{message: message, private_key: private_key}) do
@@ -67,7 +67,7 @@ alias AlgoThink.CryptoArtifacts
     |> Ecto.Changeset.validate_required([:message, :private_key])
     |> Ecto.Changeset.validate_inclusion(:message, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:private_key, [:private_key], message: "private key required")
-    |> validate_encrypted(get_attribute(message, :encrypted))
+    |> validate_encrypted(get_attribute(message, :encrypted_for))
   end
 
   def changeset_sign(%{message: message, private_key: private_key}) do
@@ -84,7 +84,7 @@ alias AlgoThink.CryptoArtifacts
     |> Ecto.Changeset.validate_required([:message, :private_key])
     |> Ecto.Changeset.validate_inclusion(:message, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:private_key, [:private_key], message: "private key required")
-    |> validate_unencrypted(get_attribute(message, :encrypted))
+    |> validate_unencrypted(get_attribute(message, :encrypted_for))
   end
 
   def changeset_verify(%{message: message, signature: signature, public_key: public_key}) do
@@ -103,28 +103,28 @@ alias AlgoThink.CryptoArtifacts
     |> Ecto.Changeset.validate_inclusion(:message, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:public_key, [:public_key], message: "public key required")
     |> Ecto.Changeset.validate_inclusion(:signature, [:signature], message: "signature required")
-    |> validate_unencrypted(get_attribute(message, :encrypted))
+    |> validate_unencrypted(get_attribute(message, :encrypted_for))
   end
 
   def changeset_solution(message, expected_user_id) do
     {owner_id, _} = Integer.parse(expected_user_id)
     %CryptoArtifacts.CryptoArtifact{}
-    |> Ecto.Changeset.cast(message, [:type, :content, :encrypted, :signed, :owner_id, :valid])
+    |> Ecto.Changeset.cast(message, [:type, :content, :signed, :owner_id, :valid])
     |> Ecto.Changeset.validate_inclusion(:type, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:owner_id, [owner_id], message: "wrong author")
-    |> validate_unencrypted(get_attribute(message, :encrypted))
+    |> validate_unencrypted(get_attribute(message, :encrypted_for))
   end
 
   def changeset_solution_with_signature(message, expected_user_id) do
     IO.inspect(message)
     {owner_id, _} = Integer.parse(expected_user_id)
     %CryptoArtifacts.CryptoArtifact{}
-    |> Ecto.Changeset.cast(message, [:type, :content, :encrypted, :signed, :owner_id, :valid])
+    |> Ecto.Changeset.cast(message, [:type, :content, :signed, :owner_id, :valid])
     |> Ecto.Changeset.validate_required([:valid], message: "message must be verified!")
     |> Ecto.Changeset.validate_inclusion(:valid, [:valid], message: "message must be verified!")
     |> Ecto.Changeset.validate_inclusion(:type, [:message], message: "message required")
     |> Ecto.Changeset.validate_inclusion(:owner_id, [owner_id], message: "wrong author")
-    |> validate_unencrypted(get_attribute(message, :encrypted))
+    |> validate_unencrypted(get_attribute(message, :encrypted_for))
   end
 
   def validate_if_true(changeset, validator ,condition) do
@@ -137,8 +137,8 @@ alias AlgoThink.CryptoArtifacts
 
   def changeset_encrypted_message(message) do
     changeset = %CryptoArtifacts.CryptoArtifact{}
-    |> Ecto.Changeset.cast(message, [:type, :content, :encrypted, :signed, :owner_id, :valid])
-    |> validate_encrypted(get_attribute(message, :encrypted), message.type == :message) # prevent sending unencrypted message
+    |> Ecto.Changeset.cast(message, [:type, :content, :signed, :owner_id, :valid])
+    |> validate_encrypted(get_attribute(message, :encrypted_for), message.type == :message) # prevent sending unencrypted message
     # prevent sending private key
     |> Ecto.Changeset.validate_exclusion(:type, [:private_key], message: "don't ever send your private key to others! People who have access to your private key can decrypt the secret messages that were encrypted with your public key!")
     if (length(changeset.errors) > 0) do

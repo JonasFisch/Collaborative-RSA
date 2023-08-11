@@ -38,7 +38,7 @@ defmodule AlgoThink.CryptoArtifacts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_crypto_artifact!(id), do: Repo.get!(CryptoArtifact, id) |> Repo.preload([:owner])
+  def get_crypto_artifact!(id), do: Repo.get!(CryptoArtifact, id) |> Repo.preload([:owner, :encrypted_for])
 
   @doc """
   Creates a crypto_artifact.
@@ -57,7 +57,7 @@ defmodule AlgoThink.CryptoArtifacts do
     |> CryptoArtifact.changeset(attrs)
     |> Repo.insert()
 
-    {:ok, Repo.preload(crypto_artifact, :owner)
+    {:ok, Repo.preload(crypto_artifact, [:owner, :encrypted_for])
   }
   end
 
@@ -99,7 +99,7 @@ defmodule AlgoThink.CryptoArtifacts do
     if (changeset.valid?) do
       {:ok, public_key} = ExPublicKey.loads(crypto_artifact_public_key.content)
       {:ok, cipher_text} = ExPublicKey.encrypt_public(crypto_artifact_message.content, public_key)
-      create_crypto_artifact(%{content: cipher_text, type: :message, owner_id: owner_id, encrypted: true})
+      create_crypto_artifact(%{content: cipher_text, type: :message, owner_id: owner_id, encrypted_for_id: crypto_artifact_public_key.owner_id})
     else
       {:error, changeset}
     end

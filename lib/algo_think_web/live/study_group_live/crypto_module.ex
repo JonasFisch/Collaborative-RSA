@@ -65,7 +65,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
       zones_structure
       |> Enum.map(fn zone_structure ->
         zone_type = Map.get(zone_structure, :type)
-        encrypted = Map.get(zone_structure, :encrypted)
+        encrypted_by = Map.get(zone_structure, :encrypted_by)
         name = Map.get(zone_structure, :name)
         placeholder = Map.get(zone_structure, :placeholder, "result")
         is_result = zone_type == :result
@@ -76,7 +76,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
           crypto_artifact: crypto_artifact,
           placeholder: placeholder,
           expected_type: zone_type,
-          encrypted: encrypted,
+          encrypted_by: encrypted_by,
           result: is_result
         }
       end)

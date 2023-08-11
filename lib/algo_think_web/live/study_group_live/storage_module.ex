@@ -20,7 +20,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.StorageModule do
                   <%= owner %>
                 </h3>
                 <%= for crypto_artifact <- crypto_artifacts do %>
-                  <.chip id={crypto_artifact.id} type={crypto_artifact.type} name={crypto_artifact.owner.name} signed={crypto_artifact.signed} encrypted={crypto_artifact.encrypted} valid={crypto_artifact.valid}  />
+                  <.chip id={crypto_artifact.id} type={crypto_artifact.type} name={crypto_artifact.owner.name} signed={crypto_artifact.signed} encrypted_for={crypto_artifact.encrypted_for} valid={crypto_artifact.valid}  />
                 <% end %>
               </div>
             <% end %>

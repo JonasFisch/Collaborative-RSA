@@ -114,7 +114,7 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
 
   end
 
-  def handle_event("close_task_modal", params, socket) do
+  def handle_event("close_task_modal", _params, socket) do
     {:noreply, socket |> assign(task_modal_open: false)}
   end
 
