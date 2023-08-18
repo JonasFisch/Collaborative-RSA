@@ -114,6 +114,6 @@
     />
   </.container>
 
-  <.finished_modal visible={@state == :finished} />
+  <.finished_modal visible={@state == :finished} team_number={@study_group_id} />
   <.task_completed_modal visible={@task_done && @task_modal_open} on_ok_clicked="close_task_modal" />
 </div>

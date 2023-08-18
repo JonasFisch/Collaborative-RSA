@@ -2,6 +2,7 @@ defmodule AlgoThinkWeb.FinishedModal do
   use Phoenix.Component
 
   attr :visible, :boolean, default: false
+  attr :team_number, :string, required: true
 
   def finished_modal(assigns) do
     ~H"""
@@ -23,7 +24,8 @@ defmodule AlgoThinkWeb.FinishedModal do
             <MaterialIcons.check_circle style="round" class="fill-green-400" size={50} />
             <span class="font-bold text-xl">Finished</span>
             <span class="text-sm text-gray-400 font-bold max-w-8/10 text-center">Thanks for participating on the Evaluation of my Master Thesis! Please fill out the Questionaire linked below! Thank you very much!</span>
-            <a href="http://www.google.com" target="_blank">
+            <span class="text-md font-medium">Your Teamnumber: <b><%= @team_number %></b></span>
+            <a href={"https://docs.google.com/forms/d/e/1FAIpQLSeDLygkTAz_wiflWL4xm6-nr6ItXaTIfBVgLEfmqNRtKIbyPA/viewform?usp=pp_url&entry.2130834201=#{@team_number}"} target="_blank">
               <span class="flex flex-row gap-2 items-center justify-cente border-2 border-blue-300 rounded-md p-1 hover:bg-blue-100">
                 <span class="text-md font-bold">Questionaire</span>
                 <MaterialIcons.arrow_forward style="round" class="fill-blue-300" size={24} />
