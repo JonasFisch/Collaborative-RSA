@@ -1,7 +1,7 @@
 defmodule AlgoThinkWeb.Stepper do
   use Phoenix.Component
 
-  @states [:group_finding, :key_gen, :rsa, :rsa_with_evil, :rsa_with_signatures, :finished]
+  @states [:group_finding, :key_gen, :rsa, :rsa_with_signatures, :finished]
 
   attr :current_state, :atom, values: @states
 
@@ -30,7 +30,6 @@ defmodule AlgoThinkWeb.Stepper do
               :group_finding -> "Waiting for all Students to join."
               :key_gen -> "Key Generation"
               :rsa -> "RSA"
-              :rsa_with_evil -> "RSA with Evil"
               :rsa_with_signatures -> "RSA with Signatures"
               :finished -> "Finished"
               _ -> "Waiting ..."

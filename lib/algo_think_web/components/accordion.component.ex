@@ -11,8 +11,8 @@ defmodule AlgoThinkWeb.Accordion do
   @spec accordion(map) :: Phoenix.LiveView.Rendered.t()
   def accordion(assigns) do
     ~H"""
-    <details class="bg-gray-100 rounded-md p-3 group mx-6 select-none" open={@open} {@rest}>
-      <summary class="list-none cursor-pointer">
+    <details class="bg-gray-100 rounded-md p-3 group mx-6 select-none" open={@open} >
+      <summary class="list-none cursor-pointer" {@rest}>
         <div class="flex justify-between items-center">
           <span class="font-medium text-xl"><%= @header %></span>
           <MaterialIcons.chevron_right class="fill-gray-400 group-open:rotate-90 transition-transform" size={32} />
