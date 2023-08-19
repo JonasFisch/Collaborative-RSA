@@ -1,4 +1,5 @@
 defmodule AlgoThinkWeb.StudyGroupLive.Index do
+  alias AlgoThink.PerformanceLogs
   alias AlgoThink.CryptoModuleValidation
   alias AlgoThink.CryptoArtifacts
   alias AlgoThink.ChipStorage
@@ -131,7 +132,9 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
   def handle_info(%{topic: topic, event: event, payload: payload}, socket) do
     if (topic == "study_group_#{socket.assigns.study_group_id}") do
       case event do
-        "new_message" -> {:noreply, socket |> assign(chat_messages: socket.assigns.chat_messages ++ [payload])}
+        "new_message" ->
+          PerformanceLogs.log_message_latency(socket.assigns.current_user.id, payload.id)
+          {:noreply, socket |> assign(chat_messages: socket.assigns.chat_messages ++ [payload])}
         _ -> {:noreply, socket}
       end
     else

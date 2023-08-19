@@ -53,6 +53,7 @@ defmodule AlgoThink.ChatMessages do
 
   """
   def create_chat_message(attrs \\ %{}) do
+    attrs = Map.put(attrs, :precise_creation_time, Time.to_string(Time.utc_now()))
     {:ok, chat_message} = %ChatMessage{}
       |> ChatMessage.changeset(attrs)
       |> Repo.insert()

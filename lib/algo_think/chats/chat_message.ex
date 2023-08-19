@@ -8,13 +8,15 @@ defmodule AlgoThink.ChatMessages.ChatMessage do
     belongs_to :study_group, AlgoThink.StudyGroups.StudyGroup
     belongs_to :attachment, AlgoThink.CryptoArtifacts.CryptoArtifact
 
+    field :precise_creation_time, :string
+
     timestamps(type: :utc_datetime)
   end
 
   @doc false
   def changeset(chat_message, attrs) do
     chat_message
-    |> cast(attrs, [:text, :author_id, :study_group_id, :attachment_id])
+    |> cast(attrs, [:text, :author_id, :study_group_id, :attachment_id, :precise_creation_time])
     |> validate_required([:author_id, :study_group_id])
   end
 end

@@ -1,5 +1,6 @@
 defmodule AlgoThinkWeb.ClassroomLive.Show do
   use AlgoThinkWeb, :live_view
+  alias AlgoThink.PerformanceLogs
   alias AlgoThink.ChatMessages
   alias AlgoThink.CryptoArtifacts
   alias AlgoThink.ChipStorage
@@ -24,7 +25,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
 
     # add finished state to each study group
     classroom = Map.put(classroom, :study_groups, Enum.map(classroom.study_groups, fn study_group ->
-      StudyGroups.add_task_finished_state(study_group)
+      StudyGroups.add_task_finished_state(study_group, classroom.state)
     end))
 
     # determine is all students are finished
@@ -50,7 +51,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
 
         # add task finished state
         classroom = Map.put(classroom, :study_groups, Enum.map(classroom.study_groups, fn study_group ->
-          StudyGroups.add_task_finished_state(study_group)
+          StudyGroups.add_task_finished_state(study_group, classroom.state)
         end))
 
         # determine is all students are finished
@@ -91,6 +92,11 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
     IO.inspect("starting the Game")
     {:ok, classroom} = Classrooms.update_classroom(socket.assigns.classroom, %{state: :key_gen})
 
+    # log that user starts task now
+    for user <- socket.assigns.classroom.users do
+      PerformanceLogs.log_user_started_task(user.id, :key_gen)
+    end
+
     send(self(), %{topic: @topic, event: "classroom_updated", payload: classroom})
     {:noreply, socket}
   end
@@ -111,9 +117,6 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
         # create message for each user
         {:ok, message} = AlgoThink.CryptoArtifacts.create_message(user.id, "Random Message")
         ChipStorage.create_crypto_artifact_user(%{user_id: user.id, study_group_id: study_group.id, crypto_artifact_id: message.id })
-
-        # TODO: use a useful message (mabye let the user decide what message they want to send)
-
       end
     end
 
@@ -124,6 +127,11 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
       :rsa_with_signatures -> :finished
       _ -> IO.warn("invalid next state given!")
     end
+
+    for user <- socket.assigns.classroom.users do
+      PerformanceLogs.log_user_started_task(user.id, next_state)
+    end
+
     {:ok, classroom} = Classrooms.update_classroom(socket.assigns.classroom, %{state: next_state})
 
     AlgoThinkWeb.Endpoint.broadcast_from(

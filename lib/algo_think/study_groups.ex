@@ -4,6 +4,7 @@ defmodule AlgoThink.StudyGroups do
   """
 
   import Ecto.Query, warn: false
+  alias AlgoThink.PerformanceLogs
   alias AlgoThink.Classrooms
   alias AlgoThink.Classrooms.ClassroomUser
   alias AlgoThink.Classrooms.Classroom
@@ -41,7 +42,8 @@ defmodule AlgoThink.StudyGroups do
   """
   def get_study_group!(id), do: Repo.get!(StudyGroup, id) |> Repo.preload(:users) |> Repo.preload(:chat_messages)
 
-  def add_task_finished_state(study_group) do
+  def add_task_finished_state(%StudyGroup{} = study_group, current_task) do
+
     user_finished_task = Repo.aggregate(from(
       cu in ClassroomUser,
       where: cu.study_group_id == ^study_group.id and cu.task_done
@@ -69,6 +71,8 @@ defmodule AlgoThink.StudyGroups do
       raise "user has no classroom user relation!!!"
     end
 
+    PerformanceLogs.log_user_ended_task(user_id, :key_gen)
+
     classroom_user
     |> ClassroomUser.changeset_update_has_key_pair(%{has_key_pair: true, task_done: true})
     |> Repo.update()
@@ -78,12 +82,17 @@ defmodule AlgoThink.StudyGroups do
   def set_user_done_task(user_id, study_group_id) do
     classroom_user = Repo.one(from(
       cu in ClassroomUser,
-      where: cu.study_group_id == ^study_group_id and cu.user_id == ^user_id
+      where: cu.study_group_id == ^study_group_id and cu.user_id == ^user_id,
+      preload: [:classroom]
     ))
 
     if classroom_user == nil do
       raise "user has no classroom user relation!!!"
     end
+
+    # log that users are finished task
+    IO.inspect("log user ended task")
+    PerformanceLogs.log_user_ended_task(user_id, classroom_user.classroom.state)
 
     classroom_user
     |> ClassroomUser.changeset_update_task_done(%{task_done: true})
