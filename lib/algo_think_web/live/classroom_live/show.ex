@@ -25,7 +25,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
 
     # add finished state to each study group
     classroom = Map.put(classroom, :study_groups, Enum.map(classroom.study_groups, fn study_group ->
-      StudyGroups.add_task_finished_state(study_group, classroom.state)
+      StudyGroups.add_task_finished_state(study_group)
     end))
 
     # determine is all students are finished
@@ -51,7 +51,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
 
         # add task finished state
         classroom = Map.put(classroom, :study_groups, Enum.map(classroom.study_groups, fn study_group ->
-          StudyGroups.add_task_finished_state(study_group, classroom.state)
+          StudyGroups.add_task_finished_state(study_group)
         end))
 
         # determine is all students are finished
@@ -108,7 +108,9 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
     # reset task done
     for study_group <- socket.assigns.classroom.study_groups do
       StudyGroups.reset_user_done_task(study_group.id)
+      StudyGroups.reset_error_count(study_group.id)
       ChatMessages.clear_chat_history(study_group)
+
 
       for user <- study_group.users do
         # delete all crypto artifacts except the users key pair

@@ -12,13 +12,14 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
         <tr>
           <th class="text-left"></th>
           <th class="text-left pb-5">Participants</th>
+          <th></th>
           <th class="text-center pb-5">Task Progress</th>
-          <th class="text-right"></th>
+          <th class="text-right pb-5">Finished</th>
         </tr>
 
         <%!-- study groups --%>
         <tr :for={study_group <- @classroom.study_groups} class="text-sm leading-6 sm:gap-8 relative mt-6" :if={@classroom.state == :group_finding || length(study_group.users) > 0}>
-          <th class="h-8 text-zinc-500 align-top text-left flex flex-row items-center">
+          <th class="h-8 text-zinc-500 align-top text-left flex flex-row items-start">
             <p class="font-medium whitespace-nowrap">
               <%= study_group.name %>
             </p>
@@ -39,16 +40,20 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
               <%= user.name %>
             </p>
           </th>
+          <th class="align-top">
+            <div class="bg-red-300 rounded-xl">
+              <%= "#{study_group.error_count} Mistakes" %>
+            </div>
+          </th>
           <th class="align-top text-center">
             <div :if={length(study_group.users) > 0} class={[
-              if length(study_group.users) > 0 && study_group.task_finished == length(study_group.users) do "bg-green-300" else "bg-red-300" end,
+              if length(study_group.users) > 0 && study_group.task_finished == length(study_group.users) do "bg-green-300" else "bg-yellow-200" end,
               "rounded-xl w-56 m-auto"
             ]}>
               <p class="ml-3 mr-0 flex flex-row justify-center gap-1 items-center">
                 <span>
                   <%= if length(study_group.users) > 0 && study_group.task_finished == length(study_group.users) do "Done" else "In Progress ..." end %>
                 </span>
-                <MaterialIcons.check :if={length(study_group.users) > 0 && study_group.task_finished == length(study_group.users)} class="fill-gray-700" size={20} />
               </p>
             </div>
           </th>

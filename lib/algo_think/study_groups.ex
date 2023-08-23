@@ -42,7 +42,7 @@ defmodule AlgoThink.StudyGroups do
   """
   def get_study_group!(id), do: Repo.get!(StudyGroup, id) |> Repo.preload(:users) |> Repo.preload(:chat_messages)
 
-  def add_task_finished_state(%StudyGroup{} = study_group, current_task) do
+  def add_task_finished_state(%StudyGroup{} = study_group) do
 
     user_finished_task = Repo.aggregate(from(
       cu in ClassroomUser,
@@ -179,6 +179,18 @@ defmodule AlgoThink.StudyGroups do
   def get_study_group_for_classroom(%User{} = user, %Classroom{} = classroom) do
     classroom_user = Repo.one(from classroom_user in ClassroomUser, where: classroom_user.user_id == ^user.id and classroom_user.classroom_id == ^classroom.id)
     classroom_user.study_group_id
+  end
+
+  def increment_error_count(study_group_id) do
+    from(sg in StudyGroup, update: [inc: [error_count: 1]], where: sg.id == ^study_group_id)
+    |> Repo.update_all([])
+
+    Classrooms.notify_subscribers("classroom_updated")
+  end
+
+  def reset_error_count(study_group_id) do
+    from(sg in StudyGroup, update: [set: [error_count: 0]], where: sg.id == ^study_group_id)
+    |> Repo.update_all([])
   end
 
   @doc """

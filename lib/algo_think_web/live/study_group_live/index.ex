@@ -1,4 +1,5 @@
 defmodule AlgoThinkWeb.StudyGroupLive.Index do
+  alias AlgoThink.StudyGroups
   alias AlgoThink.PerformanceLogs
   alias AlgoThink.CryptoModuleValidation
   alias AlgoThink.CryptoArtifacts
@@ -108,7 +109,9 @@ defmodule AlgoThinkWeb.StudyGroupLive.Index do
           acc ++ [msg]
         end)
 
-        IO.inspect(errors)
+        if (length(errors) > 0) do
+          StudyGroups.increment_error_count(socket.assigns.study_group_id)
+        end
 
         {:noreply, socket |> assign(chat_errors: errors)}
     end

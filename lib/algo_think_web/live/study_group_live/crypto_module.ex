@@ -1,4 +1,5 @@
 defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
+  alias AlgoThink.StudyGroups
   alias AlgoThink.ChipStorage
   alias AlgoThink.CryptoArtifacts
   use AlgoThinkWeb, :live_component
@@ -195,10 +196,13 @@ defmodule AlgoThinkWeb.StudyGroupLive.CryptoModule do
             Map.put(acc, key, msg)
           end)
 
+          StudyGroups.increment_error_count(socket.assigns.study_group_id)
+
           {:noreply, socket |> assign(errors: errors)}
         err ->
           IO.warn("uncatched error in crypto module")
           IO.inspect(err)
+
           {:noreply, socket}
       end
     else

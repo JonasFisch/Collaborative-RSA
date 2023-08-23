@@ -110,6 +110,8 @@ defmodule AlgoThinkWeb.StudyGroupLive.SolutionWord do
         acc ++ [msg]
       end)
 
+      StudyGroups.increment_error_count(socket.assigns.study_group_id)
+
       updated_errors = socket.assigns.errors |> Map.put(params["dropzoneId"], Enum.at(errors, 0))
       {:noreply, socket |> assign(errors: updated_errors)}
     else
