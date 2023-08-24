@@ -13,9 +13,6 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
   @impl true
   def mount(%{"id" => id}, _session, socket) do
     AlgoThinkWeb.Endpoint.subscribe(@topic)
-
-    IO.inspect(Faker.Pokemon.name())
-
     {:ok, assign(socket, classroom_id: id)}
   end
 
@@ -120,7 +117,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
         CryptoArtifacts.delete_crypto_artifacts_for_user(user, study_group)
 
         # create message for each user
-        {:ok, message} = AlgoThink.CryptoArtifacts.create_message(user.id, "Random Message")
+        {:ok, message} = AlgoThink.CryptoArtifacts.create_message(user.id, Faker.Pokemon.name())
         ChipStorage.create_crypto_artifact_user(%{user_id: user.id, study_group_id: study_group.id, crypto_artifact_id: message.id })
       end
     end
