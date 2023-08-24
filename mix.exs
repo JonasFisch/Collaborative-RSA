@@ -54,7 +54,8 @@ defmodule AlgoThink.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_export, "~> 0.8.2"},
       {:material_icons, "~> 0.1.0"},
-      {:ex_crypto, "~> 0.10.0"}
+      {:ex_crypto, "~> 0.10.0"},
+      {:faker, "~> 0.17"}
     ]
   end
 

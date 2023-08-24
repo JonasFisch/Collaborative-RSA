@@ -13,6 +13,9 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
   @impl true
   def mount(%{"id" => id}, _session, socket) do
     AlgoThinkWeb.Endpoint.subscribe(@topic)
+
+    IO.inspect(Faker.Pokemon.name())
+
     {:ok, assign(socket, classroom_id: id)}
   end
 
