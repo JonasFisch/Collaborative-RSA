@@ -4,6 +4,7 @@ defmodule AlgoThink.PerformanceLogs do
   """
 
   import Ecto.Query, warn: false
+  alias AlgoThink.TaskMistakeLog
   alias AlgoThink.ChatMessages
   alias AlgoThink.MessageLatencyLog
   alias AlgoThink.UserTaskLog
@@ -31,6 +32,12 @@ defmodule AlgoThink.PerformanceLogs do
 
     %MessageLatencyLog{}
     |> MessageLatencyLog.changeset(%{latency: latency, user_id: user_id})
+    |> Repo.insert()
+  end
+
+  def log_task_mistakes(study_group_id, mistakes, task) do
+    %TaskMistakeLog{}
+    |> TaskMistakeLog.changeset(%{mistakes: mistakes, study_group_id: study_group_id, task: task})
     |> Repo.insert()
   end
 end

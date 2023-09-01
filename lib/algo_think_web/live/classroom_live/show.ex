@@ -107,6 +107,7 @@ defmodule AlgoThinkWeb.ClassroomLive.Show do
 
     # reset task done
     for study_group <- socket.assigns.classroom.study_groups do
+      PerformanceLogs.log_task_mistakes(study_group.id, study_group.error_count, socket.assigns.classroom.state)
       StudyGroups.reset_user_done_task(study_group.id)
       StudyGroups.reset_error_count(study_group.id)
       ChatMessages.clear_chat_history(study_group)
