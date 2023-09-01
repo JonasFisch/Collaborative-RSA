@@ -13,7 +13,7 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
           <th class="text-left"></th>
           <th class="text-left pb-5">Participants</th>
           <th></th>
-          <th class="text-center pb-5">Task Progress</th>
+          <th class="text-center pb-5" :if={@is_teacher}>Task Progress</th>
           <th class="text-right pb-5">Finished</th>
         </tr>
 
@@ -41,11 +41,11 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
             </p>
           </th>
           <th class="align-top">
-            <div class="bg-red-300 rounded-xl">
+            <div :if={@is_teacher} class="bg-red-300 rounded-xl">
               <%= "#{study_group.error_count} Mistakes" %>
             </div>
           </th>
-          <th class="align-top text-center">
+          <th class="align-top text-center":if={@is_teacher}>
             <div :if={length(study_group.users) > 0} class={[
               if length(study_group.users) > 0 && study_group.task_finished == length(study_group.users) do "bg-green-300" else "bg-yellow-200" end,
               "rounded-xl w-56 m-auto"
