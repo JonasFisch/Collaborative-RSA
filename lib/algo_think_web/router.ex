@@ -1,4 +1,5 @@
 defmodule AlgoThinkWeb.Router do
+  alias PageController
   alias StudyGroupLive
   alias ClassroomLive
   use AlgoThinkWeb, :router
@@ -66,6 +67,8 @@ defmodule AlgoThinkWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     get "/", PageController, :home
+    get "/latency", PageController, :latency
+
 
     live_session :require_authenticated_user,
       root_layout: {AlgoThinkWeb.Layouts, :root},
@@ -98,5 +101,8 @@ defmodule AlgoThinkWeb.Router do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
+
+
   end
+
 end

@@ -14,7 +14,7 @@ defmodule AlgoThinkWeb.ClassroomLive.JoinSmallGroupComponent do
           <th class="text-left pb-5">Participants</th>
           <th></th>
           <th class="text-center pb-5" :if={@is_teacher}>Task Progress</th>
-          <th class="text-right pb-5">Finished</th>
+          <th class="text-right pb-5"><%= if @is_teacher do "Finished" else "#User" end %></th>
         </tr>
 
         <%!-- study groups --%>

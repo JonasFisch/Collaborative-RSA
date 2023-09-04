@@ -10,6 +10,11 @@ defmodule AlgoThink.PerformanceLogs do
   alias AlgoThink.UserTaskLog
   alias AlgoThink.Repo
 
+
+  def list_latency_logs do
+    Repo.all(MessageLatencyLog)
+  end
+
   def log_user_task(user_id, task, type) do
     Task.start(fn ->
       %UserTaskLog{}
