@@ -68,6 +68,7 @@ defmodule AlgoThinkWeb.Router do
 
     get "/", PageController, :home
     get "/latency", PageController, :latency
+    get "/time", PageController, :time_per_task
 
 
     live_session :require_authenticated_user,

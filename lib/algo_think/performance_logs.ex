@@ -15,6 +15,15 @@ defmodule AlgoThink.PerformanceLogs do
     Repo.all(MessageLatencyLog)
   end
 
+  def get_latency_logs_for_user(user_id) do
+    from(log in MessageLatencyLog, where: log.user_id == ^user_id) |> Repo.all()
+  end
+
+  def get_task_time_logs_for_task(user_id, task, type) do
+    from(log in UserTaskLog, where: log.user_id == ^user_id and log.task == ^task and log.type == ^type) |> Repo.all()
+  end
+
+
   def log_user_task(user_id, task, type) do
     Task.start(fn ->
       %UserTaskLog{}
